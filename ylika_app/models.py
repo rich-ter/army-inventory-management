@@ -26,8 +26,15 @@ class Proion(models.Model):
     def __str__(self):
 	    return self.onoma
 
+
+    def get_total_stock(self):
+        return self.apothema_set.aggregate(total_stock=models.Sum('posotita'))['total_stock'] or 0
+
     def has_enough_stock(self, requested_quantity):
         pass
+
+    
+
 
 class Apothiki(models.Model):
     id = models.AutoField(primary_key=True)
