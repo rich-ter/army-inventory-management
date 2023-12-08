@@ -216,23 +216,33 @@
   </style>
 </head>
 
-<body id="particles-js">
+ <body id="particles-js">
   <div class="animated bounceInDown">
     <div class="container">
       <span class="error animated tada" id="msg"></span>
-      <form name="form1" class="box" onsubmit="return checkStuff()">
-        <h4>YLIKA / DIDES APP <br><span>ΕΙΣΟΔΟΣ</span></h4>
-        <h5></h5>
-        <input type="text" name="email" placeholder="Email" autocomplete="off">
-        <i class="typcn typcn-eye" id="eye"></i>
-        <input type="password" name="password" placeholder="Passsword" id="pwd" autocomplete="off">
-        <input type="submit" value="Sign in" class="btn1">
-      </form>
+
+<form method="post" action="{% url 'login' %}" name="form1" class="box" onsubmit="return checkStuff()">
+    {% csrf_token %}
+    <h4><span>ΠΛΑΤΦΟΡΜΑ ΔΙΑΧΕΙΡΙΣΗΣ</span> <br> ΥΛΙΚΩΝ / ΔΙΔΕΣ <br></h4>
+    <h5></h5>
+
+    <div class="input-container">
+        {% comment %} {{ form.username.label_tag }} {% endcomment %}
+        {{ form.username }}
     </div>
-    <div class="footer">
-      <span>ΣΤΡ ΡΙΧΤΕΡ ΦΙΛΙΠΠΟΣ 23 Ε ΕΣΣΟ</a></span>
+
+    <div class="input-container">
+        {% comment %} {{ form.password.label_tag }} {% endcomment %}
+        {{ form.password }}
     </div>
-  </div>
+
+    <input type="submit" value="ΕΙΣΟΔΟΣ" class="btn1">
+</form>
+</div>
+<div class="footer">
+  <span>ΣΤΡ ΡΙΧΤΕΡ ΦΙΛΙΠΠΟΣ 23 Ε ΕΣΣΟ</a></span>
+</div>
+</div>
 
   <!-- Scripts -->
   <script>
