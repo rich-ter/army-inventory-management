@@ -5,7 +5,7 @@ from django.forms import inlineformset_factory
 # Register your models here
 # admin.site.register(Proion)
 admin.site.register(Paraliptis)
-
+admin.site.register(Apothema)
 
 
 class ApothemaInline(admin.TabularInline):  # or admin.StackedInline

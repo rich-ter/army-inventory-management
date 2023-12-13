@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 class Paraliptis(models.Model):
     id = models.AutoField(primary_key=True)
@@ -78,5 +78,3 @@ class PliroforiesParagellias(models.Model):
     def returnTotalValue(self):
         pass 
         # we want this to return the inventory for all warehouses. 
-
-
