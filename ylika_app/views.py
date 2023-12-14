@@ -1,14 +1,15 @@
 
-# # Create your views here.
 from django.http import HttpResponse, request
-# from django.shortcuts import render
-
-# def index(request):
-#     return HttpResponse('Hello world')
-
-
 from django.shortcuts import render
 from django.views.generic import View, TemplateView
+from .models import (
+    Proion,
+    Apothema
+)
+from .filters import StockFilter
+from django_filters.views import FilterView 
+
+
 # from inventory.models import Stock
 # from transactions.models import SaleBill, PurchaseBill
 
@@ -32,14 +33,14 @@ class HomeView(View):
         }
         return render(request, self.template_name, context)
 
-# class AboutView(TemplateView):
-#     template_name = "about.html"
-
+# VIEWS FOR THE YLIKA APP 
 
 def home(request):
     return render(request, 'ylika_app/home.html')
 
 
-# def home(request):
-#     return HttpResponse('Hello world')
-
+class StockListView(FilterView):
+    filterset_class = StockFilter
+    queryset = Proion.objects.all()
+    template_name = 'ylika_app/proionta/proionta.html'
+    paginate_by = 10 

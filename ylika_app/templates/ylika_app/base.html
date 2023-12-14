@@ -52,10 +52,12 @@
                     <a class="sidebar-text sidebar-button" href="{% url 'home' %}"><i class="fas fa-home"></i> Αρχική</a>
                 </li>               
                 <li>
-                    <a href="#inventorySubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button"><i class="fas fa-boxes"></i> Αποθέματα</a>
+                    <a href="#inventorySubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button"><i class="fas fa-boxes"></i> Προιόντα/Αποθέματα</a>
                     <ul class="collapse list-unstyled" id="inventorySubmenu">
-                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href=""><i class="fas fa-dot-circle"></i> Προσθήκη αποθέματος</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="/ylika_app/proionta"><i class="fas fa-dot-circle"></i> Λίστα Προιόντον</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="/ylika_app/proionta"><i class="fas fa-dot-circle"></i> Προσθήκη Προιόντος</a> </li>
                         <li> <a class="sidebar-text sidebar-subitem sidebar-button" href=""><i class="fas fa-dot-circle"></i> Λίστα αποθεμάτων</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href=""><i class="fas fa-dot-circle"></i> Προσθήκη αποθέματος</a> </li>
                     </ul>
                 </li>
                 <li>
@@ -99,9 +101,9 @@
                 <li>
                     <a href="#" class="sidebar-button nav-button">Δημιουργία Αποστολής</a>
                 </li>
-                {% comment %} <li>
+                <li>
                     <a href="#" class="sidebar-text">Link</a>
-                </li> {% endcomment %}
+                </li>
             </ul>
         </nav>
     
