@@ -4,7 +4,8 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import View, CreateView, UpdateView,TemplateView
 from .models import (
     Proion,
-    Apothema
+    Apothema,
+    Paraliptis
 )
 from .filters import StockFilter
 from django_filters.views import FilterView 
@@ -89,3 +90,11 @@ class StockDeleteView(View):                                                    
         stock.save()                                               
         messages.success(request, self.success_message)
         return redirect('proionta')
+
+
+
+class ParaliptesListView(FilterView):
+    filterset_class = StockFilter
+    queryset = Paraliptis.objects.all()
+    template_name = 'ylika_app/paraliptes/paraliptes.html'
+    paginate_by = 50 

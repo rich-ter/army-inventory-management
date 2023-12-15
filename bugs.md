@@ -8,3 +8,10 @@ What to fix:
 
 Displaying the error messages on the spot on the homepage app and not after the user successfully logs in.
 
+
+
+---
+
+features to include:
+
+- to check if we can attach a file on every paragelia that is happening.
