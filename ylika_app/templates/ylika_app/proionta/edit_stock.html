@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+
+{% block title %} {{title}} {% endblock title %}
+
+
+{% block content %}
+
+    <div style="color:#575757; font-style: bold; font-size: 3rem; border-bottom: 1px solid white;">{{title}}</div> 
+    
+    <br><!-- Log on to codeastro.com for more projects -->
+    
+    <form method="post">
+    
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+        <div class="form-group">
+            {{ form.name.errors }}
+            <label for="{{ form.name.id_for_label }}">Name:</label>
+            {{ form.onoma }}
+        </div>
+         <div class="form-group ">
+            {{ form.perigrafi.errors }}
+            <label for="{{ form.perigrafi.id_for_label }}">Perigrafi:</label>
+            {{ form.perigrafi }}
+        </div> 
+        <div class="form-group ">
+            {{ form.seriakos_arithmos.errors }}
+            <label for="{{ form.seriakos_arithmos.id_for_label }}">Seriakos Arithmos:</label>
+            {{ form.seriakos_arithmos }}
+        </div> 
+        <div class="form-group ">
+            {{ form.typos_proiontos.errors }}
+            <label for="{{ form.typos_proiontos.id_for_label }}">Typos Proiontos:</label>
+            {{ form.typos_proiontos }}
+        </div> 
+        <br><!-- Log on to codeastro.com for more projects -->
+
+        <div class="align-middle">
+            <button type="submit" class="btn btn-success">{{ savebtn }}</button>
+            {% if title == "ΚΑΙΝΟΥΡΓΙΟ ΠΡΟΙΟΝ" %}
+                <button type="reset" class="btn btn-danger" >Reset</button>
+            {% endif %}
+            {% comment %} {% if delbtn %}
+                <a href="{% url 'delete-stock' object.pk %}" class="btn  btn-danger"> Delete Stock </a>
+            {% endif %} {% endcomment %}
+            {% comment %} <a href="{% url 'inventory' %}" class="btn btn-secondary">Cancel</a> {% endcomment %}
+        </div>
+        
+    </form><!-- Log on to codeastro.com for more projects -->
+
+{% endblock content %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Stock
+from .models import Proion
 
 
 # φόρμα που επιτρέπει στον χρήστη να δημιουργεί ένα νέο αντικείμενο 
@@ -8,12 +8,14 @@ from .models import Stock
 class StockForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):                                                        # used to set css classes to the various fields
         super().__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs.update({'class': 'textinput form-control'})
-        self.fields['quantity'].widget.attrs.update({'class': 'textinput form-control', 'min': '0'})
+        self.fields['onoma'].widget.attrs.update({'class': 'textinput form-control'})       
+        self.fields['perigrafi'].widget.attrs.update({'class': 'textinput form-control'})
+        self.fields['seriakos_arithmos'].widget.attrs.update({'class': 'textinput form-control'})
+        self.fields['typos_proiontos'].widget.attrs.update({'class': 'textinput form-control'})
 
     class Meta:
-        model = Stock
-        fields = ['name', 'quantity']
+        model = Proion
+        fields = ['onoma', 'perigrafi', 'seriakos_arithmos', 'typos_proiontos']
 
 
 
