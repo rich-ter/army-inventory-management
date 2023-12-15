@@ -7,7 +7,7 @@ class Paraliptis(models.Model):
     monada = models.CharField(max_length=150)
 
     def __str__(self):
-	    return f' {self.onoma} + {self.monada}'
+	    return self.monada
 
 class Proion(models.Model):
     id = models.AutoField(primary_key=True)

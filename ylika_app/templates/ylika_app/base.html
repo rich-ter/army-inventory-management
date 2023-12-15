@@ -76,11 +76,13 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#supplierSubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button"><i class="fas fa-dolly-flatbed"></i> Παραλήπτες</a>
-                    <ul class="collapse list-unstyled" id="supplierSubmenu">
-                        {% comment %} <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'new-supplier' %}"><i class="fas fa-dot-circle"></i> Add New Supplier</a> </li>
-                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'suppliers-list' %}"><i class="fas fa-dot-circle"></i> Suppliers List</a> </li> {% endcomment %}
-                    </ul>
+                    <a  href="/ylika_app/paraliptes" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button"><i class="fas fa-dolly-flatbed"></i> Παραλήπτες</a>
+                    <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="/ylika_app/paraliptes"><i class="fas fa-dot-circle"></i> Λίστα paralipton</a> </li>
+
+                    {% comment %} <ul class="collapse list-unstyled" id="supplierSubmenu">
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'new-supplier' %}"><i class="fas fa-dot-circle"></i> Add New Supplier</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'suppliers-list' %}"><i class="fas fa-dot-circle"></i> Suppliers List</a> </li> 
+                    </ul> {% endcomment %}
                 </li>
                 <li>
                     {% comment %} <a class="sidebar-text sidebar-button" href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About</a> {% endcomment %}
