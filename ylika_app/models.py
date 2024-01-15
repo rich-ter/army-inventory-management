@@ -10,32 +10,44 @@ class Paraliptis(models.Model):
 	    return self.monada
 
 class Proion(models.Model):
+
+    TYPOS_PROIONTOS_EPILOGES = (
+        ("ΔΡΟΜΟΛΟΓΗΤΗΣ", "ΔΡΟΜΟΛΟΓΗΤΗΣ"), 
+        ("CONVERTER", "CONVERTER"),
+        ("SWITCH", "SWITCH"),
+        ("MODULE", "MODULE"),
+        ("ΜΕΤΑΤΡΟΠΕΑΣ", "ΜΕΤΑΤΡΟΠΕΑΣ"),
+        ("LAN EXTENDER", "LAN EXTENDER"),
+        ("ΚΑΛΩΔΙΩΣΗ", "ΚΑΛΩΔΙΩΣΗ"),
+        ("ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "ΚΑΜΙΑ ΕΠΙΛΟΓΗ"),
+    )
+
+    XRISI_PROIONTOS_EPILOGES = (
+        ("ΔΙΔΕΣ ΔΙΚΤΥΑΚΟΣ ΕΞΟΠΛΙΣΜΟΣ", "ΔΙΔΕΣ ΔΙΚΤΥΑΚΟΣ ΕΞΟΠΛΙΣΜΟΣ"), 
+        ("ΣΔΑ ΠΥΡΣΕΙΑ", "ΣΔΑ ΠΥΡΣΕΙΑ"),
+        ("ΕΨΑΔ-ΤΗΛΕΦΩΝΙΚΟ ΚΕΝΤΡΟ", "ΕΨΑΔ-ΤΗΛΕΦΩΝΙΚΟ ΚΕΝΤΡΟ"),
+        ("ΚΡΥΠΤΟ", "ΚΡΥΠΤΟ"),
+        ("UPS", "UPS"),
+        ("ΛΟΙΠΑ ΥΛΙΚΑ", "ΛΟΙΠΑ ΥΛΙΚΑ"),
+        ("ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "ΚΑΜΙΑ ΕΠΙΛΟΓΗ"),       
+    )
+    
     id = models.AutoField(primary_key=True)
     onoma = models.CharField(max_length=100, null = False)
     seriakos_arithmos = models.CharField(max_length=100, null = False)
+    typos_proiontos = models.CharField(max_length=30, choices=TYPOS_PROIONTOS_EPILOGES, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
+    xrisi = models.CharField(max_length=50, choices=XRISI_PROIONTOS_EPILOGES, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     perigrafi = models.CharField(max_length=200, null=True)
-
-    TYPOS_PROIONTOS_EPILOGES = (
-        ("Router", "Router"), 
-        ("Switch", "Switch"),
-        ("Crypto Device", "Crypto Device"),
-    )
-
-    typos_proiontos = models.CharField(max_length=15, choices=TYPOS_PROIONTOS_EPILOGES)
 
     def __str__(self):
 	    return self.onoma
-
 
     def get_total_stock(self):
         return self.apothema_set.aggregate(total_stock=models.Sum('posotita'))['total_stock'] or 0
 
     def has_enough_stock(self, requested_quantity):
         pass
-
     
-
-
 class Apothiki(models.Model):
     id = models.AutoField(primary_key=True)
     onoma = models.CharField(max_length=100, null=True)
@@ -45,7 +57,6 @@ class Apothiki(models.Model):
     def __str__(self):
 	    return self.onoma
 
-
 class Apothema(models.Model):
     id = models.AutoField(primary_key=True)
     posotita = models.IntegerField(default=1)
@@ -53,8 +64,7 @@ class Apothema(models.Model):
     proion = models.ForeignKey(Proion, on_delete=models.CASCADE)
     apothiki = models.ForeignKey(Apothiki, on_delete=models.CASCADE)
     # imera_paralavis = models.DateTimeField(auto_now_add=True)
-    simioseis = models.CharField(max_length=200, null=True, blank=True)
-
+    
 class Paragelia(models.Model):
     id = models.AutoField(primary_key=True)
     onoma_paralipti = models.CharField(max_length=200, null=True, blank = True)
@@ -65,7 +75,6 @@ class Paragelia(models.Model):
     def __str__(self):
         return f'{self.onoma_paralipti}'
     
-
 class PliroforiesParagellias(models.Model):
     id = models.AutoField(primary_key=True)
     paragelia = models.ForeignKey(Paragelia, on_delete=models.CASCADE)

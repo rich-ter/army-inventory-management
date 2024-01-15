@@ -56,28 +56,30 @@
                     <ul class="collapse list-unstyled" id="inventorySubmenu">
                         <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="/ylika_app/proionta"><i class="fas fa-dot-circle"></i> Λίστα Προιόντον</a> </li>
                         <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="/ylika_app/new"><i class="fas fa-dot-circle"></i> Προσθήκη Προιόντος</a> </li>
-                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href=""><i class="fas fa-dot-circle"></i> Λίστα αποθεμάτων</a> </li>
-                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href=""><i class="fas fa-dot-circle"></i> Προσθήκη αποθέματος</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="/ylika_app/apothemata"><i class="fas fa-dot-circle"></i> Λίστα αποθεμάτων</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="/ylika_app/new-apothema"><i class="fas fa-dot-circle"></i> Προσθήκη αποθέματος</a> </li>
                     </ul>
                 </li>
                 <li>
                     <a href="#purchaseSubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button"><i class="fas fa-cash-register"></i> Αποθήκες</a>
                      <ul class="collapse list-unstyled" id="purchaseSubmenu">
-                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{}"><i class="fas fa-dot-circle"></i> New Incoming Stock</a> </li>
-                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{}"><i class="fas fa-dot-circle"></i> Purchases List</a> </li> 
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{}"><i class="fas fa-dot-circle"></i> ΚΕΠΙΚ</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{}"><i class="fas fa-dot-circle"></i> 487</a> </li> 
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{}"><i class="fas fa-dot-circle"></i> Δορυφορικά</a> </li> 
                         
                     </ul>
                 </li>
                 <li>
                     <a href="#saleSubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button"><i class="fas fa-dollar-sign"></i> Αποστολές</a>
                     <ul class="collapse list-unstyled" id="saleSubmenu">
-                        {% comment %} <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'new-sale' %}"><i class="fas fa-dot-circle"></i> New Outgoing Stock</a> </li>
-                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'sales-list' %}"><i class="fas fa-dot-circle"></i> Sales Orders</a> </li> {% endcomment %}
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href=""><i class="fas fa-dot-circle"></i> Ιστορικό αποστολών</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href=""><i class="fas fa-dot-circle"></i> Προσθήκη αποστολής</a> </li> 
                     </ul>
                 </li>
+
                 <li>
-                    <a  href="/ylika_app/paraliptes" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button"><i class="fas fa-dolly-flatbed"></i> Παραλήπτες</a>
-                    <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="/ylika_app/paraliptes"><i class="fas fa-dot-circle"></i> Λίστα paralipton</a> </li>
+                    <a  class="dropdown-toggle sidebar-text right-arrow sidebar-button" href="/ylika_app/paraliptes"><i class="fas fa-dolly-flatbed"></i> Παραλήπτες</a>
+                    {% comment %} <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="/ylika_app/paraliptes"><i class="fas fa-dot-circle"></i> Λίστα paralipton</a> </li> {% endcomment %}
 
                     {% comment %} <ul class="collapse list-unstyled" id="supplierSubmenu">
                         <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'new-supplier' %}"><i class="fas fa-dot-circle"></i> Add New Supplier</a> </li>

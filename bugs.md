@@ -8,7 +8,7 @@ What to fix:
 
 Displaying the error messages on the spot on the homepage app and not after the user successfully logs in.
 
-
+2. Filtering and searching on paraliptes page doesn't work. 
 
 ---
 

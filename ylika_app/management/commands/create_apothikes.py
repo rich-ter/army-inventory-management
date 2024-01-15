@@ -72,3 +72,4 @@ class Command(BaseCommand):
             Paraliptis.objects.get_or_create(onoma=entry, monada='')
 
         self.stdout.write(self.style.SUCCESS('Successfully imported Paraliptis entries'))
+

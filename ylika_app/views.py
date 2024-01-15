@@ -2,14 +2,10 @@
 from django.http import HttpResponse, request
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import View, CreateView, UpdateView,TemplateView
-from .models import (
-    Proion,
-    Apothema,
-    Paraliptis
-)
+from .models import (Proion, Apothema, Paraliptis)
 from .filters import StockFilter
 from django_filters.views import FilterView 
-from .forms import StockForm
+from .forms import StockForm, ApothemaForm
 from django.contrib.messages.views import SuccessMessageMixin
 
 
@@ -37,16 +33,18 @@ class HomeView(View):
 def home(request):
     return render(request, 'ylika_app/home.html')
 
-# TO VIEW ΤΟ ΟΠΟΙΟ ΔΕΙΧΝΕΙ ΟΛΑ ΤA ΜΟΝΤΕΛΑ ΣΤΟ URL YLIKA_APP/PROIONTA
+
+
+################# PRODUCT CRUD OPERATIONS #######################
+
+
+# TO VIEW ΤΟ ΟΠΟΙΟ ΔΕΙΧΝΕΙ ΟΛΑ ΤA ΜΟΝΤΕΛΑ ΣΤΟ URL /YLIKA_APP/PROIONTA
 
 class StockListView(FilterView):
     filterset_class = StockFilter
     queryset = Proion.objects.all()
     template_name = 'ylika_app/proionta/proionta.html'
     paginate_by = 10 
-
-
-# TO VIEW ΤΟ ΟΠΟΙΟ ΔΗΜΙΟΥΡΓΕΙ ΕΝΑ ΑΝΤΙΚΕΙΜΕΝΟ ΚΑΙ ΤΟ ΑΠΟΘΗΚΕΥΕΙ ΣΑΝ ΠΡΟΙΟΝ
 
 class StockCreateView(SuccessMessageMixin, CreateView):
     model = Proion
@@ -60,7 +58,6 @@ class StockCreateView(SuccessMessageMixin, CreateView):
         context["title"] = 'ΚΑΙΝΟΥΡΓΙΟ ΠΡΟΙΟΝ'
         context["savebtn"] = 'Προσθήκη Προιόντος'
         return context 
-
 
 class StockUpdateView(SuccessMessageMixin, UpdateView):
     model = Proion
@@ -91,10 +88,34 @@ class StockDeleteView(View):                                                    
         messages.success(request, self.success_message)
         return redirect('proionta')
 
+################# APOTHEMA CRUD OPERATIONS #######################
+class ApothemaListView(FilterView):
+    filterset_class = StockFilter
+    queryset = Apothema.objects.all()
+    template_name = 'ylika_app/apothemata/apothemata.html'
+    paginate_by = 10 
 
+
+class ApothemaCreateView(SuccessMessageMixin, CreateView):
+    model = Apothema
+    form_class = ApothemaForm
+    template_name = "ylika_app/apothemata/edit_apothema.html"
+    success_url = 'apothemata'
+    success_message = "Apothema has been created successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = 'ΚΑΙΝΟΥΡΓΙΟ ΠΡΟΙΟΝ'
+        context["savebtn"] = 'Προσθήκη Προιόντος'
+        return context 
+
+
+################# PARALIPTES CRUD OPERATIONS #######################
 
 class ParaliptesListView(FilterView):
     filterset_class = StockFilter
     queryset = Paraliptis.objects.all()
     template_name = 'ylika_app/paraliptes/paraliptes.html'
     paginate_by = 50 
+
+

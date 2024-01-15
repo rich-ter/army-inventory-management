@@ -3,15 +3,15 @@
 {% load widget_tweaks %}
 
 
-{% block title %} Paraliptes {% endblock title %}
+{% block title %} Inventory List {% endblock title %}
 
 
 {% block content %}
     <!-- Log on to codeastro.com for more projects -->
     <div class="row" style="color: #4e4e4e; font-style: bold; font-size: 3rem; ">
-        <div class="col-md-8">Λίστα Παραληπτών</div>
+        <div class="col-md-8">Λίστα Αποθεμάτων</div>
         <div class="col-md-4">               
-            <div style="float:right;"> <a class="btn btn-success" href="/ylika_app/new">Προσθήκη Παραλήπτη</a> </div>
+            <div style="float:right;"> <a class="btn btn-success" href="/ylika_app/new">Προσθήκη αποθέματος</a> </div>
         </div>
     </div>
     
@@ -24,7 +24,7 @@
 	<!-- Log on to codeastro.com for more projects -->
         <form method="get">
             <div class="input-group search">
-                {% render_field filter.form.onoma class="form-control textinput" placeholder="Search by kepik name" %}
+                {% render_field filter.form.onoma class="form-control textinput" placeholder="Search by stock name" %}
                 <div class="input-group-append">
                    <button type="submit" class="btn btn-pink"> Search </button>
                 </div>
@@ -35,28 +35,31 @@
         
         <thead class="thead-dark align-middle">
             <tr>
-                <th width="60%">Όνομα παραληπτη</th>
-                <th>Αποστολές</th>
-                <th>Σχόλια</th>
+                <th width="40%">Όνομα προιόντος</th>
+                <th>Συνολικό απόθεμα</th>
+                <th>ΑΠ ΤΑΓΜΑ</th>
+                <th>ΑΠ ΚΕΠΙΚ</th>
+                <th>ΑΠ ΔΟΡΥΦ. </th>
+
             </tr>
         </thead>
                   
 {% if object_list %}
 
-    <tbody>     <!-- Log on to codeastro.com for more projects -->    
-            {% for paraliptis in object_list %}
+        <tbody>     <!-- Log on to codeastro.com for more projects -->    
+            {% for proion in object_list %}
                 <tr>
                     <td>
-                        <p>{{ paraliptis.onoma }}</p>
+                        <p>{{ proion.onoma }}</p>
                     </td>
-                    {% comment %} <td class="align-middle">{{ paraliptis.onoma }}</td> {% endcomment %}
-                    {% comment %} <td class="align-middle">
+                    <td class="align-middle">{{ proion.id }}</td>
+                    <td class="align-middle">
                         <a href="{% url 'edit-stock' proion.pk %}" class="btn btn-info btn-sm">Edit Details</a>
                         <a href="{% url 'delete-stock' proion.pk %}" class="btn btn-danger btn-sm"> Delete Stock </a>
-                    </td>           {% endcomment %}
+                    </td>          
                 </tr>
             {% endfor %}                   
-        </tbody> 
+        </tbody>
 
     </table>  
 
@@ -95,3 +98,4 @@
 {% endif %}
 
 {% endblock content %}
+

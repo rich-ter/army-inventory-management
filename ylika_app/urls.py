@@ -11,6 +11,10 @@ urlpatterns = [
     path('proion/<pk>/edit', views.StockUpdateView.as_view(), name='edit-stock'),
     path('proion/<pk>/delete', views.StockDeleteView.as_view(), name='delete-stock'),
 
+    #σελιδες για αποθέματα, λιστα, προσθηκη, edit, διαγραφη
+    path("apothemata", views.ApothemaListView.as_view(), name="apothemata"),
+    path("new-apothema", views.ApothemaCreateView.as_view(), name="new-apothema"),
+
     #σελιδες για παραληπτες, λιστα, προσθηκη, edit, διαγραφη.
     path("paraliptes", views.ParaliptesListView.as_view(), name="paraliptes"),
 
