@@ -2,7 +2,7 @@
 from django.http import HttpResponse, request
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import View, CreateView, UpdateView,TemplateView
-from .models import (Proion, Apothema, Paraliptis)
+from .models import (Proion, Apothema, Paraliptis, Apothiki)
 from .filters import StockFilter
 from django_filters.views import FilterView 
 from .forms import StockForm, ApothemaForm
@@ -94,6 +94,26 @@ class ApothemaListView(FilterView):
     queryset = Apothema.objects.all()
     template_name = 'ylika_app/apothemata/apothemata.html'
     paginate_by = 10 
+
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        try:
+            keipik_apothiki_id = Apothiki.objects.get(onoma='ΚΕΠΙΚ').id
+        except Apothiki.DoesNotExist:
+            keipik_apothiki_id = None
+
+        if keipik_apothiki_id:
+            for apothema in queryset:
+                apothema.count_in_keipik = Apothema.objects.filter(
+                    proion_id=apothema.proion_id,
+                    apothiki_id=keipik_apothiki_id
+                ).count()
+        else:
+            for apothema in queryset:
+                apothema.count_in_keipik = 0
+
+        return queryset
 
 
 class ApothemaCreateView(SuccessMessageMixin, CreateView):

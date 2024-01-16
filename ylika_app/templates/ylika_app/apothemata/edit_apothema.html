@@ -16,29 +16,24 @@
         {{ form.non_field_errors }}
         
         <div class="form-group">
-            {{ form.name.errors }}
-            <label for="{{ form.name.id_for_label }}">Name:</label>
-            {{ form.onoma }}
+            {{ form.posotita.errors }}
+            <label for="{{ form.posotita.id_for_label }}">Ποσότητα:</label>
+            {{ form.posotita }}
         </div>
          <div class="form-group ">
-            {{ form.perigrafi.errors }}
-            <label for="{{ form.perigrafi.id_for_label }}">Perigrafi:</label>
-            {{ form.perigrafi }}
+            {{ form.proion.errors }}
+            <label for="{{ form.proion.id_for_label }}">Προιόν:</label>
+            {{ form.proion }}
+        </div>
+        <div class="form-group ">
+            {{ form.apothiki.errors }}
+            <label for="{{ form.apothiki.id_for_label }}">Αποθήκη:</label>
+            {{ form.apothiki }}
         </div> 
         <div class="form-group ">
-            {{ form.seriakos_arithmos.errors }}
-            <label for="{{ form.seriakos_arithmos.id_for_label }}">Seriakos Arithmos:</label>
-            {{ form.seriakos_arithmos }}
-        </div> 
-        <div class="form-group ">
-            {{ form.typos_proiontos.errors }}
-            <label for="{{ form.typos_proiontos.id_for_label }}">Typos Proiontos:</label>
-            {{ form.typos_proiontos }}
-        </div> 
-        <div class="form-group ">
-            {{ form.xrisi.errors }}
-            <label for="{{ form.xrisi.id_for_label }}">Xrisi Proiontos:</label>
-            {{ form.xrisi }}
+            {{ form.simioseis.errors }}
+            <label for="{{ form.simioseis.id_for_label }}">Σημειώσεις:</label>
+            {{ form.simioseis }}
         </div> 
         <br><!-- Log on to codeastro.com for more projects -->
 
