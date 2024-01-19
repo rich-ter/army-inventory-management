@@ -27,6 +27,7 @@ class StockForm(forms.ModelForm):
 class ApothemaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['imera_paralavis'].widget.attrs.update({'class': 'text-input form-control'})
         self.fields['posotita'].widget.attrs.update({'class': 'text-input form-control'})
         self.fields['proion'].widget.attrs.update({'class': 'text-input form-control'})
         self.fields['apothiki'].widget.attrs.update({'class': 'text-input form-control'})
@@ -34,7 +35,7 @@ class ApothemaForm(forms.ModelForm):
 
     class Meta:
         model = Apothema
-        fields = ['posotita', 'proion', 'apothiki', 'simioseis']
+        fields = ['imera_paralavis','posotita', 'proion', 'apothiki', 'simioseis']
 
 # φόρμα που επιτρέπει στον χρήστη να δημιουργεί ένα νέο αντικείμενο 
 # παραγγελίας μέσω του user interaface.

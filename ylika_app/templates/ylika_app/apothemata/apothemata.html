@@ -36,9 +36,10 @@
         
         <thead class="thead-dark align-middle">
             <tr>
-                <th width="30%">Όνομα προιόντος</th>
+                <th width="20%">Όνομα προιόντος</th>
                 <th width="10%">Ποσότητα παραλαβής</th>
                 <th width="10%">Ημερομηνία Παραλαβής</th>
+                <th width="10%">Σημειώσεις</th>
                 <th width="7%">ΑΠ ΚΕΠΙΚ</th>
                 <th width="7%">ΑΠ ΤΑΓΜΑ</th>
                 <th width="7%">ΑΠ ΔΟΡΥΦ. </th>
@@ -52,11 +53,10 @@
         <tbody>     <!-- Log on to codeastro.com for more projects -->    
             {% for apothema in object_list %}
                 <tr>
-                    <td>
-                        <p>{{ apothema.proion }}</p>
-                    </td>
+                    <td><p>{{ apothema.proion }}</p></td>
                     <td class="align-middle">{{ apothema.posotita }}</td>
-                    <td class="align-middle">ημερομηνια</td>
+                    <td class="align-middle">{{apothema.imera_paralavis}}</td>
+                    <td class="align-middle">{{apothema.simioseis}}</td>
                     <td class="align-middle">{{ totals_per_apothiki.1|default_if_none:"0"|get_total_for_proion:apothema.proion.id }}</td>
                     <td class="align-middle">{{ totals_per_apothiki.2|default_if_none:"0"|get_total_for_proion:apothema.proion.id }}</td>
                     <td class="align-middle">{{ totals_per_apothiki.3|default_if_none:"0"|get_total_for_proion:apothema.proion.id }}</td>

@@ -16,6 +16,9 @@
         {{ form.non_field_errors }}
         
         <div class="form-group">
+            {{ form.imera_paralavis.errors }}
+            <label for="{{ form.imera_paralavis.id_for_label }}">Ημερομηνία:</label>
+            {{ form.imera_paralavis }}
             {{ form.posotita.errors }}
             <label for="{{ form.posotita.id_for_label }}">Ποσότητα:</label>
             {{ form.posotita }}

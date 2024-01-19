@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
+from django.utils import timezone
 
 class Paraliptis(models.Model):
     id = models.AutoField(primary_key=True)
@@ -63,8 +64,8 @@ class Apothema(models.Model):
     simioseis = models.CharField(max_length=200, null=True, blank=True)
     proion = models.ForeignKey(Proion, on_delete=models.CASCADE)
     apothiki = models.ForeignKey(Apothiki, on_delete=models.CASCADE)
-    # imera_paralavis = models.DateTimeField(auto_now_add=True)
-    
+    imera_paralavis = models.DateTimeField(default=timezone.now)
+
 class Paragelia(models.Model):
     id = models.AutoField(primary_key=True)
     onoma_paralipti = models.CharField(max_length=200, null=True, blank = True)
