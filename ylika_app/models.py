@@ -66,6 +66,9 @@ class Apothema(models.Model):
     apothiki = models.ForeignKey(Apothiki, on_delete=models.CASCADE)
     imera_paralavis = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+            ordering = ['-id']  
+            
 class Paragelia(models.Model):
     id = models.AutoField(primary_key=True)
     onoma_paralipti = models.CharField(max_length=200, null=True, blank = True)
