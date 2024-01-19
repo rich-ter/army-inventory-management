@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% load widget_tweaks %}
-{% load ylika_app_filters %}
 
 
 {% block title %} Inventory List {% endblock title %}
@@ -10,9 +9,9 @@
 {% block content %}
     <!-- Log on to codeastro.com for more projects -->
     <div class="row" style="color: #4e4e4e; font-style: bold; font-size: 3rem; ">
-        <div class="col-md-8">Λίστα Αποθεμάτων</div>
+        <div class="col-md-8">Λίστα Προιόντον</div>
         <div class="col-md-4">               
-            <div style="float:right;"> <a class="btn btn-success" href="/ylika_app/new-apothema">Προσθήκη αποθέματος</a> </div>
+            <div style="float:right;"> <a class="btn btn-success" href="/ylika_app/new">Προσθήκη προιόντος</a> </div>
         </div>
     </div>
     
@@ -36,34 +35,24 @@
         
         <thead class="thead-dark align-middle">
             <tr>
-                <th width="30%">Όνομα προιόντος</th>
-                <th width="10%">Ποσότητα παραλαβής</th>
-                <th width="10%">Ημερομηνία Παραλαβής</th>
-                <th width="7%">ΑΠ ΚΕΠΙΚ</th>
-                <th width="7%">ΑΠ ΤΑΓΜΑ</th>
-                <th width="7%">ΑΠ ΔΟΡΥΦ. </th>
-                <th width="10%">ΕΝΕΡΓΕΙΕΣ </th>
-
+                <th width="40%">Όνομα αποθήκης</th>
+                <th>Συνολικό απόθεμα</th>
+                <th>Ενέργειες</th>
             </tr>
         </thead>
                   
 {% if object_list %}
 
         <tbody>     <!-- Log on to codeastro.com for more projects -->    
-            {% for apothema in object_list %}
+            {% for proion in object_list %}
                 <tr>
                     <td>
-                        <p>{{ apothema.proion }}</p>
+                        <p>{{ proion.onoma }}</p>
                     </td>
-                    <td class="align-middle">{{ apothema.posotita }}</td>
-                    <td class="align-middle">ημερομηνια</td>
-                    <td class="align-middle">{{ totals_per_apothiki.1|default_if_none:"0"|get_total_for_proion:apothema.proion.id }}</td>
-                    <td class="align-middle">{{ totals_per_apothiki.2|default_if_none:"0"|get_total_for_proion:apothema.proion.id }}</td>
-                    <td class="align-middle">{{ totals_per_apothiki.3|default_if_none:"0"|get_total_for_proion:apothema.proion.id }}</td>
-
+                    <td class="align-middle">{{ proion.id }}</td>
                     <td class="align-middle">
-                        <a href="" class="btn btn-info btn-sm">Edit Details</a>
-                        <a href="" class="btn btn-danger btn-sm"> Delete Stock </a> 
+                        <a href="{% url 'edit-stock' proion.pk %}" class="btn btn-info btn-sm">Επεξεργασία</a>
+                        <a href="{% url 'delete-stock' proion.pk %}" class="btn btn-danger btn-sm"> Διαγραφή </a>
                     </td>          
                 </tr>
             {% endfor %}                   

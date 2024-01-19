@@ -1,8 +1,11 @@
 
+from django.db import models
+from django.db.models import Sum
+
 from django.http import HttpResponse, request
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import View, CreateView, UpdateView,TemplateView
-from .models import (Proion, Apothema, Paraliptis, Apothiki)
+from .models import (Proion, Apothema, Paraliptis, Apothiki )
 from .filters import StockFilter
 from django_filters.views import FilterView 
 from .forms import StockForm, ApothemaForm
@@ -90,30 +93,31 @@ class StockDeleteView(View):                                                    
 
 ################# APOTHEMA CRUD OPERATIONS #######################
 class ApothemaListView(FilterView):
-    filterset_class = StockFilter
-    queryset = Apothema.objects.all()
+    model = Apothema
+    # queryset = Apothema.objects.all()
     template_name = 'ylika_app/apothemata/apothemata.html'
     paginate_by = 10 
+    context_object_name = 'object_list'
 
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        try:
-            keipik_apothiki_id = Apothiki.objects.get(onoma='ΚΕΠΙΚ').id
-        except Apothiki.DoesNotExist:
-            keipik_apothiki_id = None
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-        if keipik_apothiki_id:
-            for apothema in queryset:
-                apothema.count_in_keipik = Apothema.objects.filter(
-                    proion_id=apothema.proion_id,
-                    apothiki_id=keipik_apothiki_id
-                ).count()
-        else:
-            for apothema in queryset:
-                apothema.count_in_keipik = 0
+        # Fetch Apothiki IDs (assuming you know these IDs)
+        apothiki_ids = [1, 2, 3]  # Replace with actual IDs
 
-        return queryset
+        # Dictionary to hold total posotita per Proion for each Apothiki
+        totals_per_apothiki = {apothiki_id: {} for apothiki_id in apothiki_ids}
+
+        for apothiki_id in apothiki_ids:
+            totals = Apothema.objects.filter(apothiki_id=apothiki_id).values('proion').annotate(
+                total=Sum('posotita')).order_by('proion')
+
+            for total in totals:
+                totals_per_apothiki[apothiki_id][total['proion']] = total['total']
+
+        context['totals_per_apothiki'] = totals_per_apothiki
+        return context
 
 
 class ApothemaCreateView(SuccessMessageMixin, CreateView):
@@ -125,10 +129,17 @@ class ApothemaCreateView(SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = 'ΚΑΙΝΟΥΡΓΙΟ ΠΡΟΙΟΝ'
-        context["savebtn"] = 'Προσθήκη Προιόντος'
+        context["title"] = 'ΚΑΙΝΟΥΡΓΙΟ ΑΠΟΘΕΜΑ'
+        context["savebtn"] = 'Προσθήκη Αποθέματος'
         return context 
 
+
+################# APOTHIKES CRUD OPERATIONS #######################
+class ApothikesListView(FilterView):
+    model = Apothiki
+    queryset = Apothiki.objects.all()
+    template_name = 'ylika_app/apothikes/apothikes.html'
+    paginate_by = 10 
 
 ################# PARALIPTES CRUD OPERATIONS #######################
 

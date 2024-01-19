@@ -14,6 +14,13 @@ urlpatterns = [
     #σελιδες για αποθέματα, λιστα, προσθηκη, edit, διαγραφη
     path("apothemata", views.ApothemaListView.as_view(), name="apothemata"),
     path("new-apothema", views.ApothemaCreateView.as_view(), name="new-apothema"),
+    # path('apothema/<pk>/edit', views..as_view(), name=''),
+    # path('apothema/<pk>/delete', views..as_view(), name=''),
+
+    #σελιδες για αποθήκες
+    path("apothikes", views.ApothikesListView.as_view(), name="apothikes"),
+
+
 
     #σελιδες για παραληπτες, λιστα, προσθηκη, edit, διαγραφη.
     path("paraliptes", views.ParaliptesListView.as_view(), name="paraliptes"),
