@@ -48,7 +48,7 @@ def sidebar_menu(request):
 		'text': 'Ενέργιες Αποστολών',
 		'is_header': 1
 	}, {
-		'url': 'Προιόντα',
+		'url': '/order',
 		'icon': 'bi bi-layout-sidebar',
 		'text': 'Λίστα αποστολών',
 		'name': ''

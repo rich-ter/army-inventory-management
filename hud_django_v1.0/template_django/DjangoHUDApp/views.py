@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login
 from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
 
-# page for function 
+# page for LOGIN 
 def pageLogin(request):
     if request.method == 'GET':
         form = LoginForm()
@@ -38,8 +38,26 @@ def pageLogin(request):
 
 
 
+
+
 def index(request):
 	return render(request, "pages/index.html")
+
+def pageProduct(request):
+	return render(request, "pages/page-product.html")
+
+def pageProductDetails(request):
+	return render(request, "pages/page-product-details.html")
+
+def pageOrder(request):
+	return render(request, "pages/page-order.html")
+
+def pageOrderDetails(request):
+	return render(request, "pages/page-order-details.html")
+
+
+
+# # # # # # # # # # # # NOT USED # # # # # # # # # # # # 
 
 def analytics(request):
 	return render(request, "pages/analytics.html")
@@ -57,17 +75,7 @@ def map(request):
 	return render(request, "pages/map.html")
 
 
-def pageProduct(request):
-	return render(request, "pages/page-product.html")
 
-def pageProductDetails(request):
-	return render(request, "pages/page-product-details.html")
-
-def pageOrder(request):
-	return render(request, "pages/page-order.html")
-
-def pageOrderDetails(request):
-	return render(request, "pages/page-order-details.html")
 
 
 def pageSearchResults(request):

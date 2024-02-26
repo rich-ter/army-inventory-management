@@ -37,7 +37,7 @@
 				<li class="breadcrumb-item"><a href="javascript:;">PAGES</a></li>
 				<li class="breadcrumb-item active">PRODUCT DETAILS</li>
 			</ol>
-			<h1 class="page-header mb-0">Δημιουργία Προιόντος</h1>
+			<h1 class="page-header mb-0">Product Details</h1>
 		</div>
 	</div>
 	
@@ -45,15 +45,11 @@
 		<div class="col-lg-8">
 			<div class="card mb-4">
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-					Πληροφορίες Προιόντος
+					Product Information
 				</div>
 				<div class="card-body">
 					<div class="mb-3">
-						<label class="form-label">Τίτλος <span class="text-danger">*</span></label>
-						<input type="text" class="form-control" name="title" placeholder="Product name">
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Σειριακός Αριθμός <span class="text-danger">*</span></label>
+						<label class="form-label">Title <span class="text-danger">*</span></label>
 						<input type="text" class="form-control" name="title" placeholder="Product name">
 					</div>
 					<div class="">
@@ -129,6 +125,108 @@
 			</div>
 			<div class="card mb-4">
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
+					Variants
+				</div>
+				<div class="card-body">
+					<div class="alert alert-success py-2">
+						Add variants if this product comes in multiple versions, like different sizes or colors.
+					</div>
+					<div class="row mb-3 fw-bold text-inverse">
+						<div class="col-4">Option name</div>
+						<div class="col-8">Option values</div>
+					</div>
+					<div class="row mb-3 gx-3">
+						<div class="col-4"><input type="text" class="form-control" name="variant[0][name]" placeholder="e.g Size" value="Size"></div>
+						<div class="col-7">
+							<ul id="tag-size" class="tagit form-control">
+								<li>XL</li>
+								<li>S</li>
+							</ul>
+						</div>
+						<div class="col-1">
+							<a href="#" class="btn btn-outline-secondary d-block"><i class="bi bi-x-lg"></i></a>
+						</div>
+					</div>
+					<div class="row mb-3 gx-3">
+						<div class="col-4"><input type="text" class="form-control" name="variant[1][name]" placeholder="e.g Color" value="Color"></div>
+						<div class="col-7">
+							<ul id="tag-color" class="tagit form-control">
+								<li>Black</li>
+							</ul>
+						</div>
+						<div class="col-1">
+							<a href="#" class="btn btn-outline-secondary d-block"><i class="bi bi-x-lg"></i></a>
+						</div>
+					</div>
+					<div class="row mb-3 gx-3">
+						<div class="col-4"><input type="text" class="form-control" name="variant[1][name]" placeholder="e.g Color" value="Material"></div>
+						<div class="col-7">
+							<ul id="tag-material" class="tagit form-control">
+							</ul>
+						</div>
+						<div class="col-1">
+							<a href="#" class="btn btn-outline-secondary d-block"><i class="bi bi-x-lg"></i></a>
+						</div>
+					</div>
+					<p>Modify the variants to be created:</p>
+					<table class="table fw-bold">
+						<thead>
+							<tr>
+								<th class="w-10px"></th>
+								<th>Variant</th>
+								<th class="w-150px">SKU</th>
+								<th class="w-150px">Price</th>
+								<th class="w-50px">Quantity</th>
+								<th class="w-150px"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="align-middle">
+									<div class="form-check">
+										<input type="checkbox" name="variant[0][enabled]" id="variant_0_enabled" value="1" checked class="form-check-input">
+										<label class="form-check-label">&nbsp;</label>
+									</div>
+								</td>
+								<td class="fs-13px align-middle">
+									<span class="text-theme">XL</span>
+									<span class="text-muted mx-1"> • </span>
+									<span class="text-indigo">Black</span>
+								</td>
+								<td><input type="text" class="form-control" value="" placeholder="#SKU000001"></td>
+								<td><input type="text" class="form-control" value="" placeholder="0.00"></td>
+								<td><input type="text" class="form-control" value="" placeholder="0"></td>
+								<td><a href="#" class="btn btn-outline-theme d-block">Upload Image</a></td>
+							</tr>
+							<tr>
+								<td class="align-middle">
+									<div class="form-check">
+										<input type="checkbox" name="variant[1][enabled]" id="variant_1_enabled" value="1" class="form-check-input">
+										<label class="form-check-label">&nbsp;</label>
+									</div>
+								</td>
+								<td class="fs-13px align-middle">
+									<span class="text-theme">S</span>
+									<span class="text-muted mx-1"> • </span>
+									<span class="text-indigo">Black</span>
+								</td>
+								<td><input type="text" class="form-control" value="" placeholder="#SKU000001"></td>
+								<td><input type="text" class="form-control" value="" placeholder="0.00"></td>
+								<td><input type="text" class="form-control" value="" placeholder="0"></td>
+								<td><a href="#" class="btn btn-outline-theme d-block">Upload Image</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="card-arrow">
+					<div class="card-arrow-top-left"></div>
+					<div class="card-arrow-top-right"></div>
+					<div class="card-arrow-bottom-left"></div>
+					<div class="card-arrow-bottom-right"></div>
+				</div>
+			</div>
+			<div class="card mb-4">
+				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
 					Warranty
 				</div>
 				<div class="card-body">
@@ -175,7 +273,133 @@
 					<div class="card-arrow-bottom-right"></div>
 				</div>
 			</div>
-
+			<div class="card mb-4">
+				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
+					Package Content
+				</div>
+				<div class="card-body">
+					<div class="mb-3">
+						<label class="form-label">What's in the box</label>
+						<input type="text" class="form-control" placeholder="e.g T-shirt" name="package_content">
+					</div>
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="mb-3">
+								<label class="form-label">Weight</label>
+								<input type="text" class="form-control" name="weight" placeholder="(kg)">
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label class="form-label">Parcel Size</label>
+								<div class="row">
+									<div class="col-4">
+										<div class="input-group">
+											<span class="input-group-text">W</span>
+											<input type="text" class="form-control" placeholder="(cm)" name="width">
+										</div>
+									</div>
+									<div class="col-4">
+										<div class="input-group">
+											<span class="input-group-text">L</span>
+											<input type="text" class="form-control" placeholder="(cm)" name="length">
+										</div>
+									</div>
+									<div class="col-4">
+										<div class="input-group">
+											<span class="input-group-text">H</span>
+											<input type="text" class="form-control" placeholder="(cm)" name="height">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="p-3 bg-inverse bg-opacity-10">
+						<div class="form-group mb-0">
+							<label class="form-label">Shipping</label>
+							<div class="shipping-container">
+								<hr class="mt-2 mb-2">
+								<div class="row align-items-center">
+									<div class="col-6 pt-1 pb-1">No shipping fee</div>
+									<div class="col-6 d-flex align-items-center">
+										<div class="form-check form-switch ms-auto">
+											<input type="checkbox" class="form-check-input" id="shippingFree" name="shipping_free_enable" checked value="1">
+											<label class="form-check-label" for="shippingFree">&nbsp;</label>
+										</div>
+									</div>
+								</div>
+								<hr class="mt-2 mb-2">
+								<div class="row align-items-center">
+									<div class="col-6 pt-1 pb-1">
+										AliExpress
+									</div>
+									<div class="col-6 d-flex align-items-center">
+										<div class="form-check form-switch ms-auto">
+											<input type="checkbox" class="form-check-input" id="shippingAliExpress" name="shipping_enable" value="AliExpress">
+											<label class="form-check-label" for="shippingAliExpress">&nbsp;</label>
+										</div>
+									</div>
+								</div>
+								<hr class="mt-2 mb-2">
+								<div class="row align-items-center">
+									<div class="col-6 pt-1 pb-1">
+										SaleHoo
+									</div>
+									<div class="col-6 d-flex align-items-center">
+										<div class="form-check form-switch ms-auto">
+											<input type="checkbox" class="form-check-input" id="shippingSaleHoo" name="shipping_enable" value="SaleHoo">
+											<label class="form-check-label" for="shippingSaleHoo">&nbsp;</label>
+										</div>
+									</div>
+								</div>
+								<hr class="mt-2 mb-2">
+								<div class="row align-items-center">
+									<div class="col-6 pt-1 pb-1">
+										Megagoods
+									</div>
+									<div class="col-6 d-flex align-items-center">
+										<div class="form-check form-switch ms-auto">
+											<input type="checkbox" class="form-check-input" id="shippingMegagoods" name="shipping_enable" value="Megagoods">
+											<label class="form-check-label" for="shippingMegagoods">&nbsp;</label>
+										</div>
+									</div>
+								</div>
+								<hr class="mt-2 mb-2">
+								<div class="row align-items-center">
+									<div class="col-6 pt-1 pb-1">
+										Wholesale2B
+									</div>
+									<div class="col-6 d-flex align-items-center">
+										<div class="form-check form-switch ms-auto">
+											<input type="checkbox" class="form-check-input" id="shippingWholesale2B" name="shipping_enable" value="Wholesale2B">
+											<label class="form-check-label" for="shippingWholesale2B">&nbsp;</label>
+										</div>
+									</div>
+								</div>
+								<hr class="mt-2 mb-2">
+								<div class="row align-items-center">
+									<div class="col-6 pt-1 pb-1">
+										Sunrise Wholesale
+									</div>
+									<div class="col-6 d-flex align-items-center">
+										<div class="form-check form-switch ms-auto">
+											<input type="checkbox" class="form-check-input" id="shippingSunriseWholesale" name="shipping_enable" value="Sunrise Wholesale">
+											<label class="form-check-label" for="shippingSunriseWholesale">&nbsp;</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-arrow">
+					<div class="card-arrow-top-left"></div>
+					<div class="card-arrow-top-right"></div>
+					<div class="card-arrow-bottom-left"></div>
+					<div class="card-arrow-bottom-right"></div>
+				</div>
+			</div>
 		</div>
 		<div class="col-lg-4">
 			<div class="card mb-4">
@@ -189,7 +413,7 @@
 					<div class="d-flex">
 						<div class="flex-1 d-flex">
 							<div class="me-2"><i class="fa fa-store fa-lg fa-fw text-inverse text-opacity-50"></i></div>
-							<div>Σειριακός Αριθμός</div>
+							<div>Online Store</div>
 							<span class="badge bg-inverse bg-opacity-10 text-theme fw-bold fs-12px ms-auto me-2">2022-01-05</span>
 						</div>
 						<div class="w-50px text-center"><a href="#" class="text-decoration-none"><i class="bi bi-calendar fa-lg"></i></a></div>
@@ -238,14 +462,14 @@
 				</div>
 				<div class="card-body">
 					<div class="mb-3">
-						<label class="form-label">Κατηγορία Προιόντος</label>
+						<label class="form-label">Product type</label>
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="Product type">
 							<button class="btn btn-outline-secondary"><i class="fa fa-search"></i></button>
 						</div>
 					</div>
 					<div class="mb-0">
-						<label class="form-label">Χρήση Προιόντος</label>
+						<label class="form-label">Vendor</label>
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="Apple store supplies">
 							<button class="btn btn-outline-secondary"><i class="fa fa-search"></i></button>
@@ -303,9 +527,6 @@
 			</div>
 		</div>
 	</div>
-
-	<button type="button" class="btn btn-outline-theme btn-lg">Δημιουργία Προιόντος</button>
-
 {% endblock %}
 
 {% block outter_content %}
