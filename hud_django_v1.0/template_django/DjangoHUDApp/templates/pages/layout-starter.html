@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Starter Page{% endblock %}
+
+{% block js %}
+	<script src="{% static 'plugins/@highlightjs/cdn-assets/highlight.min.js' %}"></script>
+	<script src="{% static 'js/demo/highlightjs.demo.js' %}"></script>
+	<script src="{% static 'js/demo/sidebar-scrollspy.demo.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+	<ul class="breadcrumb">
+		<li class="breadcrumb-item"><a href="#">LAYOUT</a></li>
+		<li class="breadcrumb-item active">STARTER PAGE</li>
+	</ul>
+	
+	<h1 class="page-header">
+		Starter Page <small>page header description goes here...</small>
+	</h1>
+	
+	<p>
+		Start build your page here
+	</p>
+{% endblock %}

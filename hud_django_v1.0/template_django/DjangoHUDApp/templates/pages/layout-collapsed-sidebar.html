@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Collapsed Sidebar{% endblock %}
+
+{% block js %}
+	<script src="{% static 'plugins/@highlightjs/cdn-assets/highlight.min.js' %}"></script>
+	<script src="{% static 'js/demo/highlightjs.demo.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+	<ul class="breadcrumb">
+		<li class="breadcrumb-item"><a href="#">LAYOUT</a></li>
+		<li class="breadcrumb-item active">COLLAPSED SIDEBAR</li>
+	</ul>
+	
+	<h1 class="page-header">
+		Collpased Sidebar <small>page header description goes here...</small>
+	</h1>
+	
+	<hr class="mb-4">
+	
+	<p>
+		Add the following code to the <code>DjangoHUDApp/views.py</code> for collapsed sidebar page setting.
+	</p>
+	
+	<div class="card">
+		<div class="hljs-container border-0">
+			<pre><code data-url="{% static 'data/layout-collapsed-sidebar/code-1.json' %}"></code></pre>
+		</div>
+		<div class="card-arrow">
+			<div class="card-arrow-top-left"></div>
+			<div class="card-arrow-top-right"></div>
+			<div class="card-arrow-bottom-left"></div>
+			<div class="card-arrow-bottom-right"></div>
+		</div>
+	</div>
+{% endblock %}
