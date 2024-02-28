@@ -14,10 +14,10 @@ class LoginForm(forms.Form):
 class ProductForm(forms.ModelForm):
 
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Onoma'}))
-    serial_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Seiriakos'}))
-    description = forms.CharField(widget=forms.TextInput(attrs={'class': 'summernote', 'rows': '12'}))
-    category = forms.ChoiceField(choices=Product.PRODUCT_CATEGORY, widget=forms.Select(attrs={'class': 'form-select'}))
-    usage = forms.ChoiceField(choices=Product.PRODUCT_USAGE, widget=forms.Select(attrs={'class': 'form-select'}))
+    serial_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Seiriakos'}), required=False)
+    description = forms.CharField(widget=forms.TextInput(attrs={'class': 'summernote', 'rows': '12'}), required=False)
+    category = forms.ChoiceField(choices=Product.PRODUCT_CATEGORY, widget=forms.Select(attrs={'class': 'form-select'}), required=False)
+    usage = forms.ChoiceField(choices=Product.PRODUCT_USAGE, widget=forms.Select(attrs={'class': 'form-select'}), required=False)
 
 
     class Meta:

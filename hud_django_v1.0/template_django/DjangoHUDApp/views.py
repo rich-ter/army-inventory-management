@@ -44,7 +44,7 @@ def add_product(request):
         form = ProductForm(request.POST, request.FILES)  # Including request.FILES for completeness
         if form.is_valid():
             form.save()
-            return redirect('product_list')  # Redirect as appropriate
+            return redirect('DjangoHUDApp:pageProduct')  # Redirect as appropriate
     else:
         form = ProductForm()
     context = {
