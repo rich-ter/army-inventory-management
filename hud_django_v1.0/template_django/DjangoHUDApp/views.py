@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
+from .forms import ProductForm
+from .models import Product
 
 # page for LOGIN 
 def pageLogin(request):
@@ -37,7 +39,20 @@ def pageLogin(request):
     return render(request, "pages/page-login.html", context)
 
 
-
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)  # Including request.FILES for completeness
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')  # Redirect as appropriate
+    else:
+        form = ProductForm()
+    context = {
+        'form': form,
+        'product_category_choices': Product.PRODUCT_CATEGORY,
+        'product_usage_choices': Product.PRODUCT_USAGE,
+    }
+    return render(request, 'pages/add_product.html', context) 
 
 
 def index(request):

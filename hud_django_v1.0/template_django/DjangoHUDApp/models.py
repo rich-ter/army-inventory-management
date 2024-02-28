@@ -33,11 +33,12 @@ class Product(models.Model):
         ("ΛΟΙΠΑ ΥΛΙΚΑ", "ΛΟΙΠΑ ΥΛΙΚΑ"),
         ("ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "ΚΑΜΙΑ ΕΠΙΛΟΓΗ"),       
     )
+
     
     name = models.CharField(max_length=100, null = False)
     #maybe i will need to change the location below 
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
-    serial_number = models.CharField(max_length=100, null = False)
+    serial_number = models.CharField(max_length=100, null = True)
     category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     usage = models.CharField(max_length=50, choices=PRODUCT_USAGE, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     description = models.CharField(max_length=200, null=True)

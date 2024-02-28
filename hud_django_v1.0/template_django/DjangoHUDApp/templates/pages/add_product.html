@@ -37,7 +37,7 @@
 				<li class="breadcrumb-item"><a href="javascript:;">PAGES</a></li>
 				<li class="breadcrumb-item active">PRODUCT DETAILS</li>
 			</ol>
-			<h1 class="page-header mb-0">Επεξεργασία Προιόντος</h1>
+			<h1 class="page-header mb-0">Προσθήκη Προιόντος</h1>
 		</div>
 	</div>
 	
@@ -47,189 +47,35 @@
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
 					Πληροφορίες Προιόντος
 				</div>
+
+
+			<form method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+
 				<div class="card-body">
 					<div class="mb-3">
 						<label class="form-label">Τίτλος <span class="text-danger">*</span></label>
-						<input type="text" class="form-control" name="title" placeholder="Product name">
+						{{ form.name }} 
+
 					</div>
 					<div class="mb-3">
 						<label class="form-label">Σειριακός Αριθμός <span class="text-danger">*</span></label>
-						<input type="text" class="form-control" name="title" placeholder="Product name">
+						{{ form.serial_number }} <!-- Render the 'serial_number' field -->
 					</div>
 					<div class="">
 						<label class="form-label">Περιγραφή <span class="text-danger">*</span></label>
-						<textarea class="summernote" rows="12"></textarea>
+						{{ form.description }} <!-- Render the 'description' field -->
 					</div>
 				</div>
-				<div class="card-arrow">
+				{% comment %} <div class="card-arrow">
 					<div class="card-arrow-top-left"></div>
 					<div class="card-arrow-top-right"></div>
 					<div class="card-arrow-bottom-left"></div>
 					<div class="card-arrow-bottom-right"></div>
-				</div>
+				</div> {% endcomment %}
 			</div>
-			{% comment %} <div class="card mb-4">
-				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-					Media
-				</div>
-				<form id="fileupload" action="//jquery-file-upload.appspot.com/" name="file_upload_form" method="POST" enctype="multipart/form-data">
-					<div class="card-body pb-2">
-						<div class="fileupload-buttonbar mb-2">
-							<div class="d-block d-lg-flex align-items-center">
-								<span class="btn btn-outline-theme fileinput-button me-2 mb-1">
-									<i class="fa fa-fw fa-plus"></i>
-									<span>Add files...</span>
-									<input type="file" name="files[]" multiple>
-								</span>
-								<button type="submit" class="btn btn-outline-default me-2 mb-1 start">
-									<i class="fa fa-fw fa-upload"></i>
-									<span>Start upload</span>
-								</button>
-								<button type="reset" class="btn btn-outline-default me-2 mb-1 cancel">
-									<i class="fa fa-fw fa-ban"></i>
-									<span>Cancel upload</span>
-								</button>
-								<button type="button" class="btn btn-outline-default me-2 mb-1 delete">
-									<i class="fa fa-fw fa-trash"></i>
-									<span>Delete</span>
-								</button>
-								<div class="form-check ms-2 mb-1">
-									<input type="checkbox" id="toggle-delete" class="form-check-input toggle">
-									<label for="toggle-delete" class="form-check-label">Select Files</label>
-								</div>
-							</div>
-						</div>
-						<div id="error-msg"></div>
-					</div>
-					<table class="table table-card mb-0 fs-13px">
-						<thead>
-							<tr class="fs-12px">
-								<th class="pt-2 pb-2 w-25">PREVIEW</th>
-								<th class="pt-2 pb-2 w-25">FILENAME</th>
-								<th class="pt-2 pb-2 w-25">SIZE</th>
-								<th class="pt-2 pb-2 w-25">ACTION</th>
-							</tr>
-						</thead>
-						<tbody class="files">
-							<tr class="empty-row">
-								<td colspan="4" class="text-center p-3">
-									<div class="text-inverse text-opacity-30 mb-2"><i class="fa fa-file-archive fa-3x"></i></div> 
-									No file uploaded
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</form>
-				<div class="card-arrow">
-					<div class="card-arrow-top-left"></div>
-					<div class="card-arrow-top-right"></div>
-					<div class="card-arrow-bottom-left"></div>
-					<div class="card-arrow-bottom-right"></div>
-				</div>
-			</div> {% endcomment %}
-			{% comment %} <div class="card mb-4">
-				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-					Warranty
-				</div>
-				<div class="card-body">
-					<div class="row">
-						<div class="col-lg-6">
-							<div class="mb-lg-0 mb-3">
-								<label class="form-label">Warranty Type</label>
-								<select class="form-select" name="warranty_type_id">
-									<option value="">-- Select Warranty Type --</option>
-									<option value="1">No Warranty</option>
-									<option value="2">Local Supplier Warranty</option>
-									<option value="3">Local Manufacturer Warranty</option>
-									<option value="4">International Manufacturer Warranty</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<div class="mb-lg-0 mb-3">
-								<label class="form-label">Warranty Period</label>
-								<select class="form-select" name="warranty_id">
-									<option value="">-- Select Warranty Period --</option>
-									<option value="1">1 Month</option>
-									<option value="2">3 Months</option>
-									<option value="3">6 Months</option>
-									<option value="4">1 Year</option>
-									<option value="5">2 Years</option>
-									<option value="6">3 Years</option>
-									<option value="7">4 Years</option>
-									<option value="8">5 Years</option>
-									<option value="9">6 Years</option>
-									<option value="10">7 Years</option>
-									<option value="11">8 Years</option>
-									<option value="12">9 Years</option>
-									<option value="13">10 Years</option>
-								</select>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="card-arrow">
-					<div class="card-arrow-top-left"></div>
-					<div class="card-arrow-top-right"></div>
-					<div class="card-arrow-bottom-left"></div>
-					<div class="card-arrow-bottom-right"></div>
-				</div>
-			</div> {% endcomment %}
 		</div>
 		<div class="col-lg-4">
-			
-			{% comment %} <div class="card mb-4">
-				<div class="card-header d-flex align-items-center fw-400 bg-inverse bg-opacity-10">
-					<div class="flex-1">
-						<div>Sales channels (2/3)</div>
-					</div>
-					<div><a href="#" class="text-decoration-none">Manage</a></div>
-				</div>
-				<div class="card-body">
-					<div class="d-flex">
-						<div class="flex-1 d-flex">
-							<div class="me-2"><i class="fa fa-store fa-lg fa-fw text-inverse text-opacity-50"></i></div>
-							<div>Σειριακός Αριθμός</div>
-							<span class="badge bg-inverse bg-opacity-10 text-theme fw-bold fs-12px ms-auto me-2">2022-01-05</span>
-						</div>
-						<div class="w-50px text-center"><a href="#" class="text-decoration-none"><i class="bi bi-calendar fa-lg"></i></a></div>
-					</div>
-					<hr>
-					<div class="d-flex">
-						<div class="flex-1 d-flex">
-							<div class="me-2"><i class="fab fa-shopify fa-lg fa-fw text-inverse text-opacity-50"></i></div>
-							<div>Shopify</div>
-							<span class="badge bg-inverse bg-opacity-10 text-theme fw-bold fs-12px ms-auto me-2">2022-01-05</span>
-						</div>
-						<div class="w-50px text-center"><a href="#" class="text-decoration-none"><i class="bi bi-calendar fa-lg"></i></a></div>
-					</div>
-					<hr>
-					<div class="d-flex">
-						<div class="flex-1 d-flex">
-							<div class="me-2"><i class="fab fa-amazon fa-lg fa-fw text-inverse text-opacity-50"></i></div>
-							<div>
-								<div>Amazon</div>
-								<div class="d-flex mt-1 text-inverse text-opacity-50 small">
-									<div><i class="fa fa-circle text-warning fs-6px d-block mt-2"></i></div>
-									<div class="flex-1 ps-2">
-										<div class="mb-2">
-											Amazon is disconnected. Connect your Amazon Seller Central account to continue using this sales channel.
-										</div>
-										<a href="#">Learn more</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="w-50px text-center"><a href="#" class="text-decoration-none text-inverse text-opacity-50"><i class="bi bi-x-circle-fill fa-lg fa-fw"></i></a></div>
-					</div>
-				</div>
-				<div class="card-arrow">
-					<div class="card-arrow-top-left"></div>
-					<div class="card-arrow-top-right"></div>
-					<div class="card-arrow-bottom-left"></div>
-					<div class="card-arrow-bottom-right"></div>
-				</div>
-			</div> {% endcomment %}
 			<div class="card mb-4">
 				<div class="card-header d-flex align-items-center fw-400 bg-inverse bg-opacity-10">
 					<div class="flex-1">
@@ -254,10 +100,15 @@
 							<div class="mb-lg-0 mb-3">
 								<select class="form-select" name="warranty_type_id">
 									<option value="">-- Επιλογή Κατηγορίας --</option>
+
+									{% for value, display_name in product_category_choices %}
+                					<option value="{{ value }}">{{ display_name }}</option>
+            						{% endfor %}
+									{% comment %} <option value="">-- Επιλογή Κατηγορίας --</option>
 									<option value="1">No Warranty</option>
 									<option value="2">Local Supplier Warranty</option>
 									<option value="3">Local Manufacturer Warranty</option>
-									<option value="4">International Manufacturer Warranty</option>
+									<option value="4">International Manufacturer Warranty</option> {% endcomment %}
 								</select>
 							</div>
 					</div>
@@ -266,10 +117,9 @@
 							<div class="mb-lg-0 mb-3">
 								<select class="form-select" name="warranty_type_id">
 									<option value="">-- Επιλογή Χρήσης --</option>
-									<option value="1">No Warranty</option>
-									<option value="2">Local Supplier Warranty</option>
-									<option value="3">Local Manufacturer Warranty</option>
-									<option value="4">International Manufacturer Warranty</option>
+										{% for value, display_name in product_usage_choices %}
+											<option value="{{ value }}">{{ display_name }}</option>
+										{% endfor %}
 								</select>
 							</div>
 					</div>
@@ -306,10 +156,6 @@
 									<i class="fa fa-fw fa-trash"></i>
 									<span>Delete</span>
 								</button>
-								{% comment %} <div class="form-check ms-2 mb-1">
-									<input type="checkbox" id="toggle-delete" class="form-check-input toggle">
-									<label for="toggle-delete" class="form-check-label">Select Files</label>
-								</div> {% endcomment %}
 							</div>
 						</div>
 						<div id="error-msg"></div>
@@ -340,52 +186,10 @@
 					<div class="card-arrow-bottom-right"></div>
 				</div>
 			</div>
-			{% comment %} <div class="card mb-4">
-				<div class="card-header d-flex align-items-center fw-400 bg-inverse bg-opacity-10">
-					<div class="flex-1">
-						<div>Collections</div>
-					</div>
-				</div>
-				<div class="card-body">
-					<div class="d-flex align-items-center position-relative fw-bold mb-2">
-						<span class="position-absolute top-0 bottom-0 start-0 d-flex align-items-center px-10px"><i class="fa fa-search"></i></span>
-						<input type="text" class="form-control ps-30px" placeholder="Search for collections">
-					</div>
-					<p class="mb-0 small text-inverse text-opacity-50">
-						<i class="fa fa-question-circle fa-fw"></i> Add this product to a collection so it's easy to find in your store.
-					</p>
-				</div>
-				<div class="card-arrow">
-					<div class="card-arrow-top-left"></div>
-					<div class="card-arrow-top-right"></div>
-					<div class="card-arrow-bottom-left"></div>
-					<div class="card-arrow-bottom-right"></div>
-				</div>
-			</div> {% endcomment %}
-			{% comment %} <div class="card mb-4">
-				<div class="card-header d-flex align-items-center fw-400 bg-inverse bg-opacity-10">
-					<div class="flex-1">
-						<div>Tags</div>
-					</div>
-				</div>
-				<div class="card-body">
-					<ul id="tags" class="tagit form-control mb-3">
-						<li>Laptop</li>
-						<li>Apple</li>
-					</ul>
-					<div class="small"><a href="#">View all tags</a></div>
-				</div>
-				<div class="card-arrow">
-					<div class="card-arrow-top-left"></div>
-					<div class="card-arrow-top-right"></div>
-					<div class="card-arrow-bottom-left"></div>
-					<div class="card-arrow-bottom-right"></div>
-				</div>
-			</div> {% endcomment %}
 		</div>
 	</div>
-
 	<button type="button" class="btn btn-outline-theme btn-lg">Δημιουργία Προιόντος</button>
+</form>
 
 {% endblock %}
 
