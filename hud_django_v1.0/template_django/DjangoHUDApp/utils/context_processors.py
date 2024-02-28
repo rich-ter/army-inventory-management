@@ -38,7 +38,7 @@ def sidebar_menu(request):
 		'text': 'Λίστα Προιόντων',
 		'name': 'pageProduct'
 	},{
-		'url': '/dashboard',
+		'url': '/add-product',
 		'icon': 'fas fa-plus',
 		'text': 'Προσθήκη Προιόντος',
 		'name': 'dashboard'

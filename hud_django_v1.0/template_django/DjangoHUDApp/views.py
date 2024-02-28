@@ -9,8 +9,9 @@ from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
 from .forms import ProductForm
 from .models import Product
+from django.core.paginator import Paginator
 
-# page for LOGIN 
+# Function for loging a user 
 def pageLogin(request):
     if request.method == 'GET':
         form = LoginForm()
@@ -38,7 +39,7 @@ def pageLogin(request):
     }
     return render(request, "pages/page-login.html", context)
 
-
+# Function for creating a product 
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)  # Including request.FILES for completeness
@@ -55,14 +56,26 @@ def add_product(request):
     return render(request, 'pages/add_product.html', context) 
 
 
+def pageProduct(request):
+    products_list = Product.objects.all()  # Query all products
+    paginator = Paginator(products_list, 10)  # Show 10 products per page
+
+    page_number = request.GET.get('page')
+    products = paginator.get_page(page_number)
+
+    context = {'products': products}
+    return render(request, "pages/page-product.html", context)
+
+# Function for individual product details
+
+def product_details(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    return render(request, 'pages/page-product-details.html', {'product': product})
+
+
 def index(request):
 	return render(request, "pages/index.html")
 
-def pageProduct(request):
-	return render(request, "pages/page-product.html")
-
-def pageProductDetails(request):
-	return render(request, "pages/page-product-details.html")
 
 def pageOrder(request):
 	return render(request, "pages/page-order.html")

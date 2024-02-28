@@ -14,8 +14,8 @@ urlpatterns = [
 
     #product pages
     path('product', views.pageProduct, name='pageProduct'),
-    path('product-details', views.pageProductDetails, name='pageProductDetails'),
     path('add-product', views.add_product, name='add_product'),
+    path('product-details/<int:product_id>/', views.product_details, name='pageProductDetails'),
 
     #order pages
 

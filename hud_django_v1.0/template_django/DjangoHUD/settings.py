@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-		'DjangoHUDApp.apps.DjangohudappConfig',
+	'DjangoHUDApp.apps.DjangohudappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
