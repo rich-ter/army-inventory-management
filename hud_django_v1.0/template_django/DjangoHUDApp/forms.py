@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product
+from .models import Product, Shipment
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -23,3 +23,9 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'serial_number', 'category', 'usage', 'description']
+
+class ShipmentForm(forms.ModelForm):
+
+    class Meta:
+        model = Shipment
+        fields = ['shipment_type']

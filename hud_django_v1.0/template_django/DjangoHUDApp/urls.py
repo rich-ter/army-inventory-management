@@ -18,7 +18,10 @@ urlpatterns = [
     path('product-details/<int:product_id>/', views.product_details, name='pageProductDetails'),
 
     #order pages
+    path('add-shipment', views.add_shipment, name='add_shipment'),
 
+    #warehouse pages
+    path('warehouse', views.pageWarehouse, name='pageWarehouse'),
 
 
     # not in use

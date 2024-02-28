@@ -11,7 +11,7 @@
 				<li class="breadcrumb-item"><a href="#">PAGES</a></li>
 				<li class="breadcrumb-item active">PRODUCTS</li>
 			</ul>
-			<h1 class="page-header mb-0">Products</h1>
+			<h1 class="page-header mb-0">ΑΠΟΘΗΚΕΣ</h1>
 		</div>
 		
 		<div class="ms-auto">
@@ -70,40 +70,39 @@
 						<thead>
 							<tr>
 								<th class="pt-0 pb-2"></th>
-								<th class="pt-0 pb-2">Προιόν</th>
+								<th class="pt-0 pb-2">Αποθήκη</th>
 								<th class="pt-0 pb-2">Απόθεμα</th>
-								<th class="pt-0 pb-2">Κατηγορία</th>
-								<th class="pt-0 pb-2">Χρήση</th>
+								<th class="pt-0 pb-2">Τελευταία Εισαγωγή</th>
+								<th class="pt-0 pb-2">Περιγραφή</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for product in products %}
+							{% for warehouse in warehouses %}
 
    <tr>
         <td class="w-10px align-middle">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="product{{ forloop.counter }}">
-                <label class="form-check-label" for="product{{ forloop.counter }}"></label>
-            </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="warehouse{{ forloop.counter }}">
+            <label class="form-check-label" for="warehouse{{ forloop.counter }}"></label>
+        </div>
         </td>
-        <td>
-            <div class="d-flex align-items-center">
-                <div class="w-50px h-50px bg-inverse bg-opacity-25 d-flex align-items-center justify-content-center">
-                    <!-- Display product image if exists -->
-				<img alt="{{ product.name }}" class="mw-100 mh-100" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/default-image.jpg' %}{% endif %}">
-                </div>
-                <div class="ms-3">
-                    <a href="{% url 'DjangoHUDApp:pageProductDetails' product.id %}" class="text-inverse text-opacity-75 text-decoration-none">{{ product.name }}</a>
-                </div>
+    <td>
+        <div class="d-flex align-items-center">
+            <!-- If you had an image or icon for each warehouse, it would go here. Otherwise, remove this div. -->
+            <div class="ms-3">
+                <!-- Adjust the URL name as per your urls.py for the warehouse details page -->
+                <a href="" class="text-inverse text-opacity-75 text-decoration-none">{{ warehouse.name }}</a>
             </div>
-        </td>
-        <td class="align-middle">{{ product.stock }}</td> <!-- Assuming you have a stock field -->
-        <td class="align-middle">{{ product.category }}</td>
-        <td class="align-middle">{{ product.usage }}</td>
+        </div>
+    </td>
+        <td class="align-middle">{{ warehouse.name }}</td> <!-- Assuming you have a stock field -->
+		        <td class="align-middle">{{ warehouse.description }}</td>
+
+        <td class="align-middle">{{ warehouse.description }}</td>
     </tr>
     {% empty %}
     <tr>
-        <td colspan="5" class="text-center">No products found.</td>
+        <td colspan="5" class="text-center">No warehouses found.</td>
     </tr>
 							{% endfor %}
 

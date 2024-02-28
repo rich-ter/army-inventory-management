@@ -19,7 +19,7 @@ def sidebar_menu(request):
 	},{
 		'url': '/dashboard',
 		'icon': 'bi bi-cpu',
-		'text': 'Dashboard',
+		'text': 'Διαχείρηση',
 		'name': 'dashboard'
 	}, {
 		'is_divider': 1
@@ -68,7 +68,7 @@ def sidebar_menu(request):
 		'text': 'Ενέργειες Αποθηκών',
 		'is_header': 1
 	}, {
-		'url': '/dashboard',
+		'url': '/warehouse',
 		'icon': 'fas fa-cubes',
 		'text': 'Λίστα Αποθηκών',
 		'name': 'dashboard'

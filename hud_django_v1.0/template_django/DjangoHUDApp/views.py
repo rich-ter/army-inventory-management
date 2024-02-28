@@ -7,8 +7,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
-from .forms import ProductForm
-from .models import Product
+from .forms import ProductForm, ShipmentForm
+from .models import Product, Shipment, Warehouse
 from django.core.paginator import Paginator
 
 # Function for loging a user 
@@ -71,6 +71,32 @@ def pageProduct(request):
 def product_details(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     return render(request, 'pages/page-product-details.html', {'product': product})
+
+
+
+
+# Function for creating a product 
+def add_shipment(request):
+    if request.method == 'POST':
+        form = ShipmentForm(request.POST)  # Including request.FILES for completeness
+        if form.is_valid():
+            form.save()
+            return redirect('DjangoHUDApp:pageOrder')  # Redirect as appropriate
+    else:
+        form = ProductForm()
+    context = {
+        'form': form,
+        # 'product_category_choices': Product.PRODUCT_CATEGORY,
+        # 'product_usage_choices': Product.PRODUCT_USAGE,
+    }
+    return render(request, 'pages/add_order.html', context) 
+
+
+
+def pageWarehouse(request):
+    warehouses_list = Warehouse.objects.all()
+    context = {'warehouses': warehouses_list}
+    return render(request, "pages/page-warehouse.html", context)
 
 
 def index(request):
