@@ -88,6 +88,21 @@ def add_shipment(request):
     }
     return render(request, 'pages/add_order.html', context) 
 
+# Function for creating a product 
+def add_shipment_two(request):
+    if request.method == 'POST':
+        form = ShipmentForm(request.POST)  # Including request.FILES for completeness
+        if form.is_valid():
+            form.save()
+            return redirect('DjangoHUDApp:pageOrder')  # Redirect as appropriate
+    else:
+        form = ProductForm()
+    context = {
+        'form': form,
+        # 'product_category_choices': Product.PRODUCT_CATEGORY,
+        # 'product_usage_choices': Product.PRODUCT_USAGE,
+    }
+    return render(request, 'pages/add_order_two.html', context) 
 
 
 
