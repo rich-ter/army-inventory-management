@@ -9,7 +9,6 @@ urlpatterns = [
     path('', views.pageLogin, name='pageLogin'),
     path('dashboard', views.index, name='index'),
     path('404/', views.error404, name='error404'),
-    path('order', views.pageOrder, name='pageOrder'),
     path('order-details', views.pageOrderDetails, name='pageOrderDetails'),
 
     #product pages
@@ -19,10 +18,15 @@ urlpatterns = [
 
     #order pages
     path('add-shipment', views.add_shipment, name='add_shipment'),
+    path('order', views.pageOrder, name='pageOrder'),
 
     #warehouse pages
     path('warehouse', views.pageWarehouse, name='pageWarehouse'),
 
+    path('recipient', views.pageRecipient, name='pageRecipient'),
+
+
+    path('page/data-management', views.pageDataManagement, name='pageDataManagement'),
 
     # not in use
     path('analytics/', views.analytics, name='  '),

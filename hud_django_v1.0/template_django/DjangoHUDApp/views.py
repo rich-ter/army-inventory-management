@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login
 from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
 from .forms import ProductForm, ShipmentForm
-from .models import Product, Shipment, Warehouse
+from .models import Product, Shipment, Warehouse,Recipient
 from django.core.paginator import Paginator
 
 # Function for loging a user 
@@ -55,7 +55,7 @@ def add_product(request):
     }
     return render(request, 'pages/add_product.html', context) 
 
-
+# All products page
 def pageProduct(request):
     products_list = Product.objects.all()  # Query all products
     paginator = Paginator(products_list, 10)  # Show 10 products per page
@@ -71,9 +71,6 @@ def pageProduct(request):
 def product_details(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     return render(request, 'pages/page-product-details.html', {'product': product})
-
-
-
 
 # Function for creating a product 
 def add_shipment(request):
@@ -93,18 +90,36 @@ def add_shipment(request):
 
 
 
+
+# All orders page
+def pageOrder(request):
+    shipments_list = Shipment.objects.all()
+
+    for shipment in shipments_list:
+        shipment.products_count = shipment.shipment_items.count()
+
+    context = {'shipments': shipments_list}
+    return render(request, "pages/page-order.html", context)
+
+
+
+
 def pageWarehouse(request):
     warehouses_list = Warehouse.objects.all()
     context = {'warehouses': warehouses_list}
     return render(request, "pages/page-warehouse.html", context)
+
+def pageRecipient(request):
+    recipients_list = Recipient.objects.all()
+    context = {'recipients': recipients_list}
+    return render(request, "pages/page-recipient.html", context)
 
 
 def index(request):
 	return render(request, "pages/index.html")
 
 
-def pageOrder(request):
-	return render(request, "pages/page-order.html")
+
 
 def pageOrderDetails(request):
 	return render(request, "pages/page-order-details.html")

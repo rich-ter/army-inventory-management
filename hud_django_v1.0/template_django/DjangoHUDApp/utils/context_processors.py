@@ -42,23 +42,28 @@ def sidebar_menu(request):
 		'icon': 'fas fa-plus',
 		'text': 'Προσθήκη Προιόντος',
 		'name': 'dashboard'
+	},{
+		'url': '/page/data-management',
+		'icon': 'fas fa-barcode',
+		'text': 'Αποθέματα',
+		'name': 'pageDataManagement'
 	}, {
 		'is_divider': 1
 	}, {
-		'text': 'Ενέργιες Αποστολών',
+		'text': 'Ενέργιες Διακινίσεων',
 		'is_header': 1
 	}, {
 		'url': '/order',
 		'icon': 'bi bi-layout-sidebar',
-		'text': 'Λίστα αποστολών',
+		'text': 'Λίστα Διακινίσεων',
 		'name': ''
 	}, {
 		'url': '/dashboard',
 		'icon': 'far fa-envelope',
-		'text': 'Δημιουργία Αποστολής',
+		'text': 'Δημιουργία Διακίνισης',
 		'name': 'dashboard'
 	},{
-		'url': '/dashboard',
+		'url': '/recipient',
 		'icon': 'far fa-address-book',
 		'text': 'Παραλήπτες',
 		'name': 'dashboard'

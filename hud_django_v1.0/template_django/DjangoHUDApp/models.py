@@ -3,10 +3,18 @@ from django.contrib.auth.models import User, Group
 from django.utils import timezone
 from django.conf import settings
 from django.db.models import Sum
+from django.core.exceptions import ValidationError
+from django.db import models, transaction
+from django.contrib import admin
+
+
+
 
 class Recipient(models.Model):
     name = models.CharField(max_length=100)
-    location = models.CharField(max_length=150)
+    contact_person = models.CharField(max_length=150, null = True)
+    location = models.CharField(max_length=150, null = True)
+    notes = models.CharField(max_length=450, null = True)
 
     def __str__(self):
 	    return self.name
@@ -75,24 +83,48 @@ class Shipment(models.Model):
         ('IN', 'Incoming'),
         ('OUT', 'Outgoing'),
     ]
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shipments')
     shipment_type = models.CharField(max_length=3, choices=SHIPMENT_TYPE_CHOICES)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE, null=True, blank=True)
     notes = models.CharField(max_length=200, null=True)
 
     def __str__(self):
-        return f"{self.get_shipment_type_display()} - {self.product.name} ({self.quantity})"
+        return f"{self.get_shipment_type_display()} - {self.date} - {self.warehouse}"
 
-    def save(self, *args, **kwargs):
-        # Correctly handle stock adjustments based on shipment type
-        super().save(*args, **kwargs)  # Save the shipment information first
-        stock, created = Stock.objects.get_or_create(product=self.product, warehouse=self.warehouse)
-        if self.shipment_type == 'IN':
-            stock.quantity += self.quantity
-        elif self.shipment_type == 'OUT':
-            stock.quantity = max(0, stock.quantity - self.quantity)  # Prevent negative stock
-        stock.save()
+
+    # THIS NEEDS TO BE FIXED - IT CHECKS IF ENOUGH STOCK FOR A PRODUT BEFORE SENDING 
+    # def save(self, *args, **kwargs):
+    #     with transaction.atomic():
+    #         # First, validate all items can be fulfilled
+    #         for item in self.shipment_items.all():
+    #             stock = Stock.objects.get(product=item.product, warehouse=self.warehouse)
+    #             if self.shipment_type == 'OUT' and item.quantity > stock.quantity:
+    #                 raise ValidationError(f'Not enough stock for {item.product.name} to complete this shipment.')
+
+    #         super().save(*args, **kwargs)  # Save the Shipment instance
+            
+    #         # Then, adjust stock quantities
+    #         for item in self.shipment_items.all():
+    #             stock, _ = Stock.objects.select_for_update().get_or_create(
+    #                 product=item.product, 
+    #                 warehouse=self.warehouse
+    #             )
+                
+    #             if self.shipment_type == 'IN':
+    #                 stock.quantity += item.quantity
+    #             else:  # 'OUT'
+    #                 stock.quantity -= item.quantity  # Already validated above
+                
+    #             stock.save()
+
+
+class ShipmentItem(models.Model):
+    shipment = models.ForeignKey('Shipment', on_delete=models.CASCADE, related_name='shipment_items')
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.product.name} - Qty: {self.quantity} in {self.shipment}"

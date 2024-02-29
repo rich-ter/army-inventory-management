@@ -81,31 +81,16 @@
 								<th class="border-top-0 pt-0 pb-2"></th>
 								<th class="border-top-0 pt-0 pb-2">Αρ Παραγγελίας</th>
 								<th class="border-top-0 pt-0 pb-2">Ημερομηνία</th>
+								<th class="border-top-0 pt-0 pb-2">Αποθήκη</th>
 								<th class="border-top-0 pt-0 pb-2">Παραλήπτης</th>
-								<th class="border-top-0 pt-0 pb-2">Total</th>
 								<th class="border-top-0 pt-0 pb-2">Τύπος Αποστολής</th>
-								<th class="border-top-0 pt-0 pb-2">Fulfillment status</th>
-								<th class="border-top-0 pt-0 pb-2">Προιόντα</th>
 								<th class="border-top-0 pt-0 pb-2">Τρόπος Αποστολής</th>
+								<th class="border-top-0 pt-0 pb-2">Προιόντα</th>
+								<th class="border-top-0 pt-0 pb-2">Σχόλια</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td class="w-10px align-middle">
-									<div class="form-check">
-										<input type="checkbox" class="form-check-input" id="product1">
-										<label class="form-check-label" for="product1"></label>
-									</div>
-								</td>
-								<td class="align-middle"><a href="{% url 'DjangoHUDApp:pageOrderDetails' %}">#1950</a></td>
-								<td class="align-middle">Thu 26 Nov, 12:23pm</td>
-								<td class="align-middle">Amanda Lee</td>
-								<td>$398.00</td>
-								<td class="py-1 align-middle"><span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> In</span></td>
-								<td class="align-middle"><span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Fulfilled</span></td>
-								<td class="align-middle">3 items</td>
-								<td class="align-middle">Free shipping</td>
-							</tr>
+							{% for shipment in shipments %}
 							<tr>
 								<td class="w-10px align-middle">
 									<div class="form-check">
@@ -113,16 +98,24 @@
 										<label class="form-check-label" for="product2"></label>
 									</div>
 								</td>
-								<td class="align-middle"><a href="{% url 'DjangoHUDApp:pageOrderDetails' %}">#1949</a></td>
-								<td class="align-middle">Thu 26 Nov, 11:54am</td>
-								<td class="align-middle">Leonard Oii</td>
-								<td>$496.00</td>
-								<td class="py-1 align-middle"><span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Paid</span></td>
+								<td class="align-middle"><a href="{% url 'DjangoHUDApp:pageOrderDetails' %}">#{{shipment.id}}</a></td>
+								<td class="align-middle">{{shipment.date}}</td>
+								<td class="align-middle">{{shipment.warehouse}}</td>
+								<td>{{ shipment.recipient|default:"-" }}</td>
+								<td class="py-1 align-middle">
+								{% if shipment.shipment_type == 'IN' %}
+									<span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> IN</span>
+								{% elif shipment.shipment_type == 'OUT' %}
+									<span class="badge border border-warning text-warning px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> OUT</span>
+								{% endif %}
+									</td>
 								<td class="align-middle"><span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Fulfilled</span></td>
-								<td class="align-middle">1 item</td>
-								<td class="align-middle">Local pickup</td>
+								<td class="align-middle">{{ shipment.products_count }}</td>
+								<td class="align-middle">{{shipment.notes}}</td>
 							</tr>
-							<tr>
+							{% endfor %}
+
+							{% comment %} <tr>
 								<td class="w-10px align-middle">
 									<div class="form-check">
 										<input type="checkbox" class="form-check-input" id="product3">
@@ -249,7 +242,7 @@
 								<td class="align-middle"><span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Fulfilled</span></td>
 								<td class="align-middle">1 item</td>
 								<td class="align-middle">Express</td>
-							</tr>
+							</tr> {% endcomment %}
 						</tbody>
 					</table>
 				</div>
