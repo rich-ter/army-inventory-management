@@ -10,6 +10,8 @@ from django.http import HttpResponse  # Add this import
 from .forms import ProductForm, ShipmentForm
 from .models import Product, Shipment, Warehouse,Recipient
 from django.core.paginator import Paginator
+from django.core import serializers
+
 
 # Function for loging a user 
 def pageLogin(request):
@@ -88,7 +90,6 @@ def add_shipment(request):
     }
     return render(request, 'pages/add_order.html', context) 
 
-# Function for creating a product 
 def add_shipment_two(request):
     if request.method == 'POST':
         form = ShipmentForm(request.POST)  # Including request.FILES for completeness
@@ -97,13 +98,16 @@ def add_shipment_two(request):
             return redirect('DjangoHUDApp:pageOrder')  # Redirect as appropriate
     else:
         form = ProductForm()
+    
+    # Serialize all Product objects to JSON
+    products = Product.objects.all()
+    products_json = serializers.serialize('json', products)
+    
     context = {
         'form': form,
-        # 'product_category_choices': Product.PRODUCT_CATEGORY,
-        # 'product_usage_choices': Product.PRODUCT_USAGE,
+        'products_json': products_json,
     }
-    return render(request, 'pages/add_order_two.html', context) 
-
+    return render(request, 'pages/add_order_two.html', context)
 
 
 # All orders page
