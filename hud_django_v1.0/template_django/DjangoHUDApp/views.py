@@ -11,6 +11,9 @@ from .forms import ProductForm, ShipmentForm
 from .models import Product, Shipment, Warehouse,Recipient
 from django.core.paginator import Paginator
 from django.core import serializers
+from .serializers import ProductSerializer
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 # Function for loging a user 
@@ -74,6 +77,14 @@ def product_details(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     return render(request, 'pages/page-product-details.html', {'product': product})
 
+class ProductApiList(APIView):
+    def get(self, request):
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+
+
 # Function for creating a product 
 def add_shipment(request):
     if request.method == 'POST':
@@ -119,8 +130,6 @@ def pageOrder(request):
 
     context = {'shipments': shipments_list}
     return render(request, "pages/page-order.html", context)
-
-
 
 
 def pageWarehouse(request):

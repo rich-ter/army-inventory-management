@@ -14,6 +14,7 @@ urlpatterns = [
     path('product', views.pageProduct, name='pageProduct'),
     path('add-product', views.add_product, name='add_product'),
     path('product-details/<int:product_id>/', views.product_details, name='pageProductDetails'),
+    path('api/products/', views.ProductApiList.as_view(), name='api-products'),
 
     #order pages
     path('add-shipment', views.add_shipment, name='add_shipment'),
