@@ -14,6 +14,7 @@ from django.core import serializers
 from .serializers import ProductSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth.decorators import login_required
 
 
 # Function for loging a user 
@@ -84,22 +85,31 @@ class ProductApiList(APIView):
         return Response(serializer.data)
 
 
-
 # Function for creating a product 
+# Function for creating a shipment
+@login_required
 def add_shipment(request):
+    products = Product.objects.all()  # Query all products from the database
+    recipients = Recipient.objects.all()  # Query all recipients from the database
+    warehouses = Warehouse.objects.all()  # Query all warehouses from the database
+
     if request.method == 'POST':
-        form = ShipmentForm(request.POST)  # Including request.FILES for completeness
+        form = ShipmentForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('DjangoHUDApp:pageOrder')  # Redirect as appropriate
+            shipment = form.save(commit=False)
+            shipment.user_id = request.user.id  # Set the user_id to the ID of the logged-in user
+            shipment.save()
+            return redirect('DjangoHUDApp:pageOrder')  # Redirect to the desired page after successful submission
     else:
-        form = ProductForm()
+        form = ShipmentForm()
+
     context = {
         'form': form,
-        # 'product_category_choices': Product.PRODUCT_CATEGORY,
-        # 'product_usage_choices': Product.PRODUCT_USAGE,
+        'products': products,
+        'recipients': recipients,
+        'warehouses': warehouses,  # Add warehouses to the context
     }
-    return render(request, 'pages/add_order.html', context) 
+    return render(request, 'pages/add_order.html', context)
 
 def add_shipment_two(request):
     if request.method == 'POST':
@@ -109,17 +119,14 @@ def add_shipment_two(request):
             return redirect('DjangoHUDApp:pageOrder')  # Redirect as appropriate
     else:
         form = ProductForm()
-    
-    # Serialize all Product objects to JSON
-    products = Product.objects.all()
-    products_json = serializers.serialize('json', products)
-    
+        warehouses = Warehouse.objects.all()  # Fetch all warehouses
+
     context = {
         'form': form,
-        'products_json': products_json,
+        'warehouses': warehouses,  # Pass warehouses in the context
     }
+    
     return render(request, 'pages/add_order_two.html', context)
-
 
 # All orders page
 def pageOrder(request):

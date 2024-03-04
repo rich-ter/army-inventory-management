@@ -58,7 +58,7 @@ def sidebar_menu(request):
 		'text': 'Λίστα Διακινίσεων',
 		'name': ''
 	}, {
-		'url': '/dashboard',
+		'url': '/add-shipment',
 		'icon': 'far fa-envelope',
 		'text': 'Δημιουργία Διακίνισης',
 		'name': 'dashboard'

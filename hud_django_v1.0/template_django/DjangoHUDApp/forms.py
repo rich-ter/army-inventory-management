@@ -19,13 +19,24 @@ class ProductForm(forms.ModelForm):
     category = forms.ChoiceField(choices=Product.PRODUCT_CATEGORY, widget=forms.Select(attrs={'class': 'form-select'}), required=False)
     usage = forms.ChoiceField(choices=Product.PRODUCT_USAGE, widget=forms.Select(attrs={'class': 'form-select'}), required=False)
 
-
     class Meta:
         model = Product
         fields = ['name', 'serial_number', 'category', 'usage', 'description']
 
 class ShipmentForm(forms.ModelForm):
+    # Add fields for quantity and product
+    quantity = forms.IntegerField(label='Ποσότητα', required=True)
+    products = forms.ModelChoiceField(queryset=Product.objects.all(), label='Προϊόντα', required=True)
 
     class Meta:
         model = Shipment
-        fields = ['shipment_type']
+        fields = ['shipment_type', 'warehouse', 'recipient', 'notes', 'quantity', 'products']
+
+    def __init__(self, *args, **kwargs):
+        super(ShipmentForm, self).__init__(*args, **kwargs)
+        # Customize widget attributes if needed
+        self.fields['warehouse'].widget.attrs['class'] = 'form-select'
+        self.fields['recipient'].widget.attrs['class'] = 'form-control'
+        self.fields['notes'].widget.attrs['class'] = 'form-control'
+        self.fields['quantity'].widget.attrs['class'] = 'form-control'
+        self.fields['products'].widget.attrs['class'] = 'form-select'
