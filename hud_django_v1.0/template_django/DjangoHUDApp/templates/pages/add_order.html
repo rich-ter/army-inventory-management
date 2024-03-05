@@ -9,7 +9,65 @@
 {% endblock %}
 
 {% block js %}
+<script src="{% static 'plugins/jquery/dist/jquery.min.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    $('#add-more-items').click(function() {
+        var totalForms = $('#id_' + '{{ formset.prefix }}-TOTAL_FORMS');
+        var currentFormCount = parseInt(totalForms.val());
+        var formsetContainer = $("#shipment-items-container");
+        
+        // Clone the last form in the formset
+        var lastForm = $(".shipment-item-form:last").clone(true);
+
+        // Update the form number in the form's input names and IDs
+        lastForm.find(':input').each(function() {
+            var name = $(this).attr('name');
+            var id = $(this).attr('id');
+
+            // Increment form index in the name and id for the cloned form inputs and labels
+            name = name.replace(/-\d+-/, '-' + currentFormCount + '-');
+            id = id.replace(/-\d+-/, '-' + currentFormCount + '-');
+
+            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        });
+
+        // Update labels for new inputs
+        lastForm.find('label').each(function() {
+            var newFor = $(this).attr('for').replace(/-\d+-/, '-' + currentFormCount + '-');
+            $(this).attr('for', newFor);
+        });
+
+        // Increment the TOTAL_FORMS count
+        totalForms.val(currentFormCount + 1);
+
+        // Append the cloned form to the container
+        lastForm.appendTo(formsetContainer);
+    });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var shipmentTypeSelect = document.getElementById('shipment_type_id');
+    var recipientSelect = document.getElementById('recipient_id');
+
+    function toggleRecipientField() {
+        if (shipmentTypeSelect.value === 'OUT') {
+            recipientSelect.style.display = 'block';
+        } else {
+            recipientSelect.style.display = 'none';
+        }
+    }
+
+    // Event listener for changes to the shipment type field
+    shipmentTypeSelect.addEventListener('change', toggleRecipientField);
+
+    // Call the function to set the initial state
+    toggleRecipientField();
+});
+</script>
 {% endblock %} 
 
 {% block content %}
@@ -22,93 +80,57 @@
 			<h1 class="page-header mb-0">Καταχώρηση Διακίνισης</h1>
 		</div>
 	</div>
-	
 	<div class="row gx-4">
 		<div class="col-lg-8">
 			<div class="card mb-4">
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
 					Πληροφορίες Διακίνισης
 				</div>
-			<form method="post" enctype="multipart/form-data">
-				{% csrf_token %}
-				{{ form.non_field_errors }}
-
-				<div class="card-body">
-					<!-- Products Section -->
-            <!-- Products Section -->
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="form-label">Προϊόντα <span class="text-danger">*</span></label>
-                        <div id="product-fields">
-                            <!-- Initial product selection field -->
-                            <select name="products" class="form-select mb-2">
-                                <option value="">-- Επιλέξτε Προϊόν --</option>
-                                {% for product in products %}
-                                    <option value="{{ product.id }}">{{ product.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" id="add-product">Επιπλέον Προιόν</button>
-                    </div>
-                </div>
-					<!-- Warehouse Section -->
-					<div class="col-md-4">
-						<div class="mb-3">
-							<label class="form-label">Αποθήκη <span class="text-danger">*</span></label>
-							<select name="warehouse" class="form-select">
-								<option value="">-- Επιλέξτε Αποθήκη --</option>
-								{% for warehouse in warehouses %}
-									<option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
-								{% endfor %}
-							</select>
+				<form method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					{{ form.non_field_errors }}
+					<div class="card-body">
+						{{ form.as_p }}
+					<!-- Shipment Item Section -->
+					<div class="card mb-4">
+						<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
+							Shipment Items
 						</div>
-					</div>
-
-					<!-- Quantity Section -->
-					<div class="col-md-4">
-						<div class="mb-3">
-        <label class="form-label">Ποσότητα <span class="text-danger">*</span></label>
-        <input type="number" name="quantity" id="quantity" class="form-control" placeholder="Ποσότητα">
-		        <input type="hidden" name="product_name" id="product_name">
-
-						</div>
-					</div>
-				</div>
-
-					<div class="mb-3">
-						<label class="form-label">Τύπος Αποστολής <span class="text-danger">*</span></label>
-						<select name="shipment_type" class="form-select">
-							<option value="">-- Επιλέξτε Τύπο Αποστολής --</option>
-							{% for choice in form.fields.shipment_type.choices %}
-								<option value="{{ choice.0 }}">{{ choice.1 }}</option>
+						<div class="card-body" id="shipment-items-container">
+							{{ formset.management_form }}
+							{% for form in formset %}
+							    <div class="shipment-item-form">
+									<div class="row">
+										<!-- Product Field -->
+										<div class="col-md-4">
+											<div class="mb-3">
+												{{ form.product.label_tag }}
+												{{ form.product }}
+												{{ form.product.errors }}
+											</div>
+										</div>
+										<!-- Warehouse Field -->
+										<div class="col-md-4">
+											<div class="mb-3">
+												{{ form.warehouse.label_tag }}
+												{{ form.warehouse }}
+												{{ form.warehouse.errors }}
+											</div>
+										</div>
+										<!-- Quantity Field -->
+										<div class="col-md-4">
+											<div class="mb-3">
+												{{ form.quantity.label_tag }}
+												{{ form.quantity }}
+												{{ form.quantity.errors }}
+											</div>
+										</div>
+									</div>
+							</div>
 							{% endfor %}
-						</select>
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Παραλήπτης <span class="text-danger">*</span></label>
-						<select name="recipient" class="form-select">
-							<option value="">-- Επιλέξτε Παραλήπτη --</option>
-							{% for recipient in recipients %}
-								<option value="{{ recipient.id }}">{{ recipient.name }}</option>
-							{% endfor %}
-						</select>
-					</div>
-
-					<div class="mb-3">
-						<label class="form-label">Ημερομηνία <span class="text-danger">*</span></label>
-						<div class="input-group">
-	
-							<input type="text" class="form-control" id="datepicker" placeholder="dd/mm/yyyy">
-
 						</div>
-					</div>
+							<button type="button" id="add-more-items" class="btn btn-info">Add More Items</button>
 
-
-					<div class="">
-						{{ form.notes.errors }}
-						<label class="form-label">Σχόλια <span class="text-danger">*</span></label>
-						{{ form.notes }} <!-- Render the 'description' field -->
 					</div>
 				</div>
 				{% comment %} <div class="card-arrow">
@@ -119,7 +141,28 @@
 				</div> {% endcomment %}
 			</div>
 		</div>
-
+		<div class="col-lg-4">
+			<div class="card mb-4">
+				<div class="card-header d-flex align-items-center fw-400 bg-inverse bg-opacity-10">
+					<div class="flex-1">
+						<div>Στοιχεία Προιόντος</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="">
+						{{ form.notes.errors }}
+						<label class="form-label">Σχόλια <span class="text-danger">*</span></label>
+						{{ form.notes }} <!-- Render the 'description' field -->
+					</div>
+				</div>
+				<div class="card-arrow">
+					<div class="card-arrow-top-left"></div>
+					<div class="card-arrow-top-right"></div>
+					<div class="card-arrow-bottom-left"></div>
+					<div class="card-arrow-bottom-right"></div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<button type="submit" class="btn btn-outline-theme btn-lg">Καταχώρηση Διακίνησης</button>
 </form>
@@ -128,27 +171,12 @@
 
 {% block outter_content %}
 
-<script>
-    // Event listener for the "Add Product" button
-    document.getElementById('add-product').addEventListener('click', function() {
-        addProductField();
-    });
 
-    // Function to update hidden input fields with product name and quantity
-    function updateHiddenFields() {
-        var productName = document.querySelector('select[name="products[]"]').value;
-        var quantity = document.getElementById('quantity').value;
 
-        // Update hidden input fields with the selected product name and quantity
-        document.getElementById('product_name').value = productName;
-        document.getElementById('quantity').value = quantity;
-    }
+	{% verbatim %}
 
-    // Event listener for product selection and quantity input change
-    document.querySelector('select[name="products[]"]').addEventListener('change', updateHiddenFields);
-    document.getElementById('quantity').addEventListener('input', updateHiddenFields);
 
-</script>
+
 
 <!-- script -->
 <script>
@@ -157,59 +185,6 @@
   });
 </script>
 
-
-<script>
-	// Function to add product selection field
-	function addProductField() {
-		var productField = document.createElement('select');
-		productField.setAttribute('name', 'products[]');
-		productField.setAttribute('class', 'form-select mb-2');
-		productField.innerHTML = '<option value="">-- Επιλέξτε Προϊόν --</option>';
-		{% for product in products %}
-			productField.innerHTML += '<option value="{{ product.id }}">{{ product.name }}</option>';
-		{% endfor %}
-		document.getElementById('product-fields').appendChild(productField);
-	}
-
-	// Event listener for the "Add Product" button
-	document.getElementById('add-product').addEventListener('click', function() {
-		addProductField();
-	});
-
-</script>
-	{% verbatim %}
-		<!-- BEGIN template-upload -->
-		<script id="template-upload" type="text/x-tmpl">
-		{% for (var i=0, file; file=o.files[i]; i++) { %}
-			<tr class="template-upload">
-				<td>
-					<span class="preview d-flex justify-content-center flex-align-center" style="height: 80px"></span>
-				</td>
-				<td>
-					<p class="name mb-1">{%=file.name%}</p>
-					<strong class="error text-danger"></strong>
-				</td>
-				<td>
-					<p class="size mb-2">Processing...</p>
-					<div class="progress progress-sm mb-0 h-10px progress-striped active"><div class="progress-bar bg-theme" style="min-width: 2em; width:0%;"></div></div>
-				</td>
-				<td nowrap>
-					{% if (!i && !o.options.autoUpload) { %}
-						<button class="btn btn-outline-theme btn-sm d-block w-100 start" disabled>
-							<span>Start</span>
-						</button>
-					{% } %}
-					{% if (!i) { %}
-						<button class="btn btn-outline-default btn-sm d-block w-100 cancel mt-2">
-							<span>Cancel</span>
-						</button>
-					{% } %}
-				</td>
-			</tr>
-		{% } %}
-		</script>
-		<!-- END template-upload -->
-	
 		<!-- BEGIN template-download -->
 		<script id="template-download" type="text/x-tmpl">
 		{% for (var i=0, file; file=o.files[i]; i++) { %}

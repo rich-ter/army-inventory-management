@@ -87,13 +87,18 @@ class Shipment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shipments')
     shipment_type = models.CharField(max_length=3, choices=SHIPMENT_TYPE_CHOICES)
     date = models.DateTimeField(default=timezone.now)
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE, null=True, blank=True)
     notes = models.CharField(max_length=200, null=True)
 
     def __str__(self):
-        return f"{self.get_shipment_type_display()} - {self.date} - {self.warehouse}"
-
+        return f"{self.get_shipment_type_display()} - {self.date}"
+    
+    def save(self, *args, **kwargs):
+        if self.shipment_type == 'IN':
+            # Fetch the existing recipient named "ΤΔΒ 487"
+            tdb_487 = Recipient.objects.get(name='ΤΔΒ 487')
+            self.recipient = tdb_487
+        super().save(*args, **kwargs)
 
     # THIS NEEDS TO BE FIXED - IT CHECKS IF ENOUGH STOCK FOR A PRODUT BEFORE SENDING 
     # def save(self, *args, **kwargs):
@@ -124,6 +129,7 @@ class Shipment(models.Model):
 class ShipmentItem(models.Model):
     shipment = models.ForeignKey('Shipment', on_delete=models.CASCADE, related_name='shipment_items')
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField()
 
     def __str__(self):

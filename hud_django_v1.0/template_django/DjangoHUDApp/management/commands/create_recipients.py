@@ -66,6 +66,7 @@ class Command(BaseCommand):
             'ΚΕΠΙΚ 1 ΤΑΞΚΔ-ΑΛ',
             'ΚΕΠΙΚ 32 ΤΑΞΠΝ',
             'ΚΕΠΙΚ 71 Α/Μ ΤΑΞ',
+            'ΤΔΒ 487',
         ]
 
         for entry in entries:

@@ -98,7 +98,11 @@
 										<label class="form-check-label" for="product2"></label>
 									</div>
 								</td>
-								<td class="align-middle"><a href="{% url 'DjangoHUDApp:pageOrderDetails' %}">#{{shipment.id}}</a></td>
+								<td class="align-middle">
+									<a href="{% url 'DjangoHUDApp:pageOrderDetails' shipment.id %}">
+										#{{ shipment.id }}
+									</a>
+								</td>
 								<td class="align-middle">{{shipment.date}}</td>
 								<td class="align-middle">{{shipment.warehouse}}</td>
 								<td>{{ shipment.recipient|default:"-" }}</td>

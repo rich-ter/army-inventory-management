@@ -1,5 +1,6 @@
 from django import forms
-from .models import Product, Shipment
+from .models import Product, Shipment, ShipmentItem, Warehouse
+from django.forms import inlineformset_factory
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -23,20 +24,43 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ['name', 'serial_number', 'category', 'usage', 'description']
 
+# forms.py
 class ShipmentForm(forms.ModelForm):
-    # Add fields for quantity and product
-    quantity = forms.IntegerField(label='Ποσότητα', required=True)
-    products = forms.ModelChoiceField(queryset=Product.objects.all(), label='Προϊόντα', required=True)
-
     class Meta:
         model = Shipment
-        fields = ['shipment_type', 'warehouse', 'recipient', 'notes', 'quantity', 'products']
+        fields = ['shipment_type', 'recipient', 'date',  'notes']
+        widgets = {
+            'date': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
+            'shipment_type': forms.Select(attrs={'class': 'form-select', 'id': 'shipment_type_id'}),
+            'recipient': forms.Select(attrs={'class': 'form-select', 'id': 'recipient_id'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(ShipmentForm, self).__init__(*args, **kwargs)
-        # Customize widget attributes if needed
-        self.fields['warehouse'].widget.attrs['class'] = 'form-select'
-        self.fields['recipient'].widget.attrs['class'] = 'form-control'
-        self.fields['notes'].widget.attrs['class'] = 'form-control'
-        self.fields['quantity'].widget.attrs['class'] = 'form-control'
-        self.fields['products'].widget.attrs['class'] = 'form-select'
+        # Hide the recipient field by default
+        self.fields['recipient'].widget.attrs['style'] = 'display:none;'
+
+
+class ShipmentItemForm(forms.ModelForm):
+    class Meta:
+        model = ShipmentItem
+        fields = ['product', 'warehouse', 'quantity']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].widget.attrs.update({'class': 'form-select mb-2'})
+        self.fields['warehouse'].queryset = Warehouse.objects.all()
+        self.fields['warehouse'].widget.attrs.update({'class': 'form-select'})
+        self.fields['warehouse'].empty_label = "Select Warehouse"
+        self.fields['quantity'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ποσότητα'})
+        
+# Ensure to use ShipmentItemForm in the formset
+ShipmentItemFormSet = inlineformset_factory(
+    Shipment,
+    ShipmentItem,
+    form=ShipmentItemForm,  # Use the customized form
+    fields=('product', 'warehouse', 'quantity'),
+    extra=1,
+    can_delete=True
+)

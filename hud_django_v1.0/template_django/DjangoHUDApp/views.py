@@ -7,14 +7,15 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
-from .forms import ProductForm, ShipmentForm
-from .models import Product, Shipment, Warehouse,Recipient
+from .forms import ProductForm, ShipmentForm, ShipmentItemFormSet
+from .models import Product, Shipment, Warehouse, Recipient, ShipmentItem
 from django.core.paginator import Paginator
 from django.core import serializers
 from .serializers import ProductSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 
 
 # Function for loging a user 
@@ -86,30 +87,27 @@ class ProductApiList(APIView):
 
 
 # Function for creating a product 
-# Function for creating a shipment
-@login_required
+@login_required  # Ensure that only logged-in users can access this view
 def add_shipment(request):
-    products = Product.objects.all()  # Query all products from the database
-    recipients = Recipient.objects.all()  # Query all recipients from the database
-    warehouses = Warehouse.objects.all()  # Query all warehouses from the database
-
     if request.method == 'POST':
         form = ShipmentForm(request.POST)
+        # Ensure the prefix matches what you use in the template and is consistent
+        formset = ShipmentItemFormSet(request.POST, prefix='shipmentitem')
         if form.is_valid():
             shipment = form.save(commit=False)
-            shipment.user_id = request.user.id  # Set the user_id to the ID of the logged-in user
+            shipment.user = request.user
+            # Temporarily save shipment to associate it correctly with formset instances
             shipment.save()
-            return redirect('DjangoHUDApp:pageOrder')  # Redirect to the desired page after successful submission
+            formset = ShipmentItemFormSet(request.POST, instance=shipment, prefix='shipmentitem')
+            if formset.is_valid():
+                formset.save()
+                return redirect('DjangoHUDApp:pageOrder')  # Ensure this is the correct path
     else:
         form = ShipmentForm()
+        formset = ShipmentItemFormSet(prefix='shipmentitem')  # Provide prefix here as well
+    return render(request, 'pages/add_order.html', {'form': form, 'formset': formset})
 
-    context = {
-        'form': form,
-        'products': products,
-        'recipients': recipients,
-        'warehouses': warehouses,  # Add warehouses to the context
-    }
-    return render(request, 'pages/add_order.html', context)
+
 
 def add_shipment_two(request):
     if request.method == 'POST':
@@ -155,9 +153,23 @@ def index(request):
 
 
 
+# def product_details(request, product_id):
+#     product = get_object_or_404(Product, pk=product_id)
+#     return render(request, 'pages/page-product-details.html', {'product': product})
 
-def pageOrderDetails(request):
-	return render(request, "pages/page-order-details.html")
+
+
+
+def pageOrderDetails(request, shipment_id):
+    shipment = get_object_or_404(Shipment, pk=shipment_id)
+    shipment_items = ShipmentItem.objects.filter(shipment=shipment)
+    return render(request, "pages/page-order-details.html", {"shipment": shipment, "shipment_items": shipment_items})
+
+
+# def pageOrderDetails(request, shipment_id):  # Accept shipment_id as a parameter
+#     shipment = get_object_or_404(Shipment, pk=shipment_id)
+#     # shipment_items = ShipmentItem.objects.filter(shipment=shipment)
+#     return render(request, "pages/page-order-details.html", {'shipment': shipment})
 
 
 
