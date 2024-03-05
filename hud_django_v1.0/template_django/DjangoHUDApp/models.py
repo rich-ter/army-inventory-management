@@ -7,9 +7,6 @@ from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.contrib import admin
 
-
-
-
 class Recipient(models.Model):
     name = models.CharField(max_length=100)
     contact_person = models.CharField(max_length=150, null = True)
@@ -42,7 +39,6 @@ class Product(models.Model):
         ("ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "ΚΑΜΙΑ ΕΠΙΛΟΓΗ"),       
     )
 
-    
     name = models.CharField(max_length=100, null = False)
     #maybe i will need to change the location below 
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
@@ -66,17 +62,6 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-
-class Stock(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stocks')
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='stocks')
-    quantity = models.PositiveIntegerField(default=0)
-    
-    class Meta:
-        unique_together = ('product', 'warehouse')
-
-    def __str__(self):
-        return f"{self.product.name} in {self.warehouse.name} - Qty: {self.quantity}"
 
 class Shipment(models.Model):
     SHIPMENT_TYPE_CHOICES = [
@@ -134,3 +119,14 @@ class ShipmentItem(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - Qty: {self.quantity} in {self.shipment}"
+
+class Stock(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stocks')
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='stocks')
+    quantity = models.PositiveIntegerField(default=0)
+    
+    class Meta:
+        unique_together = ('product', 'warehouse')
+
+    def __str__(self):
+        return f"{self.product.name} in {self.warehouse.name} - Qty: {self.quantity}"

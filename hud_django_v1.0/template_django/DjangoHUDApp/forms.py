@@ -13,7 +13,6 @@ class LoginForm(forms.Form):
 
 
 class ProductForm(forms.ModelForm):
-
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Onoma'}))
     serial_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Seiriakos'}), required=False)
     description = forms.CharField(widget=forms.TextInput(attrs={'class': 'summernote', 'rows': '12'}), required=False)
