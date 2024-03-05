@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.http import HttpResponseNotFound
 
 
 # Function for loging a user 
@@ -255,3 +256,7 @@ def error404(request):
 
 def handler404(request, exception = None):
 	return redirect('/404/')
+
+def handler404(request, exception):
+    context = {} # Add any context variables if needed
+    return render(request, 'pages/page-error.html', context, status=404)

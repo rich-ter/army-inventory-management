@@ -46,3 +46,5 @@ urlpatterns = [
     path('settings/', views.settings, name='settings'),
     path('helper/', views.helper, name='helper')
 ]
+
+handler404 = 'DjangoHUDApp.views.handler404'
