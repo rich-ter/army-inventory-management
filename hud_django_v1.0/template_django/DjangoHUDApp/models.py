@@ -6,6 +6,9 @@ from django.db.models import Sum
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.contrib import admin
+from django.db.models import F
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 class Recipient(models.Model):
     name = models.CharField(max_length=100)
@@ -42,7 +45,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100, null = False)
     #maybe i will need to change the location below 
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
-    serial_number = models.CharField(max_length=100, null = True)
+    # serial_number = models.CharField(max_length=100, null = True)
     category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     usage = models.CharField(max_length=50, choices=PRODUCT_USAGE, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     description = models.CharField(max_length=200, null=True)
@@ -56,6 +59,29 @@ class Product(models.Model):
     def __str__(self):
 	    return f"{self.name} - {self.category}"
     
+
+class ProductInstance(models.Model):
+
+    #ONLY FO THE INCOMING SHIPMENTS  PER PRODUCT 
+    #WHEN WE SHIP A PRODUCT WHICH IS XREOMENO ON US IF WE SHIP IT STOPS BEING XREWMENO 
+
+    PRODUCT_FUNCTIONALITY = [
+        ('ΛΕΙΤΟΥΡΓΙΚΟ', 'ΛΕΙΤΟΥΡΓΙΚΟ'),
+        ('ΥΠΟ ΕΛΕΓΧΟ', 'ΥΠΟ ΕΛΕΓΧΟ'),
+        ('ΒΛΑΒΗ', 'ΒΛΑΒΗ'),
+    ]
+
+    PRODUCT_CHARGE = [
+        ('ΧΡΕΩΜΕΝΟ', 'ΧΡΕΩΜΕΝΟ'),
+        ('ΑΧΡΕΩΤΟ', 'ΑΧΡΕΩΤΟ'),
+    ]
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='instances')
+    serial_number = models.CharField(max_length=100, unique=True)
+    purchase_date = models.DateField(null=True, blank=True)
+    warranty_expiration = models.DateField(null=True, blank=True)
+    
+
 class Warehouse(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
@@ -63,10 +89,59 @@ class Warehouse(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+
+class ShipmentItem(models.Model):
+    shipment = models.ForeignKey('Shipment', on_delete=models.CASCADE, related_name='shipment_items')
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.product.name} - Qty: {self.quantity} in {self.shipment}"
+    
+@receiver(post_save, sender=ShipmentItem)
+def adjust_stock_on_save(sender, instance, created, **kwargs):
+    adjust_stock(instance, created=True)
+
+@receiver(post_delete, sender=ShipmentItem)
+def adjust_stock_on_delete(sender, instance, **kwargs):
+    adjust_stock(instance, created=False)
+
+def adjust_stock(instance, created):
+    with transaction.atomic():
+        stock, _ = Stock.objects.get_or_create(
+            product=instance.product,
+            warehouse=instance.warehouse,
+            defaults={'quantity': 0}
+        )
+
+        # Determine the adjustment direction based on the shipment type
+        if instance.shipment.shipment_type == 'IN':
+            adjustment = instance.quantity if created else -instance.quantity
+        elif instance.shipment.shipment_type == 'OUT':
+            adjustment = -instance.quantity if created else instance.quantity
+
+        # Apply the adjustment
+        stock.quantity += adjustment
+
+        # Prevent stock from going negative for 'OUT' shipments
+        if stock.quantity < 0:
+            raise ValidationError(f'Insufficient stock for {instance.product.name} in {instance.warehouse.name}. Cannot proceed with the operation.')
+
+        stock.save()
+
+
+
 class Shipment(models.Model):
     SHIPMENT_TYPE_CHOICES = [
         ('IN', 'Incoming'),
         ('OUT', 'Outgoing'),
+    ]
+
+    SHIPMENT_METHOD_CHOICES = [
+        ('ΥΕΣΑ', 'ΥΕΣΑ'),
+        ('ΚΡΥΠΤΟΔΙΑΥΛΟΣ', 'ΚΡΥΠΤΟΔΙΑΥΛΟΣ'),
+        ('ΠΑΡΑΛΑΒΗ ΑΠΟ ΕΞΟΥΣΙΟΔΟΤΗΜΕΝΟ ΠΡΟΣΩΠΙΚΟ', 'ΠΑΡΑΛΑΒΗ ΑΠΟ ΕΞΟΥΣΙΟΔΟΤΗΜΕΝΟ ΠΡΟΣΩΠΙΚΟ'),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shipments')
@@ -78,14 +153,29 @@ class Shipment(models.Model):
     def __str__(self):
         return f"{self.get_shipment_type_display()} - {self.date}"
     
-    def save(self, *args, **kwargs):
-        if self.shipment_type == 'IN':
-            # Fetch the existing recipient named "ΤΔΒ 487"
-            tdb_487 = Recipient.objects.get(name='ΤΔΒ 487')
-            self.recipient = tdb_487
-        super().save(*args, **kwargs)
 
-    # THIS NEEDS TO BE FIXED - IT CHECKS IF ENOUGH STOCK FOR A PRODUT BEFORE SENDING 
+    # def save(self, *args, **kwargs):
+    #     # Assign a default recipient for incoming shipments
+    #     if self.shipment_type == 'IN' and not self.recipient_id:
+    #         tdb_487, _ = Recipient.objects.get_or_create(name='ΤΔΒ 487')
+    #         self.recipient = tdb_487
+
+    #     # Call save first to ensure the Shipment instance has an ID
+    #     super().save(*args, **kwargs)  
+
+    #     # Adjust stock levels for shipment items within a transaction
+    #     with transaction.atomic():
+    #         for item in self.shipment_items.all():
+    #             stock_qs = Stock.objects.filter(product=item.product, warehouse=item.warehouse)
+    #             if self.shipment_type == 'IN':
+    #                 stock_qs.update(quantity=F('quantity') + item.quantity)
+    #             elif self.shipment_type == 'OUT':
+    #                 # Check if there is enough stock before proceeding
+    #                 if stock_qs.first().quantity < item.quantity:
+    #                     raise ValidationError(f'Insufficient stock for {item.product.name}.')
+    #                 stock_qs.update(quantity=F('quantity') - item.quantity)
+
+        # THIS NEEDS TO BE FIXED - IT CHECKS IF ENOUGH STOCK FOR A PRODUT BEFORE SENDING 
     # def save(self, *args, **kwargs):
     #     with transaction.atomic():
     #         # First, validate all items can be fulfilled
@@ -111,15 +201,9 @@ class Shipment(models.Model):
     #             stock.save()
 
 
-class ShipmentItem(models.Model):
-    shipment = models.ForeignKey('Shipment', on_delete=models.CASCADE, related_name='shipment_items')
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
-    quantity = models.PositiveIntegerField()
 
-    def __str__(self):
-        return f"{self.product.name} - Qty: {self.quantity} in {self.shipment}"
 
+    
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stocks')
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='stocks')

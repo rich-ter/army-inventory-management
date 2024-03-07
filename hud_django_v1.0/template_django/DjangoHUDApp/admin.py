@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Warehouse, Recipient, Shipment, ShipmentItem
+from .models import Product, Warehouse, Recipient, Shipment, ShipmentItem, Stock, ProductInstance
 from django.core.exceptions import ValidationError
 
 class ShipmentItemInline(admin.TabularInline):
@@ -15,3 +15,5 @@ admin.site.register(Warehouse)
 admin.site.register(Recipient)
 # Make sure to register Shipment with ShipmentAdmin only once
 admin.site.register(Shipment, ShipmentAdmin)
+admin.site.register(Stock)
+admin.site.register(ProductInstance)

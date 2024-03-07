@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login
 from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
 from .forms import ProductForm, ShipmentForm, ShipmentItemFormSet
-from .models import Product, Shipment, Warehouse, Recipient, ShipmentItem
+from .models import Product, Shipment, Warehouse, Recipient, ShipmentItem, Stock
 from django.core.paginator import Paginator
 from django.core import serializers
 from .serializers import ProductSerializer
@@ -17,6 +17,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseNotFound
+from django.db.models import Sum
 
 
 # Function for loging a user 
@@ -139,7 +140,10 @@ def pageOrder(request):
 
 
 def pageWarehouse(request):
-    warehouses_list = Warehouse.objects.all()
+    # Annotate each warehouse with the total stock count
+    warehouses_list = Warehouse.objects.annotate(
+        total_stock=Sum('stocks__quantity')
+    )
     context = {'warehouses': warehouses_list}
     return render(request, "pages/page-warehouse.html", context)
 

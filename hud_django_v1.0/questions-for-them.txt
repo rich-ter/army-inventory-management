@@ -1,6 +1,3 @@
-can an order involve multiple products or always one?
-
-mia paragelia ena i polla proionta
 
 xrisi proiontos na exei tin epilogi na prosthetoume epipleon katigoria kai epilogi na min einai fixed
 
@@ -13,7 +10,6 @@ epiloges
 3. paralavi apo eksousiodotimeno prosopiko
 
 epilogi na prostethei kai alli epilogi 
-
 
 -----
 
@@ -51,3 +47,7 @@ sin geetha
 geetha/ gen / gea 
 
 
+
+----
+
+To have the option to search produdcts by their serial number

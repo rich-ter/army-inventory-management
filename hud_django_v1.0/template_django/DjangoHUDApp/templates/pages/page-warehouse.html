@@ -79,31 +79,31 @@
 						<tbody>
 							{% for warehouse in warehouses %}
 
-   <tr>
-        <td class="w-10px align-middle">
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="warehouse{{ forloop.counter }}">
-            <label class="form-check-label" for="warehouse{{ forloop.counter }}"></label>
-        </div>
-        </td>
-    <td>
-        <div class="d-flex align-items-center">
-            <!-- If you had an image or icon for each warehouse, it would go here. Otherwise, remove this div. -->
-            <div class="ms-3">
-                <!-- Adjust the URL name as per your urls.py for the warehouse details page -->
-                <a href="" class="text-inverse text-opacity-75 text-decoration-none">{{ warehouse.name }}</a>
-            </div>
-        </div>
-    </td>
-        <td class="align-middle">{{ warehouse.name }}</td> <!-- Assuming you have a stock field -->
-		        <td class="align-middle">{{ warehouse.description }}</td>
+						<tr>
+								<td class="w-10px align-middle">
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" id="warehouse{{ forloop.counter }}">
+									<label class="form-check-label" for="warehouse{{ forloop.counter }}"></label>
+								</div>
+								</td>
+							<td>
+								<div class="d-flex align-items-center">
+									<!-- If you had an image or icon for each warehouse, it would go here. Otherwise, remove this div. -->
+									<div class="ms-3">
+										<!-- Adjust the URL name as per your urls.py for the warehouse details page -->
+										<a href="" class="text-inverse text-opacity-75 text-decoration-none">{{ warehouse.name }}</a>
+									</div>
+								</div>
+							</td>
+    <td class="align-middle">{{ warehouse.total_stock }}</td> <!-- Updated to show total stock -->
+										<td class="align-middle">{{ warehouse.description }}</td>
 
-        <td class="align-middle">{{ warehouse.description }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="5" class="text-center">No warehouses found.</td>
-    </tr>
+								<td class="align-middle">{{ warehouse.description }}</td>
+							</tr>
+							{% empty %}
+							<tr>
+								<td colspan="5" class="text-center">No warehouses found.</td>
+							</tr>
 							{% endfor %}
 
 						</tbody>
