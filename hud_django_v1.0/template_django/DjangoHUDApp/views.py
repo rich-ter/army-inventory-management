@@ -87,7 +87,6 @@ class ProductApiList(APIView):
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
-
 # Function for creating a product 
 @login_required  # Ensure that only logged-in users can access this view
 def add_shipment(request):
@@ -108,8 +107,6 @@ def add_shipment(request):
         form = ShipmentForm()
         formset = ShipmentItemFormSet(prefix='shipmentitem')  # Provide prefix here as well
     return render(request, 'pages/add_order.html', {'form': form, 'formset': formset})
-
-
 
 def add_shipment_two(request):
     if request.method == 'POST':
@@ -146,6 +143,33 @@ def pageWarehouse(request):
     )
     context = {'warehouses': warehouses_list}
     return render(request, "pages/page-warehouse.html", context)
+
+def pageDataManagement(request):
+    stock_list = Stock.objects.all()
+    context = {
+        "appContentFullHeight": 1,
+        "appContentClass": 'py-3',
+        "stock_list": stock_list  # Add the stock list to the context
+    }
+    return render(request, "pages/page-data-management.html", context)
+
+def stockPerWarehouse(request, warehouse_id):
+    # Get the specific warehouse
+    warehouse = get_object_or_404(Warehouse, pk=warehouse_id)
+    
+    # Get the stock items that belong to this warehouse
+    # Assuming you have a reverse relationship from Warehouse to Stock set up in your models
+    # If not, adjust the following query to match your model relationships
+    stock_items = Stock.objects.filter(warehouse=warehouse).select_related('product')
+
+    # Include both the warehouse and the stock items in the context
+    context = {
+        'warehouse': warehouse,
+        'stock_items': stock_items
+    }
+    
+    return render(request, "pages/page-stock-per-warehouse.html", context)
+
 
 def pageRecipient(request):
     recipients_list = Recipient.objects.all()
@@ -226,12 +250,7 @@ def pageRegister(request):
 	}
 	return render(request, "pages/page-register.html", context)
 
-def pageDataManagement(request):
-	context = {
-		"appContentFullHeight": 1,
-		"appContentClass": 'py-3'
-	}
-	return render(request, "pages/page-data-management.html", context)
+
 
 def pageFileManager(request):
 	context = {

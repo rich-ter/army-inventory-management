@@ -9,6 +9,7 @@ urlpatterns = [
     path('', views.pageLogin, name='pageLogin'),
     path('dashboard', views.index, name='index'),
     path('404/', views.error404, name='error404'),
+    path('page/error', views.pageError, name='pageError'),
 
     #product pages
     path('product', views.pageProduct, name='pageProduct'),
@@ -24,11 +25,15 @@ urlpatterns = [
 
     #warehouse pages
     path('warehouse', views.pageWarehouse, name='pageWarehouse'),
+    path('stock-per-warehouse/<int:warehouse_id>/', views.stockPerWarehouse, name='pageStockPerWarehouse'),
 
+    #stock pages
+    path('page/data-management', views.pageDataManagement, name='pageDataManagement'),
+
+    #recipient pages
     path('recipient', views.pageRecipient, name='pageRecipient'),
 
 
-    path('page/data-management', views.pageDataManagement, name='pageDataManagement'),
 
     # not in use
     path('analytics/', views.analytics, name='  '),
@@ -38,7 +43,6 @@ urlpatterns = [
     path('map/', views.map, name='map'),
     path('page/search-results', views.pageSearchResults, name='pageSearchResults'),
     path('page/coming-soon', views.pageComingSoon, name='pageComingSoon'),
-    path('page/error', views.pageError, name='pageError'),
     path('page/register', views.pageRegister, name='pageRegister'),
     path('page/data-management', views.pageDataManagement, name='pageDataManagement'),
     path('page/file-manager', views.pageFileManager, name='pageFileManager'),

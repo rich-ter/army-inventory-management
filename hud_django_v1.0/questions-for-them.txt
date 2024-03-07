@@ -50,4 +50,5 @@ geetha/ gen / gea
 
 ----
 
-To have the option to search produdcts by their serial number
+To have the option to search produdcts by their serial number and add products based on their serial number in the warehouse.
+

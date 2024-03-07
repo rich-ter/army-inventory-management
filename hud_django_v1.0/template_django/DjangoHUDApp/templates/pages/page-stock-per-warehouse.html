@@ -76,38 +76,36 @@
 								<th class="pt-0 pb-2">Χρήση</th>
 							</tr>
 						</thead>
-						<tbody>
-							{% for product in products %}
-
-   <tr>
-        <td class="w-10px align-middle">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="product{{ forloop.counter }}">
-                <label class="form-check-label" for="product{{ forloop.counter }}"></label>
-            </div>
-        </td>
-        <td>
-            <div class="d-flex align-items-center">
-                <div class="w-50px h-50px bg-inverse bg-opacity-25 d-flex align-items-center justify-content-center">
-                    <!-- Display product image if exists -->
-				<img alt="{{ product.name }}" class="mw-100 mh-100" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/default-image.jpg' %}{% endif %}">
-                </div>
-                <div class="ms-3">
-                    <a href="{% url 'DjangoHUDApp:pageProductDetails' product.id %}" class="text-inverse text-opacity-75 text-decoration-none">{{ product.name }}</a>
-                </div>
-            </div>
-        </td>
-        <td class="align-middle">{{ product.stock }}</td> <!-- Assuming you have a stock field -->
-        <td class="align-middle">{{ product.category }}</td>
-        <td class="align-middle">{{ product.usage }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="5" class="text-center">No products found.</td>
-    </tr>
-							{% endfor %}
-
-						</tbody>
+					<tbody>
+						{% for stock_item in stock_items %}
+						<tr>
+							<td class="w-10px align-middle">
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" id="stockItem{{ forloop.counter }}">
+									<label class="form-check-label" for="stockItem{{ forloop.counter }}"></label>
+								</div>
+							</td>
+							<td>
+								<div class="d-flex align-items-center">
+									<div class="w-50px h-50px bg-inverse bg-opacity-25 d-flex align-items-center justify-content-center">
+										<!-- Display product image if exists -->
+										<img alt="{{ stock_item.product.name }}" class="mw-100 mh-100" src="{% if stock_item.product.image %}{{ stock_item.product.image.url }}{% else %}{% static 'img/default-image.jpg' %}{% endif %}">
+									</div>
+									<div class="ms-3">
+										<a href="{% url 'DjangoHUDApp:pageProductDetails' stock_item.product.id %}" class="text-inverse text-opacity-75 text-decoration-none">{{ stock_item.product.name }}</a>
+									</div>
+								</div>
+							</td>
+							<td class="align-middle">{{ stock_item.quantity }}</td>
+							<td class="align-middle">{{ stock_item.product.get_category_display }}</td>
+							<td class="align-middle">{{ stock_item.product.get_usage_display }}</td>
+						</tr>
+						{% empty %}
+						<tr>
+							<td colspan="5" class="text-center">No products found in this warehouse.</td>
+						</tr>
+						{% endfor %}
+					</tbody>
 					</table>
 				</div>
 				<!-- END table -->

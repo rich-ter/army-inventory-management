@@ -78,18 +78,18 @@ def sidebar_menu(request):
 		'text': 'Λίστα Αποθηκών',
 		'name': 'dashboard'
 	}, {
-		'url': '/dashboard',
-		'icon': 'bi bi-cpu',
+		'url': '/stock-per-warehouse/1',
+		'icon': 'fas fa-server',
 		'text': 'Αποθήκη ΚΕΠΙΚ',
 		'name': 'dashboard'
 	},{
-		'url': '/dashboard',
-		'icon': 'bi bi-cpu',
+		'url': '/stock-per-warehouse/2',
+		'icon': 'fas fa-building',
 		'text': 'Αποθήκη Τάγματος',
 		'name': 'dashboard'
 	}, {
-		'url': '/dashboard',
-		'icon': 'bi bi-cpu',
+		'url': '/stock-per-warehouse/3',
+		'icon': 'fas fa-signal',
 		'text': 'Αποθήκη Δορυφορικών',
 		'name': 'dashboard'
 	}, {
