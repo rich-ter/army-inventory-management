@@ -36,50 +36,40 @@
 			<thead>
 				<tr>
 					<th class="no-sort"></th>
-					<th>No.</th>
-					<th>Category</th>
-					<th>Item Name</th>
-					<th>Status</th>
-					<th>Stock</th>
-					<th>Απ. ΚΕΠΙΚ</th>
-					<th>Απ. ΤΑΓΜΑ</th>
-					<th>Απ. ΔΟΡΥΦΟΡΙΚΑ</th>
+					<th>Stock id</th>
+					<th>Κατηγορία</th>
+					<th>Προιόν</th>
+					<th>Χρήση</th>
 					<th>Συνολικό Απόθεμα</th>
+					<th>Απ. ΤΑΓΜΑ</th>
+					<th>Απ. ΚΕΠΙΚ</th>
+					<th>Απ. ΔΟΡΥΦΟΡΙΚΑ</th>
 					<th>Total Cost</th>
 					<th>Total Profit</th>
 				</tr>
 			</thead>
 			<tbody class="text-body">
+            {% for product in products_with_stock %}
 				<tr>
 					<td><a href="#" data-bs-toggle="modal" data-bs-target="#modalDetail"><i class="fa fa-search fa-fw"></i></a></td>
-					<td>1.</td>
-					<td>Mobile Phone</td>
-					<td>iPhone 14 Pro Max - 256gb - Deep Purple</td>
-					<td class="text-success"><i class="bi-check-circle-fill"></i></td>
-					<td>25</td>
-					<td>5 sold</td>
-					<td>6 sold</td>
-					<td>5 sold</td>
-					<td>25 sold</td>
+                	<td>{{ product.id }}</td>
+					<td>{{ product.category }}</td>
+                <td>{{ product.name }}</td>
+                	<td>{{ product.usage }}</td>
+					<td>
+						{% if product.total_stock == 0 or product.total_stock is None %}
+							0 <a href="#" class="text-warning" data-bs-toggle="tooltip" data-bs-title="Out of Stock"><i class="bi-exclamation-circle-fill"></i></a>
+						{% else %}
+							{{ product.total_stock }}
+						{% endif %}
+					</td>					
+            <td>{{ product.stock_kepik }}</td>
+            <td>{{ product.stock_kepik }}</td>
+            <td>{{ product.stock_doriforika }}</td>
 					<td>$44,950</td>
 					<td class="text-success">$5,000</td>
 				</tr>
-				<tr>
-					<td>
-						<a href="#" data-bs-toggle="modal" data-bs-target="#modalDetail"><i class="fa fa-search fa-fw"></i></a>
-					</td>
-					<td>3.</td>
-					<td>Mobile Phone</td>
-					<td>iPhone 14 - 256gb - Space Black</td>
-					<td class="text-body-tertiary"><i class="bi-x-circle-fill"></i></td>
-					<td>0 <a href="#" class="text-warning" data-bs-toggle="tooltip" data-bs-title="Out of Stock"><i class="bi-exclamation-circle-fill"></i></a></td>
-					<td>5 sold</td>
-					<td>2 sold</td>
-					<td>15 sold</td>
-					<td>25 sold</td>
-					<td>$27,445</td>
-					<td class="text-success">$5,500</td>
-				</tr>
+				{% endfor %}
 			</tbody>
 			<tfoot>
 				<tr>
@@ -91,7 +81,6 @@
 					<th></th>
 					<th>309 sold</th>
 					<th>241 sold</th>
-					<th>271 sold</th>
 					<th>457 sold</th>
 					<th>$751,792</th>
 					<th class="text-success">$171670</th>

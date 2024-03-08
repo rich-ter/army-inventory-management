@@ -17,7 +17,8 @@ from rest_framework.views import APIView
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseNotFound
-from django.db.models import Sum
+from django.db.models import Sum,F, Q
+from django.views.generic import ListView
 
 
 # Function for loging a user 
@@ -145,13 +146,35 @@ def pageWarehouse(request):
     return render(request, "pages/page-warehouse.html", context)
 
 def pageDataManagement(request):
-    stock_list = Stock.objects.all()
-    context = {
-        "appContentFullHeight": 1,
-        "appContentClass": 'py-3',
-        "stock_list": stock_list  # Add the stock list to the context
+    products = Product.objects.annotate(total_stock=Sum('stocks__quantity'))
+    # Pre-fetching the warehouses to reduce database queries
+    warehouses = {
+        wh.name: wh for wh in Warehouse.objects.filter(name__in=['ΚΕΠΙΚ', 'ΔΟΡΥΦΟΡΙΚΑ', 'ΤΑΓΜΑ'])
     }
-    return render(request, "pages/page-data-management.html", context)
+
+    for product in products:
+        # Initialize attributes for each warehouse stock
+        product.stock_kepik = 0
+        product.stock_doriforika = 0
+        product.stock_tagma = 0
+
+        # Fetch stocks related to the product and iterate over them
+        stocks = Stock.objects.filter(product=product, warehouse__in=warehouses.values())
+        for stock in stocks:
+            if stock.warehouse.name == 'ΚΕΠΙΚ':
+                product.stock_kepik = stock.quantity
+            elif stock.warehouse.name == 'ΔΟΡΥΦΟΡΙΚΑ':
+                product.stock_doriforika = stock.quantity
+            elif stock.warehouse.name == 'ΤΑΓΜΑ':
+                product.stock_tagma = stock.quantity
+
+    context = {
+        'appContentFullHeight': 1,
+        'appContentClass': 'py-3',
+        'products_with_stock': products,
+    }
+
+    return render(request, 'pages/page-data-management.html', context)
 
 def stockPerWarehouse(request, warehouse_id):
     # Get the specific warehouse

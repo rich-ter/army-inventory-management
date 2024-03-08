@@ -52,11 +52,12 @@ class Product(models.Model):
     usage = models.CharField(max_length=50, choices=PRODUCT_USAGE, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     description = models.CharField(max_length=200, null=True)
 
-    def stock_by_warehouse(self):
-        return Stock.objects.filter(product=self).values('warehouse__name', 'quantity')
+    # def stock_by_warehouse(self):
+    #     return Stock.objects.filter(product=self).values('warehouse__name', 'quantity')
     
     def total_stock(self):
-        return Stock.objects.filter(product=self).aggregate(total=Sum('quantity'))['total'] or 0
+        """Return the total stock across all warehouses for this product."""
+        return self.stocks.aggregate(total=Sum('quantity'))['total'] or 0
     
     def __str__(self):
 	    return f"{self.name} - {self.category}"
