@@ -22,6 +22,7 @@ urlpatterns = [
     path('add-shipment-two', views.add_shipment_two, name='add_shipment_two'),
     path('order', views.pageOrder, name='pageOrder'),
     path('order-details/<int:shipment_id>/', views.pageOrderDetails, name='pageOrderDetails'),
+    path('order-details/<int:shipment_id>/print/', views.order_print, name='order_print'),
 
     #warehouse pages
     path('warehouse', views.pageWarehouse, name='pageWarehouse'),

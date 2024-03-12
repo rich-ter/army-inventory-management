@@ -12,6 +12,7 @@ from django.dispatch import receiver
 
 class Recipient(models.Model):
     name = models.CharField(max_length=100)
+    unit = models.CharField(max_length=100)
     contact_person = models.CharField(max_length=150, null = True)
     location = models.CharField(max_length=150, null = True)
     notes = models.CharField(max_length=450, null = True)

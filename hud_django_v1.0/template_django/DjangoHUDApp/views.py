@@ -225,6 +225,18 @@ def pageOrderDetails(request, shipment_id):
 
 
 
+def order_print(request,shipment_id):
+    shipment = get_object_or_404(Shipment, pk=shipment_id)
+    shipment_items = ShipmentItem.objects.filter(shipment=shipment)
+    return render(request, "doriforika-protokolo.html", {"shipment": shipment, "shipment_items": shipment_items})
+
+
+
+
+
+
+
+
 # # # # # # # # # # # # NOT USED # # # # # # # # # # # # 
 
 def analytics(request):
