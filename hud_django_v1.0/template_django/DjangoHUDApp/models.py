@@ -12,7 +12,7 @@ from django.dispatch import receiver
 
 class Recipient(models.Model):
     name = models.CharField(max_length=100)
-    unit = models.CharField(max_length=100)
+    unit = models.CharField(max_length=100, default='None Specified')
     contact_person = models.CharField(max_length=150, null = True)
     location = models.CharField(max_length=150, null = True)
     notes = models.CharField(max_length=450, null = True)
@@ -45,8 +45,16 @@ class Product(models.Model):
         ("ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "ΚΑΜΙΑ ΕΠΙΛΟΓΗ"),       
     )
 
+    MEASUREMENT_TYPES = (
+        ("ΤΕΜΑΧΙΑ", "ΤΕΜΑΧΙΑ"), 
+        ("ΜΕΤΡΑ", "ΜΕΤΡΑ"),
+        ("ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "ΚΑΜΙΑ ΕΠΙΛΟΓΗ"),       
+    )
+
     name = models.CharField(max_length=100, null = False)
     #maybe i will need to change the location below 
+    batch_number = models.CharField(max_length=100, null = False, default='KAMIA EPILOGH')
+    unit_of_measurement = models.CharField(max_length=30, choices=MEASUREMENT_TYPES, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
     # serial_number = models.CharField(max_length=100, null = True)
     category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
@@ -65,10 +73,8 @@ class Product(models.Model):
     
 
 class ProductInstance(models.Model):
-
     #ONLY FO THE INCOMING SHIPMENTS  PER PRODUCT 
     #WHEN WE SHIP A PRODUCT WHICH IS XREOMENO ON US IF WE SHIP IT STOPS BEING XREWMENO 
-
     PRODUCT_FUNCTIONALITY = [
         ('ΛΕΙΤΟΥΡΓΙΚΟ', 'ΛΕΙΤΟΥΡΓΙΚΟ'),
         ('ΥΠΟ ΕΛΕΓΧΟ', 'ΥΠΟ ΕΛΕΓΧΟ'),
@@ -85,6 +91,8 @@ class ProductInstance(models.Model):
     purchase_date = models.DateField(null=True, blank=True)
     warranty_expiration = models.DateField(null=True, blank=True)
     
+    def __str__(self):
+        return f"This is the product with id:{self.id} with the serial number{self.serial_number}"
 
 class Warehouse(models.Model):
     name = models.CharField(max_length=100)
@@ -92,10 +100,10 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-
-
+    
 class ShipmentItem(models.Model):
     shipment = models.ForeignKey('Shipment', on_delete=models.CASCADE, related_name='shipment_items')
+    #this most probably should be replaced with the productinstance instead of the product itself.
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField()
@@ -103,6 +111,7 @@ class ShipmentItem(models.Model):
     def __str__(self):
         return f"{self.product.name} - Qty: {self.quantity} in {self.shipment}"
     
+
 @receiver(post_save, sender=ShipmentItem)
 def adjust_stock_on_save(sender, instance, created, **kwargs):
     adjust_stock(instance, created=True)

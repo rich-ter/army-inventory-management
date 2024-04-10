@@ -19,23 +19,23 @@
       datasets: [{
         label: 'Total Visitors',
         data: [37,31,36,34,43,31],
-        backgroundColor: 'rgba('+ app.color.themeRgb +', .25)',
-        borderColor: app.color.theme,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)', // Hardcoded color for testing
+        borderColor: 'rgb(54, 162, 235)', // Hardcoded color for testing
         borderWidth: 1.5
       },{
         label: 'New Visitors',
         data: [12,16,20,14,23,21],
-        backgroundColor: 'rgba('+ app.color.secondaryRgb +', .25)',
-        borderColor: app.color.secondary,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)', // Hardcoded color for testing
+        borderColor: 'rgb(255, 99, 132)', // Hardcoded color for testing
         borderWidth: 1.5
       },{
         label: 'Total Visitors',
         data: [37,31,36,34,43,31],
-        backgroundColor: 'rgba('+ app.color.themeRgb +', .25)',
-        borderColor: app.color.theme,
+        backgroundColor: 'rgba(255, 206, 86, 0.2)', // Hardcoded color for testing
+        borderColor: 'rgb(255, 206, 86)', // Hardcoded color for testing
         borderWidth: 1.5
       }]
-    }
+    },
   });
 </script>
 {% endblock %}
@@ -57,7 +57,7 @@
 <!-- required js -->
 
 <!-- html -->
-<canvas id="barChart"></canvas>
+<canvas id="barChart" height="200"></canvas>
 
 
 	

@@ -2,3 +2,7 @@
 
 -- 
 
+seperate users based on kepik and doriforika
+html auto printing for shipments
+correlate the products to a serial number and be able to search by this serial number.
+

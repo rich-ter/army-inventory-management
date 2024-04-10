@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark" {% block htmlAttr %}{% endblock %}>
+<html lang="en" data-bs-theme="dark" class="bg-cover-3" {% block htmlAttr %}{% endblock %}>
 <head>
 	<meta charset="utf-8">
 	<title>HUD | {% block title %}{% endblock %}</title>
@@ -42,7 +42,7 @@
 			{% block content %}{% endblock %}
 		</div>
 		
-		{% include 'partial/theme-panel.html' %} 
+		{% comment %} {% include 'partial/theme-panel.html' %}  {% endcomment %}
 		
 		{% if appFooter %}
 			{% include 'partial/footer.html' %}
