@@ -10,7 +10,7 @@ urlpatterns = [
     path('dashboard', views.index, name='index'),
     path('404/', views.error404, name='error404'),
     path('page/error', views.pageError, name='pageError'),
-
+    path('logout/', views.logout_view, name='logout'),
     #product pages
     path('product', views.pageProduct, name='pageProduct'),
     path('add-product', views.add_product, name='add_product'),

@@ -98,10 +98,10 @@ def sidebar_menu(request):
 		'text': 'Άλλες Ενέργειες',
 		'is_header': 1
 	}, {
-		'url': '/profile',
+		'url': '/logout',
 		'icon': 'bi bi-people',
 		'text': 'Έξοδος',
-		'name': 'profile'
+		'name': 'logout'
 	},{
 		'url': '/settings',
 		'icon': 'bi bi-gear',

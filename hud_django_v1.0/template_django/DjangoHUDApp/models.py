@@ -60,6 +60,7 @@ class Product(models.Model):
     category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     usage = models.CharField(max_length=50, choices=PRODUCT_USAGE, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     description = models.CharField(max_length=200, null=True)
+    # product_owner = 
 
     # def stock_by_warehouse(self):
     #     return Stock.objects.filter(product=self).values('warehouse__name', 'quantity')
@@ -213,10 +214,6 @@ class Shipment(models.Model):
                 
     #             stock.save()
 
-
-
-
-    
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stocks')
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='stocks')

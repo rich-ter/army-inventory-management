@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.http import HttpResponse
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
 from .forms import ProductForm, ShipmentForm, ShipmentItemFormSet
@@ -48,6 +48,10 @@ def pageLogin(request):
         "appContentClass": 'p-0'
     }
     return render(request, "pages/page-login.html", context)
+
+def logout_view(request):
+     logout(request)
+     return redirect('DjangoHUDApp:pageLogin')
 
 # Function for creating a product 
 def add_product(request):
