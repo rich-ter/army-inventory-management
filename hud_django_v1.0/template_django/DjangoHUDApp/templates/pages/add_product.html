@@ -59,11 +59,11 @@
 						<label class="form-label">Τίτλος <span class="text-danger">*</span></label>
 						{{ form.name }} 
 					</div>
-					<div class="mb-3">
+					{% comment %} <div class="mb-3">
 						{{ form.serial_number.errors }}
 						<label class="form-label">Σειριακός Αριθμός <span class="text-danger">*</span></label>
 						{{ form.serial_number }} <!-- Render the 'serial_number' field -->
-					</div>
+					</div> {% endcomment %}
 					<div class="">
 						{{ form.description.errors }}
 						<label class="form-label">Περιγραφή <span class="text-danger">*</span></label>
@@ -138,7 +138,7 @@
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
 					Φωτογραφία
 				</div>
-				{% comment %} <form id="fileupload" action="//jquery-file-upload.appspot.com/" name="file_upload_form" method="POST" enctype="multipart/form-data">
+				<form id="fileupload" action="//jquery-file-upload.appspot.com/" name="file_upload_form" method="POST" enctype="multipart/form-data">
 					<div class="card-body pb-2">
 						<div class="fileupload-buttonbar mb-2">
 							<div class="d-block d-lg-flex align-items-center">
@@ -159,6 +159,10 @@
 									<i class="fa fa-fw fa-trash"></i>
 									<span>Delete</span>
 								</button>
+								{% comment %} <div class="form-check ms-2 mb-1">
+									<input type="checkbox" id="toggle-delete" class="form-check-input toggle">
+									<label for="toggle-delete" class="form-check-label">Select Files</label>
+								</div> {% endcomment %}
 							</div>
 						</div>
 						<div id="error-msg"></div>
@@ -181,7 +185,7 @@
 							</tr>
 						</tbody>
 					</table>
-				</form> {% endcomment %}
+				</form>
 				<div class="card-arrow">
 					<div class="card-arrow-top-left"></div>
 					<div class="card-arrow-top-right"></div>

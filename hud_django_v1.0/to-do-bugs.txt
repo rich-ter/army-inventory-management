@@ -16,11 +16,26 @@
 9. To be able to search a shipment based on the product name. 
 10. To make the 487 more prominent on the background.
 
+
+
+
+to be able to seperate the different products on the warehouse level. 
+
+on list product tob eable to open the product image
+
+
+
+
+ADD ATTACHEMNT TO SHIPMENTS SO WE CAN UPLOAD A DOCUMENT PDF.
+
 ------ BUGS ------ 
 
 1. 
 
 
+SOS BUG 
+
+WHEN 'CREATING ORDER' EVEN IF THE STOCK IS LOWER AND IT DOESNT LET THE OBJECT IS ACTUALLY CREATED EVEN THO THE ERROR IS SHOWING.
 
 
 correlate the products to a serial number and be able to search by this serial number.

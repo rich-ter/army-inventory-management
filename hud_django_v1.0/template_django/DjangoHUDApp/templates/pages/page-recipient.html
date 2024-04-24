@@ -14,9 +14,6 @@
 			<h1 class="page-header mb-0">ΠΑΡΑΛΗΠΤΕΣ</h1>
 		</div>
 		
-		<div class="ms-auto">
-			<a href="add-shipment" class="btn btn-outline-theme"><i class="fa fa-plus-circle fa-fw me-1"></i> Δημιουργία Διακίνησης</a>
-		</div>
 	</div>
 	
 	<div class="card">
@@ -41,10 +38,9 @@
 						<thead>
 							<tr>
 								<th class="pt-0 pb-2"></th>
-								<th class="pt-0 pb-2">Παραλήπτης</th>
-								<th class="pt-0 pb-2">Άτομο Επικοινωνίας</th>
-								<th class="pt-0 pb-2">Τοποθεσία</th>
-								<th class="pt-0 pb-2">Σχόλια</th>
+								<th class="pt-0 pb-2">ΣΧΗΜΑΤΙΣΜΟΣ</th>
+								<th class="pt-0 pb-2">ΑΠΟΔΕΚΤΗΣ</th>
+								<th class="pt-0 pb-2">ΣΧΟΛΙΑ</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -52,22 +48,18 @@
 
    <tr>
         <td class="w-10px align-middle">
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="recipient{{ forloop.counter }}">
-            <label class="form-check-label" for="recipient{{ forloop.counter }}"></label>
-        </div>
+
         </td>
     <td>
         <div class="d-flex align-items-center">
             <!-- If you had an image or icon for each warehouse, it would go here. Otherwise, remove this div. -->
             <div class="ms-3">
                 <!-- Adjust the URL name as per your urls.py for the warehouse details page -->
-                <a href="" class="text-inverse text-opacity-75 text-decoration-none">{{ recipient.name }}</a>
+                <a href="" class="text-inverse text-opacity-75 text-decoration-none">{{ recipient.commanding_unit }}</a>
             </div>
         </div>
     </td>
-        <td class="align-middle">{{ recipient.contact_person }}</td> <!-- Assuming you have a stock field -->
-		<td class="align-middle">{{ recipient.location }}</td>
+        <td class="align-middle">{{ recipient.recipient_unit }}</td> <!-- Assuming you have a stock field -->
         <td class="align-middle">{{ recipient.notes }}</td>
     </tr>
     {% empty %}

@@ -93,10 +93,13 @@
 							{% for shipment in shipments %}
 							<tr>
 								<td class="w-10px align-middle">
-									<div class="form-check">
+									{% comment %} <div class="form-check">
 										<input type="checkbox" class="form-check-input" id="product2">
 										<label class="form-check-label" for="product2"></label>
-									</div>
+									</div> {% endcomment %}
+								<a href="{% url 'DjangoHUDApp:order_print' shipment_id=shipment.id %}" class="btn" target="_blank">
+									<i class="bi bi-printer"></i>
+								</a>
 								</td>
 								<td class="align-middle">
 									<a href="{% url 'DjangoHUDApp:pageOrderDetails' shipment.id %}">

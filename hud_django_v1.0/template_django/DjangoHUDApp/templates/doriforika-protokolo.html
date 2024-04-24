@@ -21,11 +21,11 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            border: none; /* Remove border from the table */
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+            padding: 15px; /* Increase padding for the cells */
+            text-align: center; /* Center align text */
         }
         th {
             background-color: #f0f0f0;
@@ -37,18 +37,21 @@
         .protocol-title {
             text-align: center;
         }
-        .signatures {
-            margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
+        .signatories {
+            margin-top: 20px;
         }
-        .signature-field {
-            flex-basis: 48%; /* Adjust this value as needed */
-            border-bottom: 1px solid black;
+        .signatories th, .signatories td {
+            padding: 5px; /* Adjust cell padding */
         }
-        .signatory-title {
-            text-align: center;
-            margin-top: 5px;
+        .signatories table {
+            margin: auto; /* Center the table */
+        }
+        .signature-name {
+            font-weight: bold; /* Make the text bold */
+        }
+        .table-separator {
+            border-bottom: 2px solid black; /* Add a line after the table */
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -61,58 +64,64 @@
             <h1>ΠΡΩΤΟΚΟΛΛΟ ΠΑΡΑΔΟΣΗΣ – ΠΑΡΑΛΑΒΗΣ ΥΛΙΚΩΝ</h1>
         </div>
 
-        <p>Στην Αθήνα σήμερα, την [Ημερομηνία] του μηνός [Μήνας] του έτους [Έτος]</p>
-        <p>Ο υπογεγραμμένος [Όνομα] παρέλαβα από το [Παραδίδουσα Μονάδα] τα παρακάτω υλικά βάσει [Αιτίας]:</p>
+        <p>Στην Αθήνα σήμερα, την {{ shipment.date.day }} του μηνός {{ shipment.date|date:"F" }} του έτους {{ shipment.date.year }}</p>
+        <p>Ο υπογεγραμμένος __________ παρέλαβα από το [Παραδίδουσα Μονάδα] τα παρακάτω υλικά βάσει [Αιτίας]:</p>
 
         <!-- Product Table -->
         <table>
             <thead>
+               
                 <tr>
                     <th>Α/Α</th>
                     <th>ΠΕΡΙΓΡΑΦΗ</th>
                     <th>ΜΟΝ. ΜΕΤΡΗΣΗΣ</th>
                     <th>ΠΟΣΟΤΗΤΑ</th>
-                    <th>ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
+                    <th>ΠΑΡ/ΣΕΙΣ</th>
+                <tr>
+                </tr>
                 </tr>
             </thead>
             <tbody>
-                <!-- Django will populate rows here -->
-            </tbody>
+        {% for item in shipment_items %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.unit_of_measurement }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.description }}</td>
+            </tr>
+        {% endfor %}
+                </tbody>
         </table>
 
-        <!-- Signatures -->
-    <div class="signatures">
-        <table>
-            <tr>
-                <th colspan="2">ΠΑΡΑΔΙΔΟΥΣΑ ΜΟΝΑΔΑ</th>
-                <th colspan="2">ΠΑΡΑΛΑΜΒΑΝΟΥΣΑ ΜΟΝΑΔΑ</th>
-            </tr>
-            <tr>
-                <td colspan="2" class="signature-field">ΘΕΩΡΗΘΗΚΕ</td>
-                <td colspan="2" class="signature-field">ΘΕΩΡΗΘΗΚΕ</td>
-            </tr>
-            <tr>
-                <td>ΔΚΤΗΣ</td>
-                <td><div class="signature-line"></div></td>
-                <td>ΠΑΡΑΔΙΔΩΝ</td>
-                <td><div class="signature-line"></div></td>
-            </tr>
-            <tr>
-                <td>ΔΧΣΤΗΣ</td>
-                <td><div class="signature-line"></div></td>
-                <td>ΔΚΤΗΣ</td>
-                <td><div class="signature-line"></div></td>
-            </tr>
-            <tr>
-                <td colspan="2">ΠΑΡΑΛΑΒΩΝ</td>
-                <td colspan="2"><div class="signature-line"></div></td>
-            </tr>
-            <tr>
-                <td colspan="2">ΔΧΣΤΗΣ</td>
-                <td colspan="2"><div class="signature-line"></div></td>
-            </tr>
-        </table>
-    </div>
+        <!-- Signatories -->
+        <div class="signatories">
+            <table>
+                <tr>
+                    <td colspan="3"><span class="signature-name">ΠΑΡΑΔΙΔΟΥΣΑ</span></td>
+                    <td colspan="3"><span class="signature-name">ΠΑΡΑΛΑΜΒΑΝΟΥΣΑ</span></td>
+                </tr>
+                <tr>
+                    <td>-Ο-</td>
+                    <td>-Ο-</td>
+                    <td>-Ο-</td>
+                    <td>-Ο-</td>
+                    <td>-Ο-</td>
+                    <td>-Ο-</td>
+                </tr>
+                <tr>
+                    <td>ΔΚΤΗΣ</td>
+                    <td>ΠΑΡΑΔΙΔΩΝ</td>
+                    <td>ΔΧΣΤΗΣ</td>
+                    <td>ΔΚΤΗΣ</td>
+                    <td>ΠΑΡΑΔΙΔΩΝ</td>
+                    <td>ΔΧΣΤΗΣ</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Table Separator -->
+        {% comment %} <div class="table-separator"></div> {% endcomment %}
     </div>
 </body>
 </html>

@@ -11,14 +11,13 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 class Recipient(models.Model):
-    name = models.CharField(max_length=100)
-    unit = models.CharField(max_length=100, default='None Specified')
-    contact_person = models.CharField(max_length=150, null = True)
-    location = models.CharField(max_length=150, null = True)
+    commanding_unit = models.CharField(max_length=100)
+    recipient_unit = models.CharField(max_length=100, default='None Specified')
     notes = models.CharField(max_length=450, null = True)
 
     def __str__(self):
-	    return self.name
+	    return self.recipient_unit
+
 
 class Product(models.Model):
 
@@ -52,15 +51,12 @@ class Product(models.Model):
     )
 
     name = models.CharField(max_length=100, null = False)
-    #maybe i will need to change the location below 
     batch_number = models.CharField(max_length=100, null = False, default='KAMIA EPILOGH')
     unit_of_measurement = models.CharField(max_length=30, choices=MEASUREMENT_TYPES, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
-    # serial_number = models.CharField(max_length=100, null = True)
     category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     usage = models.CharField(max_length=50, choices=PRODUCT_USAGE, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     description = models.CharField(max_length=200, null=True)
-    # product_owner = 
 
     # def stock_by_warehouse(self):
     #     return Stock.objects.filter(product=self).values('warehouse__name', 'quantity')
@@ -74,8 +70,6 @@ class Product(models.Model):
     
 
 class ProductInstance(models.Model):
-    #ONLY FO THE INCOMING SHIPMENTS  PER PRODUCT 
-    #WHEN WE SHIP A PRODUCT WHICH IS XREOMENO ON US IF WE SHIP IT STOPS BEING XREWMENO 
     PRODUCT_FUNCTIONALITY = [
         ('ΛΕΙΤΟΥΡΓΙΚΟ', 'ΛΕΙΤΟΥΡΓΙΚΟ'),
         ('ΥΠΟ ΕΛΕΓΧΟ', 'ΥΠΟ ΕΛΕΓΧΟ'),
@@ -104,7 +98,6 @@ class Warehouse(models.Model):
     
 class ShipmentItem(models.Model):
     shipment = models.ForeignKey('Shipment', on_delete=models.CASCADE, related_name='shipment_items')
-    #this most probably should be replaced with the productinstance instead of the product itself.
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField()
