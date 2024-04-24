@@ -59,11 +59,12 @@
 						<label class="form-label">Τίτλος <span class="text-danger">*</span></label>
 						{{ form.name }} 
 					</div>
-					{% comment %} <div class="mb-3">
-						{{ form.serial_number.errors }}
-						<label class="form-label">Σειριακός Αριθμός <span class="text-danger">*</span></label>
-						{{ form.serial_number }} <!-- Render the 'serial_number' field -->
-					</div> {% endcomment %}
+					<div class="mb-3">
+						{{ form.batch_number.errors }}
+						<label class="form-label">Αριθμός Μερίδας <span class="text-danger">*</span></label>
+						{{ form.batch_number }} 
+					</div>    
+
 					<div class="">
 						{{ form.description.errors }}
 						<label class="form-label">Περιγραφή <span class="text-danger">*</span></label>
@@ -86,18 +87,16 @@
 					</div>
 				</div>
 				<div class="card-body">
-					{% comment %} <div class="mb-3">
-						<label class="form-label">Μελλοντική Προσθήκη</label>
+					<div class="mb-3">
+						<label class="form-label">Μονάδα Μέτρησης</label>
 							<div class="mb-lg-0 mb-3">
 								<select class="form-select" name="warranty_type_id">
-									<option value="">-- Επιλογή --</option>
-									<option value="1">No Warranty</option>
-									<option value="2">Local Supplier Warranty</option>
-									<option value="3">Local Manufacturer Warranty</option>
-									<option value="4">International Manufacturer Warranty</option>
+									<option value="">-- Μονάδα Μέτρησης --</option>
+									<option value="1">ΤΕΜΑΧΙΑ</option>
+									<option value="2">ΜΕΤΡΑ</option>
 								</select>
 							</div>
-					</div> {% endcomment %}
+					</div> 
 					<div class="mb-3">
 						<label class="form-label">Κατηγορία Προιόντος</label>
 							<div class="mb-lg-0 mb-3">
@@ -138,54 +137,8 @@
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
 					Φωτογραφία
 				</div>
-				<form id="fileupload" action="//jquery-file-upload.appspot.com/" name="file_upload_form" method="POST" enctype="multipart/form-data">
-					<div class="card-body pb-2">
-						<div class="fileupload-buttonbar mb-2">
-							<div class="d-block d-lg-flex align-items-center">
-								<span class="btn btn-outline-theme fileinput-button me-2 mb-1">
-									<i class="fa fa-fw fa-plus"></i>
-									<span>Add files...</span>
-									<input type="file" name="files[]" multiple>
-								</span>
-								<button type="submit" class="btn btn-outline-default me-2 mb-1 start">
-									<i class="fa fa-fw fa-upload"></i>
-									<span>Start upload</span>
-								</button>
-								<button type="reset" class="btn btn-outline-default me-2 mb-1 cancel">
-									<i class="fa fa-fw fa-ban"></i>
-									<span>Cancel upload</span>
-								</button>
-								<button type="button" class="btn btn-outline-default me-2 mb-1 delete">
-									<i class="fa fa-fw fa-trash"></i>
-									<span>Delete</span>
-								</button>
-								{% comment %} <div class="form-check ms-2 mb-1">
-									<input type="checkbox" id="toggle-delete" class="form-check-input toggle">
-									<label for="toggle-delete" class="form-check-label">Select Files</label>
-								</div> {% endcomment %}
-							</div>
-						</div>
-						<div id="error-msg"></div>
-					</div>
-					<table class="table table-card mb-0 fs-13px">
-						<thead>
-							<tr class="fs-12px">
-								<th class="pt-2 pb-2 w-25">PREVIEW</th>
-								<th class="pt-2 pb-2 w-25">FILENAME</th>
-								<th class="pt-2 pb-2 w-25">SIZE</th>
-								<th class="pt-2 pb-2 w-25">ACTION</th>
-							</tr>
-						</thead>
-						<tbody class="files">
-							<tr class="empty-row">
-								<td colspan="4" class="text-center p-3">
-									<div class="text-inverse text-opacity-30 mb-2"><i class="fa fa-file-archive fa-3x"></i></div> 
-									No file uploaded
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</form>
+                <input type="file" id="image" name="image" class="form-control">
+
 				<div class="card-arrow">
 					<div class="card-arrow-top-left"></div>
 					<div class="card-arrow-top-right"></div>
@@ -203,7 +156,7 @@
 {% block outter_content %}
 	{% verbatim %}
 		<!-- BEGIN template-upload -->
-		<script id="template-upload" type="text/x-tmpl">
+		{% comment %} <script id="template-upload" type="text/x-tmpl">
 		{% for (var i=0, file; file=o.files[i]; i++) { %}
 			<tr class="template-upload">
 				<td>
@@ -231,11 +184,11 @@
 				</td>
 			</tr>
 		{% } %}
-		</script>
+		</script> {% endcomment %}
 		<!-- END template-upload -->
 	
 		<!-- BEGIN template-download -->
-		<script id="template-download" type="text/x-tmpl">
+		{% comment %} <script id="template-download" type="text/x-tmpl">
 		{% for (var i=0, file; file=o.files[i]; i++) { %}
 			<tr class="template-download">
 				<td>
@@ -277,7 +230,7 @@
 				</td>
 			</tr>
 		{% } %}
-		</script>
+		</script> {% endcomment %}
 		<!-- END template-download -->
 	{% endverbatim %}
 {% endblock %} 

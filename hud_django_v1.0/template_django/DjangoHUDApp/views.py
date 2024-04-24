@@ -54,20 +54,34 @@ def logout_view(request):
      return redirect('DjangoHUDApp:pageLogin')
 
 # Function for creating a product 
+# Function for creating a product
 def add_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)  # Including request.FILES for completeness
+        # Create a form instance and populate it with data from the request:
+        form = ProductForm(request.POST, request.FILES)  # Ensure that request.FILES is also passed
         if form.is_valid():
+            # Save the new product to the database
             form.save()
-            return redirect('DjangoHUDApp:pageProduct')  # Redirect as appropriate
+            # Redirect to a new URL:
+            return redirect('DjangoHUDApp:pageProduct')  # Redirect to an appropriate page after saving
+        else:
+            # If the form is not valid, render the same page with validation errors
+            return render(request, 'pages/add_product.html', {
+                'form': form,
+                'product_category_choices': Product.PRODUCT_CATEGORY,
+                'product_usage_choices': Product.PRODUCT_USAGE,
+                'unit_of_measurement_choices': Product.MEASUREMENT_TYPES,
+            })
     else:
+        # If this is a GET (or any other method) create the default form.
         form = ProductForm()
-    context = {
-        'form': form,
-        'product_category_choices': Product.PRODUCT_CATEGORY,
-        'product_usage_choices': Product.PRODUCT_USAGE,
-    }
-    return render(request, 'pages/add_product.html', context) 
+        context = {
+            'form': form,
+            'product_category_choices': Product.PRODUCT_CATEGORY,
+            'product_usage_choices': Product.PRODUCT_USAGE,
+            'unit_of_measurement_choices': Product.MEASUREMENT_TYPES,
+        }
+        return render(request, 'pages/add_product.html', context)
 
 # All products page
 def pageProduct(request):
