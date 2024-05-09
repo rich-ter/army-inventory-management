@@ -92,6 +92,7 @@ class ProductInstance(models.Model):
 class Warehouse(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
+    access_groups = models.ManyToManyField(Group, related_name="access_warehouses")
 
     def __str__(self):
         return f"{self.name}"
@@ -217,3 +218,7 @@ class Stock(models.Model):
 
     def __str__(self):
         return f"{self.product.name} in {self.warehouse.name} - Qty: {self.quantity}"
+    
+
+
+# implementing the different use roles and groups for 

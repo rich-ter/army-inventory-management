@@ -19,6 +19,8 @@ from django.db import transaction
 from django.http import HttpResponseNotFound
 from django.db.models import Sum,F, Q
 from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
 
 
 # Function for loging a user 
@@ -83,11 +85,21 @@ def add_product(request):
         }
         return render(request, 'pages/add_product.html', context)
 
-# All products page
+@login_required
 def pageProduct(request):
-    products_list = Product.objects.all()  # Query all products
-    paginator = Paginator(products_list, 10)  # Show 10 products per page
+    user_groups = request.user.groups.values_list('name', flat=True)
 
+    if 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
+        # Filter for ΔΟΡΥΦΟΡΙΚΑ usage
+        products_list = Product.objects.filter(usage='ΔΟΡΥΦΟΡΙΚΑ')
+    elif 'ΔΙΔΕΣ' in user_groups:
+        # Show all except ΔΟΡΥΦΟΡΙΚΑ products
+        products_list = Product.objects.exclude(usage='ΔΟΡΥΦΟΡΙΚΑ')
+    else:
+        # Show all products to other users (adjust as necessary)
+        products_list = Product.objects.all()
+
+    paginator = Paginator(products_list, 10)  # Show 10 products per page
     page_number = request.GET.get('page')
     products = paginator.get_page(page_number)
 
@@ -144,22 +156,60 @@ def add_shipment_two(request):
     
     return render(request, 'pages/add_order_two.html', context)
 
-# All orders page
+@login_required
 def pageOrder(request):
-    shipments_list = Shipment.objects.all()
+    user = request.user
 
+    # Admin users see all shipments
+    if user.is_superuser:
+        shipments_list = Shipment.objects.all()
+    else:
+        # Filter shipments by the groups of the user
+        user_groups = user.groups.values_list('name', flat=True)
+        if 'ΔΙΔΕΣ' in user_groups:
+            # Users in ΔΙΔΕΣ see shipments from all users in this group
+            shipments_list = Shipment.objects.filter(user__groups__name='ΔΙΔΕΣ')
+        elif 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
+            # Users in ΔΟΡΥΦΟΡΙΚΑ only see their own shipments
+            shipments_list = Shipment.objects.filter(user=user)
+        else:
+            # Default to no shipments if no specific group is found
+            shipments_list = Shipment.objects.none()
+
+    # Annotate shipments with the count of shipment items
     for shipment in shipments_list:
         shipment.products_count = shipment.shipment_items.count()
 
     context = {'shipments': shipments_list}
     return render(request, "pages/page-order.html", context)
 
-
+@login_required
 def pageWarehouse(request):
-    # Annotate each warehouse with the total stock count
-    warehouses_list = Warehouse.objects.annotate(
-        total_stock=Sum('stocks__quantity')
-    )
+    # Get the user's groups as a list of strings
+    user_groups = request.user.groups.values_list('name', flat=True)
+
+    # Initialize an empty queryset
+    warehouses_list = Warehouse.objects.none()
+
+    # Check if user is a superuser or in the Admin group
+    if request.user.is_superuser or 'Admin' in user_groups:
+        # Show all warehouses if user is an admin or in the admin group
+        warehouses_list = Warehouse.objects.annotate(total_stock=Sum('stocks__quantity'))
+
+    # Check for 'Doriforika' group and filter accordingly
+    elif 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
+        # Filter warehouses to show only those related to "Doriforika"
+        warehouses_list = Warehouse.objects.filter(name="Δορυφορικα").annotate(
+            total_stock=Sum('stocks__quantity')
+        )
+
+    # Check for 'ΔΙΔΕΣ' group and filter for "KEPIK" and "TAGMA" warehouses
+    elif 'ΔΙΔΕΣ' in user_groups:
+        # Filter warehouses to show only "KEPIK" and "TAGMA"
+        warehouses_list = Warehouse.objects.filter(name__in=["ΚΕΠΙΚ", "ΤΑΓΜΑ"]).annotate(
+            total_stock=Sum('stocks__quantity')
+        )
+
     context = {'warehouses': warehouses_list}
     return render(request, "pages/page-warehouse.html", context)
 
