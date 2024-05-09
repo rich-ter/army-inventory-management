@@ -176,11 +176,11 @@ def pageOrder(request):
             # Default to no shipments if no specific group is found
             shipments_list = Shipment.objects.none()
 
-    # Annotate shipments with the count of shipment items
-    for shipment in shipments_list:
-        shipment.products_count = shipment.shipment_items.count()
+    paginator = Paginator(shipments_list, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    shipments = paginator.get_page(page_number)
 
-    context = {'shipments': shipments_list}
+    context = {'shipments': shipments}
     return render(request, "pages/page-order.html", context)
 
 @login_required
@@ -213,21 +213,32 @@ def pageWarehouse(request):
     context = {'warehouses': warehouses_list}
     return render(request, "pages/page-warehouse.html", context)
 
+@login_required
 def pageDataManagement(request):
-    products = Product.objects.annotate(total_stock=Sum('stocks__quantity'))
-    # Pre-fetching the warehouses to reduce database queries
-    warehouses = {
-        wh.name: wh for wh in Warehouse.objects.filter(name__in=['ΚΕΠΙΚ', 'ΔΟΡΥΦΟΡΙΚΑ', 'ΤΑΓΜΑ'])
-    }
+    user = request.user
+    products = Product.objects.none()  # Start with no products
+    warehouse_filter = []  # List to hold filtered warehouse names
 
+    if user.is_superuser:
+        products = Product.objects.annotate(total_stock=Sum('stocks__quantity'))
+        warehouse_filter = ['ΚΕΠΙΚ', 'ΔΟΡΥΦΟΡΙΚΑ', 'ΤΑΓΜΑ']
+    else:
+        user_groups = user.groups.values_list('name', flat=True)
+        if 'ΔΙΔΕΣ' in user_groups:
+            products = Product.objects.exclude(usage='ΔΟΡΥΦΟΡΙΚΑ').annotate(total_stock=Sum('stocks__quantity'))
+            warehouse_filter = ['ΚΕΠΙΚ', 'ΤΑΓΜΑ']  # Excludes ΔΟΡΥΦΟΡΙΚΑ warehouse
+        elif 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
+            products = Product.objects.filter(usage='ΔΟΡΥΦΟΡΙΚΑ').annotate(total_stock=Sum('stocks__quantity'))
+            warehouse_filter = ['ΔΟΡΥΦΟΡΙΚΑ']  # Only ΔΟΡΥΦΟΡΙΚΑ warehouse
+
+    # Fetching warehouses once based on required filters
+    warehouses = Warehouse.objects.filter(name__in=warehouse_filter)
+    warehouse_dict = {wh.name: wh for wh in warehouses}
+
+    # Annotating stock information from the filtered warehouses
     for product in products:
-        # Initialize attributes for each warehouse stock
-        product.stock_kepik = 0
-        product.stock_doriforika = 0
-        product.stock_tagma = 0
-
-        # Fetch stocks related to the product and iterate over them
-        stocks = Stock.objects.filter(product=product, warehouse__in=warehouses.values())
+        product.stock_kepik = product.stock_doriforika = product.stock_tagma = 0
+        stocks = Stock.objects.filter(product=product, warehouse__in=warehouses)
         for stock in stocks:
             if stock.warehouse.name == 'ΚΕΠΙΚ':
                 product.stock_kepik = stock.quantity
@@ -240,6 +251,10 @@ def pageDataManagement(request):
         'appContentFullHeight': 1,
         'appContentClass': 'py-3',
         'products_with_stock': products,
+        # Including warehouse access flags for template rendering
+        'can_view_kepik': 'ΚΕΠΙΚ' in warehouse_filter,
+        'can_view_doriforika': 'ΔΟΡΥΦΟΡΙΚΑ' in warehouse_filter,
+        'can_view_tagma': 'ΤΑΓΜΑ' in warehouse_filter,
     }
 
     return render(request, 'pages/page-data-management.html', context)

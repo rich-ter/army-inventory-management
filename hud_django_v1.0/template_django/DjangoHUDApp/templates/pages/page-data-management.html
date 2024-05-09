@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Data Management{% endblock %}
+{% block title %}Αποθέματα{% endblock %}
 
 {% block css %}
 	<link href="{% static 'plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css' %}" rel="stylesheet" />
@@ -36,16 +36,15 @@
 			<thead>
 				<tr>
 					<th class="no-sort"></th>
-					<th>Stock id</th>
+					<th>Μερίδα</th>
 					<th>Κατηγορία</th>
 					<th>Προιόν</th>
 					<th>Χρήση</th>
 					<th>Συνολικό Απόθεμα</th>
-					<th>Απ. ΤΑΓΜΑ</th>
-					<th>Απ. ΚΕΠΙΚ</th>
-					<th>Απ. ΔΟΡΥΦΟΡΙΚΑ</th>
-					<th>Total Cost</th>
-					<th>Total Profit</th>
+                    {% if can_view_tagma %}<th>Απ. ΤΑΓΜΑ</th>{% endif %}
+                    {% if can_view_kepik %}<th>Απ. ΚΕΠΙΚ</th>{% endif %}
+                    {% if can_view_doriforika %}<th>Απ. ΔΟΡΥΦΟΡΙΚΑ</th>{% endif %}
+					{% comment %} <th>Total Profit</th> {% endcomment %}
 				</tr>
 			</thead>
 			<tbody class="text-body">
@@ -63,11 +62,10 @@
 							{{ product.total_stock }}
 						{% endif %}
 					</td>					
-            <td>{{ product.stock_kepik }}</td>
-            <td>{{ product.stock_kepik }}</td>
-            <td>{{ product.stock_doriforika }}</td>
-					<td>$44,950</td>
-					<td class="text-success">$5,000</td>
+                    {% if can_view_tagma %}<td>{{ product.stock_tagma }}</td>{% endif %}
+                    {% if can_view_kepik %}<td>{{ product.stock_kepik }}</td>{% endif %}
+                    {% if can_view_doriforika %}<td>{{ product.stock_doriforika }}</td>{% endif %}
+					{% comment %} <td class="text-success">$5,000</td> {% endcomment %}
 				</tr>
 				{% endfor %}
 			</tbody>
@@ -79,11 +77,10 @@
 					<th></th>
 					<th></th>
 					<th></th>
-					<th>309 sold</th>
-					<th>241 sold</th>
-					<th>457 sold</th>
-					<th>$751,792</th>
-					<th class="text-success">$171670</th>
+                    {% if can_view_tagma %}<th>309 sold</th>{% endif %}
+                    {% if can_view_kepik %}<th>241 sold</th>{% endif %}
+                    {% if can_view_doriforika %}<th>457 sold</th>{% endif %}
+					{% comment %} <th class="text-success">$171670</th> {% endcomment %}
 				</tr>
 			</tfoot>
 		</table>
