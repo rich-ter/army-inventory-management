@@ -122,7 +122,7 @@ class ProductApiList(APIView):
 @login_required  # Ensure that only logged-in users can access this view
 def add_shipment(request):
     if request.method == 'POST':
-        form = ShipmentForm(request.POST)
+        form = ShipmentForm(request.POST, request.FILES)
         # Ensure the prefix matches what you use in the template and is consistent
         formset = ShipmentItemFormSet(request.POST, prefix='shipmentitem')
         if form.is_valid():

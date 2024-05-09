@@ -14,7 +14,7 @@ def mark_active_link(menu, current_path_name):
 
 def sidebar_menu(request):
 	sidebar_menu = [{
-		'text': 'Navigation',
+		'text': 'Επιλογές',
 		'is_header': 1
 	},{
 		'url': '/dashboard',
@@ -102,12 +102,14 @@ def sidebar_menu(request):
 		'icon': 'bi bi-people',
 		'text': 'Έξοδος',
 		'name': 'logout'
-	},{
-		'url': '/settings',
-		'icon': 'bi bi-gear',
-		'text': 'Ρυθμίσεις',
-		'name': 'settings'
-	}]
+	},
+    # {
+	# 	'url': '/settings',
+	# 	'icon': 'bi bi-gear',
+	# 	'text': 'Ρυθμίσεις',
+	# 	'name': 'settings'
+	# }
+     ]
 	
 	resolved_path = resolve(request.path_info)
 

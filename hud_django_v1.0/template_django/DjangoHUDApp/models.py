@@ -157,6 +157,7 @@ class Shipment(models.Model):
     date = models.DateTimeField(default=timezone.now)
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE, null=True, blank=True)
     notes = models.CharField(max_length=200, null=True)
+    attachment = models.FileField(upload_to='shipment_attachments/', null=True, blank=True)  # Store file path in database
 
     def __str__(self):
         return f"{self.get_shipment_type_display()} - {self.date}"

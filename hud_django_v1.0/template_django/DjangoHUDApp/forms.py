@@ -29,12 +29,13 @@ class ProductForm(forms.ModelForm):
 class ShipmentForm(forms.ModelForm):
     class Meta:
         model = Shipment
-        fields = ['shipment_type', 'recipient', 'date',  'notes']
+        fields = ['shipment_type', 'recipient', 'date',  'notes', 'attachment']
         widgets = {
             'date': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
             'shipment_type': forms.Select(attrs={'class': 'form-select', 'id': 'shipment_type_id'}),
             'recipient': forms.Select(attrs={'class': 'form-select', 'id': 'recipient_id'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'attachment': forms.FileInput(attrs={'class': 'form-control'})  # Add this line for file input
         }
 
     def __init__(self, *args, **kwargs):
