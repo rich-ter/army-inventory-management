@@ -1,26 +1,14 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse
-from django.views import generic
 from django.http import HttpResponse
-from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
 from .forms import ProductForm, ShipmentForm, ShipmentItemFormSet
 from .models import Product, Shipment, Warehouse, Recipient, ShipmentItem, Stock
 from django.core.paginator import Paginator
-from django.core import serializers
-from .serializers import ProductSerializer
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.http import HttpResponseNotFound
 from django.db.models import Sum,F, Q
-from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
-from django.utils.timezone import now
 
 
 # Function for loging a user 
@@ -112,11 +100,7 @@ def product_details(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     return render(request, 'pages/page-product-details.html', {'product': product})
 
-class ProductApiList(APIView):
-    def get(self, request):
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+
 
 # Function for creating a product 
 @login_required  # Ensure that only logged-in users can access this view
