@@ -1,55 +1,31 @@
-
 ------ THINGS LEFT TO FINISH ------ 
-
-1. HTML page to print a shipment form. The shipment form will be identical for the 2 squadrons but change the 1 loxos to 2nd loxos etc.
-2. Create 3 user types (DIDES, DORIFORIKA, ADMIN)
-    2.1 Create the django admin to have the 3 different users above and to be able to add products only for their warehouse.
-    2.2 Do not allow the dides user to view doriforika products
-    2.3 Do not allow the doriforika user to view the dides products
-    2.3 Admin user can view everything from all users.
-3. Include the option for the shipments to hold attachements against them (either a pdf or a word document).
-4. Filter and search in each of the pages.
-5. Finalise dashboards 
-6. To be able to upload images for each of the products - DONE
-7. To be able to change the product and change the information available.
-8. To be able to edit the shipment order and change the information within
-9. To be able to search a shipment based on the product name. 
-10. To make the 487 more prominent on the background.
-11. To make searchable filters 
-12. 
-
-
----
-
-STILL LEFT TO DO:
 
 1. SEARCHING FILTERS EERYWHERE
 2. MAKE SURE ABOUT CRUD OPERATIONS ABOUT SHIPMENTS AND PRODUCTS
 3. MAKE SURE BACK-END LOGIC WORKS FOR CORRECTLY ADDING AND REMOVING ITEMS FROM THE WAREHOUSES.
 4. ON THE PRODUCT LIST localhost:8000/product ADD A 'SEARCH ICON' LIKE IN THE APOTHEMA THAT WILL DISPLAY THE PRODUCT IMAGE. 
+5. Deploy on docker 
+    5.1 Set-up nginx to serve the app 
+6. Finalise Dashboards
+7. Create the django admin to have the 3 different users above and to be able to add products only for their warehouse.
+9. To be able to search a shipment based on the product name. 
 
 
+------ DONE ------ 
 
+1. To be able to upload images for each of the products - DONE
+2. Create 3 user types (DIDES, DORIFORIKA, ADMIN)
+    2.1 Do not allow the dides user to view doriforika products
+    2.2 Do not allow the doriforika user to view the dides products
+    2.3 Admin user can view everything from all users.
+3. HTML page to print a shipment form. The shipment form will be identical for the 2 squadrons but change the 1 loxos to 2nd loxos etc.
 
-on list product tob eable to open the product image
-
-
-
-
-ADD ATTACHEMNT TO SHIPMENTS SO WE CAN UPLOAD A DOCUMENT PDF.
 
 ------ BUGS ------ 
 
-1. 
+1. WHEN 'CREATING ORDER' EVEN IF THE STOCK IS LOWER AND IT DOESNT LET THE OBJECT IS ACTUALLY CREATED EVEN THO THE ERROR IS SHOWING.
+2. 
 
-
-SOS BUG 
-
-WHEN 'CREATING ORDER' EVEN IF THE STOCK IS LOWER AND IT DOESNT LET THE OBJECT IS ACTUALLY CREATED EVEN THO THE ERROR IS SHOWING.
-
-
-correlate the products to a serial number and be able to search by this serial number.
--- this must be done in the stock keeping so we can search by the serial number of the prouct. 
 
 
 
