@@ -320,13 +320,11 @@ def order_print(request,shipment_id):
 
 
 
-# # # # # # # # # # # # NOT USED # # # # # # # # # # # # 
+# # # # # # # # # # # # ANALYTICS PAGES # # # # # # # # # # # # 
 
 def analytics(request):
 	return render(request, "pages/analytics.html")
 
-def widgets(request):
-	return render(request, "pages/widgets.html")
 
 def chartJs(request):
 	return render(request, "pages/chart-js.html")
@@ -334,23 +332,10 @@ def chartJs(request):
 def chartApex(request):
 	return render(request, "pages/chart-apex.html")
 
-def map(request):
-	return render(request, "pages/map.html")
 
 
+# # # # # # # # # # # # 404 PAGES # # # # # # # # # # # # 
 
-
-
-def pageSearchResults(request):
-	return render(request, "pages/page-search-results.html")
-
-def pageComingSoon(request):
-	context = {
-		"appSidebarHide": 1,
-		"appHeaderHide": 1,
-		"appContentClass": 'p-0'
-	}
-	return render(request, "pages/page-coming-soon.html", context)
 
 def pageError(request):
 	context = {
@@ -360,32 +345,6 @@ def pageError(request):
 	}
 	return render(request, "pages/page-error.html", context)
 
-def pageRegister(request):
-	context = {
-		"appSidebarHide": 1,
-		"appHeaderHide": 1,
-		"appContentClass": 'p-0'
-	}
-	return render(request, "pages/page-register.html", context)
-
-
-
-def pageFileManager(request):
-	context = {
-		"appContentFullHeight": 1,
-		"appContentClass": 'd-flex flex-column'
-	}
-	return render(request, "pages/page-file-manager.html", context)
-
-def profile(request):
-	return render(request, "pages/profile.html")
-
-
-def settings(request):
-	return render(request, "pages/settings.html")
-
-def helper(request):
-	return render(request, "pages/helper.html")
 	
 def error404(request):
 	context = {

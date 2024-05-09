@@ -36,22 +36,10 @@ urlpatterns = [
     #recipient pages
     path('recipient', views.pageRecipient, name='pageRecipient'),
 
-
-
     # not in use
     path('analytics/', views.analytics, name='  '),
-    path('widgets/', views.widgets, name='widgets'),
     path('chart/js/', views.chartJs, name='chartJs'),
     path('chart/apex/', views.chartApex, name='chartApex'),
-    path('map/', views.map, name='map'),
-    path('page/search-results', views.pageSearchResults, name='pageSearchResults'),
-    path('page/coming-soon', views.pageComingSoon, name='pageComingSoon'),
-    path('page/register', views.pageRegister, name='pageRegister'),
-    # path('page/data-management', views.pageDataManagement, name='pageDataManagement'),
-    path('page/file-manager', views.pageFileManager, name='pageFileManager'),
-    path('profile/', views.profile, name='profile'),
-    path('settings/', views.settings, name='settings'),
-    path('helper/', views.helper, name='helper')
 ]
 
 handler404 = 'DjangoHUDApp.views.handler404'

@@ -1,9 +1,6 @@
-<!-- BEGIN #header -->
 <div id="header" class="app-header">
   {% if appSidebarHide is None %}
-  <!-- END mobile-toggler -->
   {% endif %} {% if appTopNav is not None and appSidebarHide %} {% endif %}
-  <!-- BEGIN brand -->
   <div class="brand">
     <a href="/dashboard" class="brand-logo">
       <span class="brand-img">
@@ -12,28 +9,11 @@
       <span class="brand-text"> ΣΔΑ 'ΡΙΧΤΕΡ'</span>
     </a>
   </div>
-  <!-- END brand -->
-  <!-- BEGIN menu -->
   <div class="menu">
     <div class="menu-item dropdown dropdown-mobile-full">
-      <a
-        href="#"
-        data-bs-toggle="dropdown"
-        data-bs-display="static"
-        class="menu-link"
-      >
-        <div class="menu-img online">
-          {% load static %}
-          <img
-            src="{% static '/img/user/profile.jpg' %}"
-            alt="Profile"
-            height="60"
-          />
-        </div>
         <div class="menu-text d-sm-block d-none w-170px">
           {{ user.username }}
         </div>
     </div>
   </div>
-  <!-- END menu -->
 </div>
