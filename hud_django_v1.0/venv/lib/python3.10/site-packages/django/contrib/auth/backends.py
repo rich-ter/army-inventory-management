@@ -1,6 +1,10 @@
+import warnings
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.db.models import Exists, OuterRef, Q
+from django.utils.deprecation import RemovedInDjango50Warning
+from django.utils.inspect import func_supports_parameter
 
 UserModel = get_user_model()
 
@@ -53,7 +57,8 @@ class ModelBackend(BaseBackend):
         Reject users with is_active=False. Custom user models that don't have
         that attribute are allowed.
         """
-        return getattr(user, "is_active", True)
+        is_active = getattr(user, "is_active", None)
+        return is_active or is_active is None
 
     def _get_user_permissions(self, user_obj):
         return user_obj.user_permissions.all()
@@ -207,7 +212,19 @@ class RemoteUserBackend(ModelBackend):
                 user = UserModel._default_manager.get_by_natural_key(username)
             except UserModel.DoesNotExist:
                 pass
-        user = self.configure_user(request, user, created=created)
+
+        # RemovedInDjango50Warning: When the deprecation ends, replace with:
+        #   user = self.configure_user(request, user, created=created)
+        if func_supports_parameter(self.configure_user, "created"):
+            user = self.configure_user(request, user, created=created)
+        else:
+            warnings.warn(
+                f"`created=True` must be added to the signature of "
+                f"{self.__class__.__qualname__}.configure_user().",
+                category=RemovedInDjango50Warning,
+            )
+            if created:
+                user = self.configure_user(request, user)
         return user if self.user_can_authenticate(user) else None
 
     def clean_username(self, username):

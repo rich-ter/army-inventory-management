@@ -2,12 +2,10 @@
 Base classes for writing management commands (named commands which can
 be executed through ``django-admin`` or ``manage.py``).
 """
-
 import argparse
 import os
 import sys
 from argparse import ArgumentParser, HelpFormatter
-from functools import partial
 from io import TextIOBase
 
 import django
@@ -73,15 +71,6 @@ class CommandParser(ArgumentParser):
         else:
             raise CommandError("Error: %s" % message)
 
-    def add_subparsers(self, **kwargs):
-        parser_class = kwargs.get("parser_class", type(self))
-        if issubclass(parser_class, CommandParser):
-            kwargs["parser_class"] = partial(
-                parser_class,
-                called_from_command_line=self.called_from_command_line,
-            )
-        return super().add_subparsers(**kwargs)
-
 
 def handle_default_options(options):
     """
@@ -98,7 +87,7 @@ def handle_default_options(options):
 def no_translations(handle_func):
     """Decorator that forces a command to run with translations deactivated."""
 
-    def wrapper(*args, **kwargs):
+    def wrapped(*args, **kwargs):
         from django.utils import translation
 
         saved_locale = translation.get_language()
@@ -110,7 +99,7 @@ def no_translations(handle_func):
                 translation.activate(saved_locale)
         return res
 
-    return wrapper
+    return wrapped
 
 
 class DjangoHelpFormatter(HelpFormatter):
@@ -529,11 +518,9 @@ class BaseCommand:
                 if issues:
                     visible_issue_count += len(issues)
                     formatted = (
-                        (
-                            self.style.ERROR(str(e))
-                            if e.is_serious()
-                            else self.style.WARNING(str(e))
-                        )
+                        self.style.ERROR(str(e))
+                        if e.is_serious()
+                        else self.style.WARNING(str(e))
                         for e in issues
                     )
                     formatted = "\n".join(sorted(formatted))
@@ -546,15 +533,11 @@ class BaseCommand:
             if visible_issue_count:
                 footer += "\n"
             footer += "System check identified %s (%s silenced)." % (
-                (
-                    "no issues"
-                    if visible_issue_count == 0
-                    else (
-                        "1 issue"
-                        if visible_issue_count == 1
-                        else "%s issues" % visible_issue_count
-                    )
-                ),
+                "no issues"
+                if visible_issue_count == 0
+                else "1 issue"
+                if visible_issue_count == 1
+                else "%s issues" % visible_issue_count,
                 len(all_issues) - visible_issue_count,
             )
 

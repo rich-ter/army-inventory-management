@@ -4,7 +4,6 @@ Cross Site Request Forgery Middleware.
 This module provides a middleware that implements protection
 against request forgeries from other sites.
 """
-
 import logging
 import string
 from collections import defaultdict
@@ -12,7 +11,8 @@ from urllib.parse import urlparse
 
 from django.conf import settings
 from django.core.exceptions import DisallowedHost, ImproperlyConfigured
-from django.http import HttpHeaders, UnreadablePostError
+from django.http import UnreadablePostError
+from django.http.request import HttpHeaders
 from django.urls import get_callable
 from django.utils.cache import patch_vary_headers
 from django.utils.crypto import constant_time_compare, get_random_string
@@ -86,7 +86,13 @@ def _add_new_csrf_cookie(request):
     csrf_secret = _get_new_csrf_string()
     request.META.update(
         {
-            "CSRF_COOKIE": csrf_secret,
+            # RemovedInDjango50Warning: when the deprecation ends, replace
+            # with: 'CSRF_COOKIE': csrf_secret
+            "CSRF_COOKIE": (
+                _mask_cipher_secret(csrf_secret)
+                if settings.CSRF_COOKIE_MASKED
+                else csrf_secret
+            ),
             "CSRF_COOKIE_NEEDS_UPDATE": True,
         }
     )
@@ -420,7 +426,7 @@ class CsrfViewMiddleware(MiddlewareMixin):
         if getattr(callback, "csrf_exempt", False):
             return None
 
-        # Assume that anything not defined as 'safe' by RFC 9110 needs protection
+        # Assume that anything not defined as 'safe' by RFC7231 needs protection
         if request.method in ("GET", "HEAD", "OPTIONS", "TRACE"):
             return self._accept(request)
 

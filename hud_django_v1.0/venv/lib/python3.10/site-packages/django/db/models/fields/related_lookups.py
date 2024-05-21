@@ -1,3 +1,5 @@
+import warnings
+
 from django.db.models.lookups import (
     Exact,
     GreaterThan,
@@ -7,11 +9,11 @@ from django.db.models.lookups import (
     LessThan,
     LessThanOrEqual,
 )
+from django.utils.deprecation import RemovedInDjango50Warning
 
 
 class MultiColSource:
     contains_aggregate = False
-    contains_over_clause = False
 
     def __init__(self, alias, targets, sources, field):
         self.targets, self.sources, self.field, self.alias = (
@@ -42,7 +44,14 @@ def get_normalized_value(value, lhs):
 
     if isinstance(value, Model):
         if value.pk is None:
-            raise ValueError("Model instances passed to related filters must be saved.")
+            # When the deprecation ends, replace with:
+            # raise ValueError(
+            #     "Model instances passed to related filters must be saved."
+            # )
+            warnings.warn(
+                "Passing unsaved model instances to related filters is deprecated.",
+                RemovedInDjango50Warning,
+            )
         value_list = []
         sources = lhs.output_field.path_infos[-1].target_fields
         for source in sources:
@@ -83,6 +92,7 @@ class RelatedIn(In):
             elif not getattr(self.rhs, "has_select_fields", True) and not getattr(
                 self.lhs.field.target_field, "primary_key", False
             ):
+                self.rhs.clear_select_clause()
                 if (
                     getattr(self.lhs.output_field, "primary_key", False)
                     and self.lhs.output_field.model == self.rhs.model
@@ -94,7 +104,7 @@ class RelatedIn(In):
                     target_field = self.lhs.field.name
                 else:
                     target_field = self.lhs.field.target_field.name
-                self.rhs.set_values([target_field])
+                self.rhs.add_fields([target_field], True)
         return super().get_prep_lookup()
 
     def as_sql(self, compiler, connection):

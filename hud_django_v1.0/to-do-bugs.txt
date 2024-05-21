@@ -9,7 +9,10 @@
 6. Finalise Dashboards
 7. Create the django admin to have the 3 different users above and to be able to add products only for their warehouse.
 9. To be able to search a shipment based on the product name. 
-
+10. Export to csv the apothemata database. 
+11. Doriforika and dides might have similar products make sure that if the usage is common that both can see it.
+12. shipment list to include the name of the product in the shipment so they can track it. 
+13. In the paraliptes tab, we press one of them and we get a result of all the shipments that we have sent to them. 
 
 ------ DONE ------ 
 

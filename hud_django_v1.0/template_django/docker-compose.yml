@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  django:
+    container_name: richter-latest-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn --bind 0.0.0.0:8000 DjangoHUD.wsgi:application
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "8080:80"  # Change host port to 8080 to avoid conflicts
+    depends_on:
+      - django
+    volumes:
+      - ./DjangoHUDApp/static:/app/DjangoHUDApp/static
+      - ./DjangoHUDApp/media:/app/DjangoHUDApp/media
