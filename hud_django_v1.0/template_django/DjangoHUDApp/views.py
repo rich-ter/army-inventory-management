@@ -76,6 +76,7 @@ def add_product(request):
 @login_required
 def pageProduct(request):
     user_groups = request.user.groups.values_list('name', flat=True)
+    query = request.GET.get('q', '')  # Get the search query if it exists, otherwise default to an empty string
 
     if 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
         # Filter for ΔΟΡΥΦΟΡΙΚΑ usage
@@ -87,11 +88,14 @@ def pageProduct(request):
         # Show all products to other users (adjust as necessary)
         products_list = Product.objects.all()
 
+    if query:
+        products_list = products_list.filter(Q(name__icontains=query) | Q(category__icontains=query))
+
     paginator = Paginator(products_list, 10)  # Show 10 products per page
     page_number = request.GET.get('page')
     products = paginator.get_page(page_number)
 
-    context = {'products': products}
+    context = {'products': products, 'query': query}
     return render(request, "pages/page-product.html", context)
 
 # Function for individual product details

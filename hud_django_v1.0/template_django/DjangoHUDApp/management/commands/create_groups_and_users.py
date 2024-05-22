@@ -8,7 +8,7 @@ class Command(BaseCommand):
         # Create groups
         group_dides, _ = Group.objects.get_or_create(name='ΔΙΔΕΣ')
         group_doriforika, _ = Group.objects.get_or_create(name='ΔΟΡΥΦΟΡΙΚΑ')
-
+        
         # Define user data
         user_data = [
             {'username': 'alexandris', 'password': 'alexandris', 'group': group_doriforika},

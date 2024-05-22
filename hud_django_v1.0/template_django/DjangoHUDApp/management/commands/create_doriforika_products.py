@@ -1,3 +1,14 @@
+from django.core.management.base import BaseCommand
+from django.contrib.auth.models import Group
+from DjangoHUDApp.models import Product, Warehouse, Stock
+
+class Command(BaseCommand):
+    help = 'Creates all the product instances for doriforika created'
+
+    def handle(self, *args, **options):
+        # Retrieve the "ΔΟΡΥΦΟΡΙΚΑ" group
+        group_doriforika, created = Group.objects.get_or_create(name='ΔΟΡΥΦΟΡΙΚΑ')
+
         doriforika_products = [
             {"BATCH NO.": 751, "NAME": "ΤΕΧΝΙΚΑ ΕΓΧΕΙΡΙΔΙΑ", "UNITS OF MEASUREMENT": "Τεμάχια", "QUANTITY": 4},
             {"BATCH NO.": 798, "NAME": "Τ.Δ.FD177/RACAL/PRM4720B", "UNITS OF MEASUREMENT": "Τεμάχια", "QUANTITY": 10},
@@ -194,3 +205,32 @@
             {"BATCH NO.": 8739, "NAME": "ΠΟΛΥΜΕΤΡΟ ΡΑΓΑΣ", "UNITS OF MEASUREMENT": "Τεμάχια", "QUANTITY": 1},
             {"BATCH NO.": 8750, "NAME": "ALGA MICROWAVE ALTX-LITE-KU-16 BUC 16W 24VDCE", "UNITS OF MEASUREMENT": "Τεμάχια", "QUANTITY": 3},
         ]
+
+
+        # Create or retrieve the "Doriforika Warehouse"
+        doriforika_warehouse, _ = Warehouse.objects.get_or_create(name='ΔΟΡΥΦΟΡΙΚΑ',)
+
+        # Process each product and assign it to the group and warehouse
+        for data in doriforika_products:
+            product_data = {
+                'batch_number': data["BATCH NO."],
+                'name': data["NAME"],
+                'unit_of_measurement': data["UNITS OF MEASUREMENT"],
+                'category': 'ΚΑΜΙΑ ΕΠΙΛΟΓΗ',
+                'usage': 'ΔΟΡΥΦΟΡΙΚΑ',
+                'description': ''
+            }
+
+            # Create or retrieve the product
+            product, created = Product.objects.get_or_create(**product_data)
+            
+            # Add the product to the "ΔΟΡΥΦΟΡΙΚΑ" group
+            product.owners.add(group_doriforika)
+            product.save()
+
+            # Create or update the stock in the "Doriforika Warehouse"
+            stock, _ = Stock.objects.get_or_create(product=product, warehouse=doriforika_warehouse, defaults={'quantity': data["QUANTITY"]})
+            stock.quantity = data["QUANTITY"]
+            stock.save()
+
+        self.stdout.write(self.style.SUCCESS('Products created and assigned to ΔΟΡΥΦΟΡΙΚΑ group successfully'))

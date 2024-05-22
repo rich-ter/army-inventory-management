@@ -57,6 +57,7 @@ class Product(models.Model):
     category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     usage = models.CharField(max_length=50, choices=PRODUCT_USAGE, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     description = models.CharField(max_length=200, null=True)
+    owners = models.ManyToManyField(Group, blank=True, verbose_name='Product Owners')
 
     # def stock_by_warehouse(self):
     #     return Stock.objects.filter(product=self).values('warehouse__name', 'quantity')
