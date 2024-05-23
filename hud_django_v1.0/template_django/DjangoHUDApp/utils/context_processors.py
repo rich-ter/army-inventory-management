@@ -17,7 +17,7 @@ def sidebar_menu(request):
 		'text': 'Επιλογές',
 		'is_header': 1
 	},{
-		'url': '/dashboard',
+		'url': '/index',
 		'icon': 'bi bi-cpu',
 		'text': 'Διαχείρηση',
 		'name': 'dashboard'

@@ -163,53 +163,6 @@ class Shipment(models.Model):
     def __str__(self):
         return f"{self.get_shipment_type_display()} - {self.date}"
     
-
-    # def save(self, *args, **kwargs):
-    #     # Assign a default recipient for incoming shipments
-    #     if self.shipment_type == 'IN' and not self.recipient_id:
-    #         tdb_487, _ = Recipient.objects.get_or_create(name='ΤΔΒ 487')
-    #         self.recipient = tdb_487
-
-    #     # Call save first to ensure the Shipment instance has an ID
-    #     super().save(*args, **kwargs)  
-
-    #     # Adjust stock levels for shipment items within a transaction
-    #     with transaction.atomic():
-    #         for item in self.shipment_items.all():
-    #             stock_qs = Stock.objects.filter(product=item.product, warehouse=item.warehouse)
-    #             if self.shipment_type == 'IN':
-    #                 stock_qs.update(quantity=F('quantity') + item.quantity)
-    #             elif self.shipment_type == 'OUT':
-    #                 # Check if there is enough stock before proceeding
-    #                 if stock_qs.first().quantity < item.quantity:
-    #                     raise ValidationError(f'Insufficient stock for {item.product.name}.')
-    #                 stock_qs.update(quantity=F('quantity') - item.quantity)
-
-        # THIS NEEDS TO BE FIXED - IT CHECKS IF ENOUGH STOCK FOR A PRODUT BEFORE SENDING 
-    # def save(self, *args, **kwargs):
-    #     with transaction.atomic():
-    #         # First, validate all items can be fulfilled
-    #         for item in self.shipment_items.all():
-    #             stock = Stock.objects.get(product=item.product, warehouse=self.warehouse)
-    #             if self.shipment_type == 'OUT' and item.quantity > stock.quantity:
-    #                 raise ValidationError(f'Not enough stock for {item.product.name} to complete this shipment.')
-
-    #         super().save(*args, **kwargs)  # Save the Shipment instance
-            
-    #         # Then, adjust stock quantities
-    #         for item in self.shipment_items.all():
-    #             stock, _ = Stock.objects.select_for_update().get_or_create(
-    #                 product=item.product, 
-    #                 warehouse=self.warehouse
-    #             )
-                
-    #             if self.shipment_type == 'IN':
-    #                 stock.quantity += item.quantity
-    #             else:  # 'OUT'
-    #                 stock.quantity -= item.quantity  # Already validated above
-                
-    #             stock.save()
-
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stocks')
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='stocks')

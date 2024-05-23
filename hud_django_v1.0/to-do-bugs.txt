@@ -13,6 +13,7 @@
 13. In the paraliptes tab, we press one of them and we get a result of all the shipments that we have sent to them. 
 14. Deploy on docker 
 15. create management command for creating the products in the right order, specifying the warehouses etc. 
+16. fix routing and route names. 
 
 ------ DONE ------ 
 

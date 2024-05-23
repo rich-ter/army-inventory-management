@@ -7,7 +7,7 @@ urlpatterns = [
     
     #general pages
     path('', views.pageLogin, name='pageLogin'),
-    path('dashboard', views.index, name='index'),
+    path('index', views.index, name='index'),
     path('404/', views.error404, name='error404'),
     path('page/error', views.pageError, name='pageError'),
     path('logout/', views.logout_view, name='logout'),

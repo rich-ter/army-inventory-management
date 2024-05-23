@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum,F, Q
 from django.contrib.auth.decorators import login_required
 from .filters import ProductFilter
+from django.utils.dateparse import parse_date
+from django.utils import timezone
 
 
 # Function for loging a user 
@@ -103,7 +105,6 @@ def product_details(request, product_id):
 
 
 
-# Function for creating a product 
 @login_required  # Ensure that only logged-in users can access this view
 def add_shipment(request):
     if request.method == 'POST':
@@ -113,12 +114,17 @@ def add_shipment(request):
         if form.is_valid():
             shipment = form.save(commit=False)
             shipment.user = request.user
+            # Set the date explicitly to ensure timezone.now() is used correctly
+            shipment.date = timezone.now()
             # Temporarily save shipment to associate it correctly with formset instances
             shipment.save()
             formset = ShipmentItemFormSet(request.POST, instance=shipment, prefix='shipmentitem')
             if formset.is_valid():
                 formset.save()
                 return redirect('DjangoHUDApp:pageOrder')  # Ensure this is the correct path
+        else:
+            print(form.errors)
+            print(formset.errors)
     else:
         form = ShipmentForm()
         formset = ShipmentItemFormSet(prefix='shipmentitem')  # Provide prefix here as well
@@ -268,11 +274,40 @@ def pageRecipient(request):
     return render(request, "pages/page-recipient.html", context)
 
 
+# def index(request):
+# 	return render(request, "pages/index.html")
+
 def index(request):
-	return render(request, "pages/index.html")
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
 
+    shipments = Shipment.objects.all()
+    stocks = Stock.objects.all()
+    total_shipments = 0
+    total_stock = 0
 
+    if start_date and end_date:
+        start_date = parse_date(start_date)
+        end_date = parse_date(end_date)
+        shipments = shipments.filter(date__range=[start_date, end_date])
+        total_shipments = shipments.count()
 
+        # Calculate total stock
+        total_stock = stocks.aggregate(total_quantity=Sum('quantity'))['total_quantity']
+    else:
+        total_shipments = shipments.count()
+        total_stock = stocks.aggregate(total_quantity=Sum('quantity'))['total_quantity']
+
+    recent_shipments = shipments.order_by('-date')[:10]
+
+    context = {
+        'start_date': start_date,
+        'end_date': end_date,
+        'total_shipments': total_shipments,
+        'total_stock': total_stock,
+        'recent_shipments': recent_shipments,
+    }
+    return render(request, 'pages/index.html', context)
 # def product_details(request, product_id):
 #     product = get_object_or_404(Product, pk=product_id)
 #     return render(request, 'pages/page-product-details.html', {'product': product})
