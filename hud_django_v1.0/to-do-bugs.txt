@@ -3,17 +3,17 @@
 1. SEARCHING FILTERS EERYWHERE
 2. MAKE SURE ABOUT CRUD OPERATIONS ABOUT SHIPMENTS AND PRODUCTS
 3. MAKE SURE BACK-END LOGIC WORKS FOR CORRECTLY ADDING AND REMOVING ITEMS FROM THE WAREHOUSES.
-4. ON THE PRODUCT LIST localhost:8000/product ADD A 'SEARCH ICON' LIKE IN THE APOTHEMA THAT WILL DISPLAY THE PRODUCT IMAGE. - TO REMOVE
 6. Finalise Dashboards
 7. Create the django admin to have the 3 different users above and to be able to add products only for their warehouse.
-9. To be able to search a shipment based on the product name. 
-10. Export to csv the apothemata database. - SOLVED
-11. Doriforika and dides might have similar products make sure that if the usage is common that both can see it. - SOLVED
+9. To be able to search a shipment based on the product name. - NOT NEEDED ANYMORE
 12. shipment list to include the name of the product in the shipment so they can track it. 
-13. In the paraliptes tab, we press one of them and we get a result of all the shipments that we have sent to them. 
-14. Deploy on docker 
 15. create management command for creating the products in the right order, specifying the warehouses etc. 
 16. fix routing and route names. 
+17. Have the incoming to also have a recipient which can be eborio, OTe etc. remove the conditional logic from having the shipment only outgoing showing the recipient.
+18. If time, then add a page for the recipients to have a list to show all recent shipemnts to that recipient.
+19. feature to import csv into the database with the exported apothemata. to recount the stock.
+20. To ensure order of deleting and CASCADE.models delete is working as expected and logical for deleted orders and not breaking the app. 
+
 
 ------ DONE ------ 
 
@@ -23,6 +23,9 @@
     2.2 Do not allow the doriforika user to view the dides products
     2.3 Admin user can view everything from all users.
 3. HTML page to print a shipment form. The shipment form will be identical for the 2 squadrons but change the 1 loxos to 2nd loxos etc.
+4. ON THE PRODUCT LIST localhost:8000/product ADD A 'SEARCH ICON' LIKE IN THE APOTHEMA THAT WILL DISPLAY THE PRODUCT IMAGE. - SOLVED
+10. Export to csv the apothemata database. - SOLVED
+11. Doriforika and dides might have similar products make sure that if the usage is common that both can see it. - SOLVED
 
 
 ------ BUGS ------ 

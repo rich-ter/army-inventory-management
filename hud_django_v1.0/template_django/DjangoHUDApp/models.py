@@ -13,7 +13,7 @@ from django.dispatch import receiver
 class Recipient(models.Model):
     commanding_unit = models.CharField(max_length=100)
     recipient_unit = models.CharField(max_length=100, default='None Specified')
-    notes = models.CharField(max_length=450, null = True)
+    notes = models.CharField(max_length=450, null = True, blank=True)
 
     def __str__(self):
 	    return self.recipient_unit
@@ -51,12 +51,12 @@ class Product(models.Model):
     )
 
     name = models.CharField(max_length=100, null = False)
-    batch_number = models.CharField(max_length=100, null = False, default='KAMIA EPILOGH')
+    batch_number = models.CharField(max_length=100, null = False, default='KAMIA EPILOGH', blank=True)
     unit_of_measurement = models.CharField(max_length=30, choices=MEASUREMENT_TYPES, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
     category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     usage = models.CharField(max_length=50, choices=PRODUCT_USAGE, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
-    description = models.CharField(max_length=200, null=True)
+    description = models.CharField(max_length=200, null=True, blank=True)
     owners = models.ManyToManyField(Group, blank=True, verbose_name='Product Owners')
 
     # def stock_by_warehouse(self):
@@ -83,7 +83,7 @@ class ProductInstance(models.Model):
     ]
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='instances')
-    serial_number = models.CharField(max_length=100, unique=True)
+    serial_number = models.CharField(max_length=100, unique=True, blank=True)
     purchase_date = models.DateField(null=True, blank=True)
     warranty_expiration = models.DateField(null=True, blank=True)
     
@@ -92,7 +92,7 @@ class ProductInstance(models.Model):
 
 class Warehouse(models.Model):
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, blank=True)
     access_groups = models.ManyToManyField(Group, related_name="access_warehouses")
 
     def __str__(self):
@@ -156,12 +156,12 @@ class Shipment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shipments')
     shipment_type = models.CharField(max_length=3, choices=SHIPMENT_TYPE_CHOICES)
     date = models.DateTimeField(default=timezone.now)
-    recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE, null=True, blank=True)
-    notes = models.CharField(max_length=200, null=True)
+    recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
+    notes = models.CharField(max_length=200, null=True, blank=True)
     attachment = models.FileField(upload_to='shipment_attachments/', null=True, blank=True)  # Store file path in database
 
     def __str__(self):
-        return f"{self.get_shipment_type_display()} - {self.date}"
+        return f" Αποστολή από {self.user} / Τύπου: {self.shipment_type} - Ημερομηνία: {self.date}"
     
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stocks')

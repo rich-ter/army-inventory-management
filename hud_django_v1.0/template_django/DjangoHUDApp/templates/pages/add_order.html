@@ -48,7 +48,7 @@ $(document).ready(function() {
 });
 </script>
 
-<script>
+{% comment %} <script>
 document.addEventListener("DOMContentLoaded", function() {
     var shipmentTypeSelect = document.getElementById('shipment_type_id');
     var recipientSelect = document.getElementById('recipient_id');
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Call the function to set the initial state
     toggleRecipientField();
 });
-</script>
+</script> {% endcomment %}
 {% endblock %} 
 
 {% block content %}
@@ -146,67 +146,3 @@ document.addEventListener("DOMContentLoaded", function() {
 </form>
 
 {% endblock %}
-
-{% block outter_content %}
-
-
-
-	{% verbatim %}
-
-
-
-
-<!-- script -->
-<script>
-  $('#datepicker').datepicker({
-    autoclose: true
-  });
-</script>
-
-		<!-- BEGIN template-download -->
-		<script id="template-download" type="text/x-tmpl">
-		{% for (var i=0, file; file=o.files[i]; i++) { %}
-			<tr class="template-download">
-				<td>
-					<span class="preview d-flex justify-content-center flex-align-center" style="height: 80px">
-						{% if (file.thumbnailUrl) { %}
-							<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-						{% } %}
-					</span>
-				</td>
-				<td>
-					<p class="name">
-						{% if (file.url) { %}
-							<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-						{% } else { %}
-							<span>{%=file.name%}</span>
-						{% } %}
-					</p>
-					{% if (file.error) { %}
-						<div><span class="label label-danger">Error</span> {%=file.error%}</div>
-					{% } %}
-				</td>
-				<td>
-					<span class="size">{%=o.formatFileSize(file.size)%}</span>
-				</td>
-				<td nowrap>
-					{% if (file.deleteUrl) { %}
-						<button class="btn btn-outline-danger btn-sm btn-block delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-							<span>Delete</span>
-						</button>
-						<div class="form-check mt-2">
-							<input type="checkbox" id="{%=file.deleteUrl%}" name="delete" value="1" class="form-check-input toggle">
-							<label for="{%=file.deleteUrl%}" class="form-check-label"></label>
-						</div>
-					{% } else { %}
-						<button class="btn btn-outline-default btn-sm d-block w-100 cancel">
-							<span>Cancel</span>
-						</button>
-					{% } %}
-				</td>
-			</tr>
-		{% } %}
-		</script>
-		<!-- END template-download -->
-	{% endverbatim %}
-{% endblock %} 

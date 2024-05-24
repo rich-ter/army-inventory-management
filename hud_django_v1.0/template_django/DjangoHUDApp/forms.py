@@ -40,8 +40,6 @@ class ShipmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ShipmentForm, self).__init__(*args, **kwargs)
-        # Hide the recipient field by default
-        self.fields['recipient'].widget.attrs['style'] = 'display:none;'
 
 
 class ShipmentItemForm(forms.ModelForm):

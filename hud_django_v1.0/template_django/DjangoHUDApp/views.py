@@ -12,6 +12,9 @@ from django.contrib.auth.decorators import login_required
 from .filters import ProductFilter
 from django.utils.dateparse import parse_date
 from django.utils import timezone
+from django.contrib import messages
+import pandas as pd
+from django.core.files.storage import FileSystemStorage
 
 
 # Function for loging a user 
@@ -222,9 +225,62 @@ def pageWarehouse(request):
 
 @login_required
 def pageDataManagement(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        file = request.FILES['file']
+        file_name = file.name
+
+        if file_name.endswith('.csv'):
+            df = pd.read_csv(file)
+        elif file_name.endswith('.xlsx'):
+            df = pd.read_excel(file)
+        else:
+            return HttpResponse("Unsupported file format", status=400)
+
+        # Print columns for debugging
+        print(df.columns)
+
+        # Fill NaN values with empty strings to avoid errors
+        df.fillna('', inplace=True)
+
+        # Process the DataFrame to update Products and Stocks
+        for index, row in df.iterrows():
+            product_name = str(row['Προιόν']).strip()
+            category = str(row['Κατηγορία']).strip()
+            usage = str(row['Χρήση']).strip()
+            batch_number = str(row['Μερίδα']).strip()
+            # total_stock = row['Συνολικό Απόθεμα']
+            stock_tagma = row['Απ. ΤΑΓΜΑ']
+            stock_kepik = row['Απ. ΚΕΠΙΚ']
+            stock_doriforika = row['Απ. ΔΟΡΥΦΟΡΙΚΑ']
+
+            product, created = Product.objects.get_or_create(
+                name=product_name,
+                defaults={'category': category, 'usage': usage, 'batch_number': batch_number}
+            )
+
+            if not created:
+                product.category = category
+                product.usage = usage
+                product.batch_number = batch_number
+                product.save()
+
+            warehouses = {
+                'ΤΑΓΜΑ': stock_tagma,
+                'ΚΕΠΙΚ': stock_kepik,
+                'ΔΟΡΥΦΟΡΙΚΑ': stock_doriforika
+            }
+
+            for warehouse_name, quantity in warehouses.items():
+                warehouse, _ = Warehouse.objects.get_or_create(name=warehouse_name)
+                stock, _ = Stock.objects.get_or_create(product=product, warehouse=warehouse)
+                stock.quantity = quantity
+                stock.save()
+
+        return redirect('DjangoHUDApp:pageDataManagement')
+
     user = request.user
-    products = Product.objects.none()  # Start with no products
-    warehouse_filter = []  # List to hold filtered warehouse names
+    products = Product.objects.none()
+    warehouse_filter = []
 
     if user.is_superuser:
         products = Product.objects.annotate(total_stock=Sum('stocks__quantity'))
@@ -233,16 +289,14 @@ def pageDataManagement(request):
         user_groups = user.groups.values_list('name', flat=True)
         if 'ΔΙΔΕΣ' in user_groups:
             products = Product.objects.exclude(usage='ΔΟΡΥΦΟΡΙΚΑ').annotate(total_stock=Sum('stocks__quantity'))
-            warehouse_filter = ['ΚΕΠΙΚ', 'ΤΑΓΜΑ']  # Excludes ΔΟΡΥΦΟΡΙΚΑ warehouse
+            warehouse_filter = ['ΚΕΠΙΚ', 'ΤΑΓΜΑ']
         elif 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
             products = Product.objects.filter(usage='ΔΟΡΥΦΟΡΙΚΑ').annotate(total_stock=Sum('stocks__quantity'))
-            warehouse_filter = ['ΔΟΡΥΦΟΡΙΚΑ']  # Only ΔΟΡΥΦΟΡΙΚΑ warehouse
+            warehouse_filter = ['ΔΟΡΥΦΟΡΙΚΑ']
 
-    # Fetching warehouses once based on required filters
     warehouses = Warehouse.objects.filter(name__in=warehouse_filter)
     warehouse_dict = {wh.name: wh for wh in warehouses}
 
-    # Annotating stock information from the filtered warehouses
     for product in products:
         product.stock_kepik = product.stock_doriforika = product.stock_tagma = 0
         stocks = Stock.objects.filter(product=product, warehouse__in=warehouses)
@@ -258,7 +312,6 @@ def pageDataManagement(request):
         'appContentFullHeight': 1,
         'appContentClass': 'py-3',
         'products_with_stock': products,
-        # Including warehouse access flags for template rendering
         'can_view_kepik': 'ΚΕΠΙΚ' in warehouse_filter,
         'can_view_doriforika': 'ΔΟΡΥΦΟΡΙΚΑ' in warehouse_filter,
         'can_view_tagma': 'ΤΑΓΜΑ' in warehouse_filter,
