@@ -49,7 +49,6 @@
         <table class="table table-bordered table-xs w-100 fw-semibold text-nowrap mb-3" id="datatable">
             <thead>
                 <tr>
-                    <th class="no-sort"></th>
                     <th>Μερίδα</th>
                     <th>Κατηγορία</th>
                     <th>Προιόν</th>
@@ -63,7 +62,6 @@
             <tbody class="text-body">
                 {% for product in products_with_stock %}
                 <tr>
-                    <td><a href="#" data-bs-toggle="modal" data-bs-target="#modalDetail"><i class="fa fa-search fa-fw"></i></a></td>
                     <td>{{ product.batch_number }}</td>
                     <td>{{ product.category }}</td>
                     <td>{{ product.name }}</td>
@@ -88,86 +86,19 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th>
-                    {% if can_view_tagma %}<th>309 sold</th>{% endif %}
+					{% comment %} to fix the below to work, either here or on the template page {% endcomment %}
+                    {% if can_view_tagma %}                            
+						{% with total_tagma=0 %}
+                                {% for product in products_with_stock %}
+                                    {% with total_tagma=total_tagma|add:product.stock_tagma %}
+                                    {% endwith %}
+                                {% endfor %}
+                                {{ total_tagma }}
+                        {% endwith %}{% endif %}
                     {% if can_view_kepik %}<th>241 sold</th>{% endif %}
                     {% if can_view_doriforika %}<th>457 sold</th>{% endif %}
                 </tr>
             </tfoot>
         </table>
     </div>
-{% endblock %}
-
-{% block outter_content %}
-    <!-- BEGIN #modalDetail -->
-    <div class="modal fade" id="modalDetail">
-        <div class="modal-dialog" style="max-width: 600px">
-            <div class="modal-content">
-                <div class="modal-header py-2">
-                    <h5 class="modal-title fs-16px">Product Information</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row gx-4 align-items-center">
-                        <div class="col-sm-5 mb-3 mb-sm-0">
-                            <div class="card">
-                                <div class="card-body p-2">
-                                    <img src="{% static 'img/product/product-16.jpg' %}" class="mw-100 d-block" alt="">
-                                </div>
-                                <div class="card-arrow">
-                                    <div class="card-arrow-top-left"></div>
-                                    <div class="card-arrow-top-right"></div>
-                                    <div class="card-arrow-bottom-left"></div>
-                                    <div class="card-arrow-bottom-right"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-7 py-1 fs-13px">
-                            <div class="row mb-10px">
-                                <div class="col-4 fw-bold">Model:</div>
-                                <div class="col-8 text-white">iPhone 14 Pro Max</div>
-                            </div>
-                            <div class="row mb-10px">
-                                <div class="col-4 fw-bold">Colour:</div>
-                                <div class="col-8 text-white">Space Black</div>
-                            </div>
-                            <div class="row mb-10px">
-                                <div class="col-4 fw-bold">Storage:</div>
-                                <div class="col-8 text-white">256gb</div>
-                            </div>
-                            <div class="row mb-10px">
-                                <div class="col-4 fw-bold">Size:</div>
-                                <div class="col-8 text-white">147 x 72 x 7.8mm</div>
-                            </div>
-                            <div class="row mb-10px">
-                                <div class="col-4 fw-bold">Category:</div>
-                                <div class="col-8 text-white"><span class="badge bg-theme text-theme-color py-1 fs-10px my-n1 fw-bold">PHONE</span></div>
-                            </div>
-                            <div class="row mb-10px">
-                                <div class="col-4 fw-bold">Price:</div>
-                                <div class="col-8 text-white">$1,999</div>
-                            </div>
-                            <div class="row mb-10px">
-                                <div class="col-4 fw-bold">Cost:</div>
-                                <div class="col-8 text-white">$1,899</div>
-                            </div>
-                            <div class="row mb-10px">
-                                <div class="col-4 fw-bold">Profit:</div>
-                                <div class="col-8 text-success">$200</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4 fw-bold">Stock:</div>
-                                <div class="col-8 text-white"><input type="text" class="form-control form-control-sm w-100px" value="20"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="#" data-bs-dismiss="modal" class="btn btn-outline-default w-100px">Cancel</a>
-                    <button type="submit" class="btn btn-outline-theme">Save & Publish</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END #modalDetail -->
 {% endblock %}
