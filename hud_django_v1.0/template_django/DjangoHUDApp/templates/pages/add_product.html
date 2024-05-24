@@ -17,14 +17,14 @@
 	<script src="{% static 'plugins/blueimp-load-image/js/load-image.all.min.js' %}"></script>
 	<script src="{% static 'plugins/blueimp-canvas-to-blob/js/canvas-to-blob.min.js' %}"></script>
 	<script src="{% static 'plugins/blueimp-gallery/js/jquery.blueimp-gallery.min.js' %}"></script>
-	<script src="{% static 'plugins/blueimp-file-upload/js/jquery.iframe-transport.js' %}"></script>
+	{% comment %} <script src="{% static 'plugins/blueimp-file-upload/js/jquery.iframe-transport.js' %}"></script>
 	<script src="{% static 'plugins/blueimp-file-upload/js/jquery.fileupload.js' %}"></script>
 	<script src="{% static 'plugins/blueimp-file-upload/js/jquery.fileupload-process.js' %}"></script>
 	<script src="{% static 'plugins/blueimp-file-upload/js/jquery.fileupload-image.js' %}"></script>
 	<script src="{% static 'plugins/blueimp-file-upload/js/jquery.fileupload-audio.js' %}"></script>
 	<script src="{% static 'plugins/blueimp-file-upload/js/jquery.fileupload-video.js' %}"></script>
 	<script src="{% static 'plugins/blueimp-file-upload/js/jquery.fileupload-validate.js' %}"></script>
-	<script src="{% static 'plugins/blueimp-file-upload/js/jquery.fileupload-ui.js' %}"></script>
+	<script src="{% static 'plugins/blueimp-file-upload/js/jquery.fileupload-ui.js' %}"></script> {% endcomment %}
 	<script src="{% static 'plugins/jquery-migrate/dist/jquery-migrate.min.js' %}"></script>
 	<script src="{% static 'plugins/tag-it/js/tag-it.min.js' %}"></script>
 	<script src="{% static 'js/demo/page-product-details.demo.js' %}"></script>
@@ -33,10 +33,6 @@
 {% block content %}
 	<div class="d-flex align-items-center mb-3">
 		<div>
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:;">PAGES</a></li>
-				<li class="breadcrumb-item active">PRODUCT DETAILS</li>
-			</ol>
 			<h1 class="page-header mb-0">Προσθήκη Προιόντος</h1>
 		</div>
 	</div>
@@ -152,85 +148,3 @@
 </form>
 
 {% endblock %}
-
-{% block outter_content %}
-	{% verbatim %}
-		<!-- BEGIN template-upload -->
-		{% comment %} <script id="template-upload" type="text/x-tmpl">
-		{% for (var i=0, file; file=o.files[i]; i++) { %}
-			<tr class="template-upload">
-				<td>
-					<span class="preview d-flex justify-content-center flex-align-center" style="height: 80px"></span>
-				</td>
-				<td>
-					<p class="name mb-1">{%=file.name%}</p>
-					<strong class="error text-danger"></strong>
-				</td>
-				<td>
-					<p class="size mb-2">Processing...</p>
-					<div class="progress progress-sm mb-0 h-10px progress-striped active"><div class="progress-bar bg-theme" style="min-width: 2em; width:0%;"></div></div>
-				</td>
-				<td nowrap>
-					{% if (!i && !o.options.autoUpload) { %}
-						<button class="btn btn-outline-theme btn-sm d-block w-100 start" disabled>
-							<span>Start</span>
-						</button>
-					{% } %}
-					{% if (!i) { %}
-						<button class="btn btn-outline-default btn-sm d-block w-100 cancel mt-2">
-							<span>Cancel</span>
-						</button>
-					{% } %}
-				</td>
-			</tr>
-		{% } %}
-		</script> {% endcomment %}
-		<!-- END template-upload -->
-	
-		<!-- BEGIN template-download -->
-		{% comment %} <script id="template-download" type="text/x-tmpl">
-		{% for (var i=0, file; file=o.files[i]; i++) { %}
-			<tr class="template-download">
-				<td>
-					<span class="preview d-flex justify-content-center flex-align-center" style="height: 80px">
-						{% if (file.thumbnailUrl) { %}
-							<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-						{% } %}
-					</span>
-				</td>
-				<td>
-					<p class="name">
-						{% if (file.url) { %}
-							<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-						{% } else { %}
-							<span>{%=file.name%}</span>
-						{% } %}
-					</p>
-					{% if (file.error) { %}
-						<div><span class="label label-danger">Error</span> {%=file.error%}</div>
-					{% } %}
-				</td>
-				<td>
-					<span class="size">{%=o.formatFileSize(file.size)%}</span>
-				</td>
-				<td nowrap>
-					{% if (file.deleteUrl) { %}
-						<button class="btn btn-outline-danger btn-sm btn-block delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-							<span>Delete</span>
-						</button>
-						<div class="form-check mt-2">
-							<input type="checkbox" id="{%=file.deleteUrl%}" name="delete" value="1" class="form-check-input toggle">
-							<label for="{%=file.deleteUrl%}" class="form-check-label"></label>
-						</div>
-					{% } else { %}
-						<button class="btn btn-outline-default btn-sm d-block w-100 cancel">
-							<span>Cancel</span>
-						</button>
-					{% } %}
-				</td>
-			</tr>
-		{% } %}
-		</script> {% endcomment %}
-		<!-- END template-download -->
-	{% endverbatim %}
-{% endblock %} 

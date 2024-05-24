@@ -98,10 +98,26 @@ def pageProduct(request):
     return render(request, "pages/page-product.html", context)
 
 # Function for individual product details
-
+@login_required
 def product_details(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
-    return render(request, 'pages/page-product-details.html', {'product': product})
+    
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('DjangoHUDApp:pageProduct')  # Redirect to an appropriate page after updating
+    else:
+        form = ProductForm(instance=product)
+    
+    context = {
+        'form': form,
+        'product': product,
+        'product_category_choices': Product.PRODUCT_CATEGORY,
+        'product_usage_choices': Product.PRODUCT_USAGE,
+        'unit_of_measurement_choices': Product.MEASUREMENT_TYPES,
+    }
+    return render(request, 'pages/page-product-details.html', context)
 
 
 

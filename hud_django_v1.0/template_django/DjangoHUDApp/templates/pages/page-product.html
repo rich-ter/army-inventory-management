@@ -4,6 +4,14 @@
 
 {% block title %}Products{% endblock %}
 
+{% block css %}
+    <link href="{% static 'css/lightbox.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/lightbox.js' %}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="d-flex align-items-center mb-3">
         <div>
@@ -43,8 +51,13 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="w-50px h-50px bg-inverse bg-opacity-25 d-flex align-items-center justify-content-center">
-                                                <!-- Display product image if exists -->
-                                                <img alt="{{ product.name }}" class="mw-100 mh-100" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/default-image.jpg' %}{% endif %}">
+                                                {% if product.image %}
+                                                    <a href="{{ product.image.url }}" data-lightbox="product-{{ product.id }}" data-title="{{ product.name }}">
+                                                        <img alt="{{ product.name }}" class="mw-100 mh-100" src="{{ product.image.url }}">
+                                                    </a>
+                                                {% else %}
+                                                    <img alt="" class="mw-100 mh-100" src="{% static 'img/default-image.jpg' %}">
+                                                {% endif %}
                                             </div>
                                             <div class="ms-3">
                                                 <a href="{% url 'DjangoHUDApp:pageProductDetails' product.id %}" class="text-inverse text-opacity-75 text-decoration-none">{{ product.name }}</a>

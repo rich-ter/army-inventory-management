@@ -141,36 +141,6 @@ document.addEventListener("DOMContentLoaded", function() {
 				</div> {% endcomment %}
 			</div>
 		</div>
-		<div class="col-lg-4">
-			<div class="card mb-4">
-				<div class="card-header d-flex align-items-center fw-400 bg-inverse bg-opacity-10">
-					<div class="flex-1">
-						<div>Στοιχεία Προιόντος</div>
-					</div>
-				</div>
-				<div class="card-body">
-					<div class="">
-						{{ form.notes.errors }}
-						<label class="form-label">Σχόλια <span class="text-danger">*</span></label>
-						{{ form.notes }} <!-- Render the 'description' field -->
-					</div>
-				</div>
-					<div class="card mb-4">
-				        <div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-                            Attachments
-                        </div>
-                        <div class="card-body">
-                            <input type="file" name="attachment" class="form-control" id="attachment">
-                        </div>
-					</div>
-				<div class="card-arrow">
-					<div class="card-arrow-top-left"></div>
-					<div class="card-arrow-top-right"></div>
-					<div class="card-arrow-bottom-left"></div>
-					<div class="card-arrow-bottom-right"></div>
-				</div>
-			</div>
-		</div>
 	</div>
 	<button type="submit" class="btn btn-outline-theme btn-lg">Καταχώρηση Διακίνησης</button>
 </form>
