@@ -38,8 +38,14 @@
             </div>
         </div>
         <!-- Submit Button -->
-        <div class="col-md-2 mb-2">
-            <button type="submit" class="btn btn-theme w-100">Αναζήτηση</button>
+        <div class="col-md-1 mb-2">
+            <button type="submit" class="btn btn-theme w-100"><i class="fa fa-search"></i></button>
+        </div>
+        <!-- Clear Filters Button -->
+        <div class="col-md-1 mb-2">
+            <a href="{% url 'DjangoHUDApp:pageOrder' %}" class="btn btn-outline-secondary w-100">
+                <i class="fa fa-times"></i>
+            </a>
         </div>
     </div>
 </form>

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load filters_tags %}
 
 {% block title %}Διακινίσεις{% endblock %}
 
@@ -13,19 +14,21 @@
 			<a href="add-shipment" class="btn btn-outline-theme"><i class="fa fa-plus-circle fa-fw me-1"></i> Δημιουργία Διακίνησης</a>
 		</div>
 	</div>
+	{% render_shipment_filter_form filter %}
+
 	<div class="card">
-		<ul class="nav nav-tabs nav-tabs-v2 px-4">
+		{% comment %} <ul class="nav nav-tabs nav-tabs-v2 px-4">
 			<li class="nav-item me-3"><a href="#allTab" class="nav-link active px-2" data-bs-toggle="tab">Όλες</a></li>
 			<li class="nav-item me-3"><a href="#publishedTab" class="nav-link px-2" data-bs-toggle="tab">Εισαγωγή</a></li>
 			<li class="nav-item me-3"><a href="#expiredTab" class="nav-link px-2" data-bs-toggle="tab">Εξαγωγές</a></li>
-			{% comment %} <li class="nav-item me-3"><a href="#deletedTab" class="nav-link px-2" data-bs-toggle="tab">Open</a></li>
+			<li class="nav-item me-3"><a href="#deletedTab" class="nav-link px-2" data-bs-toggle="tab">Open</a></li>
 			<li class="nav-item me-3"><a href="#deletedTab" class="nav-link px-2" data-bs-toggle="tab">Closed</a></li>
-			<li class="nav-item me-3"><a href="#deletedTab" class="nav-link px-2" data-bs-toggle="tab">Local delivery</a></li> {% endcomment %}
-		</ul>
+			<li class="nav-item me-3"><a href="#deletedTab" class="nav-link px-2" data-bs-toggle="tab">Local delivery</a></li> 
+		</ul>{% endcomment %}
 		<div class="tab-content p-4">
 			<div class="tab-pane fade show active" id="allTab">
 				<!-- BEGIN input-group -->
-				<div class="input-group mb-4">
+				{% comment %} <div class="input-group mb-4">
 					<div class="flex-fill position-relative">
 						<div class="input-group">
 							<input type="text" class="form-control px-35px" placeholder="Filter orders">
@@ -50,7 +53,7 @@
 						<div role="separator" class="dropdown-divider"></div>
 						<a class="dropdown-item" href="#">Separated link</a>
 					</div>
-				</div>
+				</div> {% endcomment %}
 				<!-- END input-group -->
 				
 				<!-- BEGIN table -->
@@ -59,9 +62,8 @@
 						<thead>
 							<tr>
 								<th class="border-top-0 pt-0 pb-2"></th>
-								<th class="border-top-0 pt-0 pb-2">Αρ Παραγγελίας</th>
+								<th class="border-top-0 pt-0 pb-2">Αρ.</th>
 								<th class="border-top-0 pt-0 pb-2">Ημερομηνία</th>
-								<th class="border-top-0 pt-0 pb-2">Αποθήκη</th>
 								<th class="border-top-0 pt-0 pb-2">Παραλήπτης</th>
 								<th class="border-top-0 pt-0 pb-2">Τύπος Αποστολής</th>
 								<th class="border-top-0 pt-0 pb-2">Τρόπος Αποστολής</th>
@@ -87,7 +89,6 @@
 									</a>
 								</td>
 								<td class="align-middle">{{shipment.date}}</td>
-								<td class="align-middle">{{shipment.warehouse}}</td>
 								<td>{{ shipment.recipient|default:"-" }}</td>
 								<td class="py-1 align-middle">
 								{% if shipment.shipment_type == 'IN' %}

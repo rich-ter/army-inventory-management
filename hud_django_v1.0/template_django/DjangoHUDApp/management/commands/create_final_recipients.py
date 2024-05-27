@@ -66,7 +66,6 @@ class Command(BaseCommand):
             Recipient.objects.create(
                 commanding_unit=item["ΣΧΗΜΑΤΙΣΜΟΙ"],
                 recipient_unit=item["ΑΠΟΔΕΚΤΕΣ"],
-                contact_person=item["ΑΤΟΜΟ ΕΠΙΚΟΙΝΩΝΙΑΣ"],
                 notes=item["ΣΗΜΕΙΩΣΕΙΣ"]
             )
 

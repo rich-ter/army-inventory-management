@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum,F, Q
 from django.contrib.auth.decorators import login_required
-from .filters import ProductFilter
+from .filters import ProductFilter, ShipmentFilter
 from django.utils.dateparse import parse_date
 from django.utils import timezone
 from django.contrib import messages
@@ -149,23 +149,6 @@ def add_shipment(request):
         formset = ShipmentItemFormSet(prefix='shipmentitem')  # Provide prefix here as well
     return render(request, 'pages/add_order.html', {'form': form, 'formset': formset})
 
-def add_shipment_two(request):
-    if request.method == 'POST':
-        form = ShipmentForm(request.POST)  # Including request.FILES for completeness
-        if form.is_valid():
-            form.save()
-            return redirect('DjangoHUDApp:pageOrder')  # Redirect as appropriate
-    else:
-        form = ProductForm()
-        warehouses = Warehouse.objects.all()  # Fetch all warehouses
-
-    context = {
-        'form': form,
-        'warehouses': warehouses,  # Pass warehouses in the context
-    }
-    
-    return render(request, 'pages/add_order_two.html', context)
-
 @login_required
 def pageOrder(request):
     user = request.user
@@ -186,13 +169,17 @@ def pageOrder(request):
             # Default to no shipments if no specific group is found
             shipments_list = Shipment.objects.none()
 
+    shipments_filter = ShipmentFilter(request.GET, queryset=shipments_list)
+    shipments_list = shipments_filter.qs
+
     paginator = Paginator(shipments_list, 10)  # Show 10 products per page
     page_number = request.GET.get('page')
     shipments = paginator.get_page(page_number)
 
-    context = {'shipments': shipments}
+    context = {'shipments': shipments, 'filter': shipments_filter}
     return render(request, "pages/page-order.html", context)
 
+    
 @login_required
 def pageWarehouse(request):
     # Get the user's groups as a list of strings

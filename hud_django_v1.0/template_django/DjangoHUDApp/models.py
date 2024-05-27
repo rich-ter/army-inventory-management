@@ -70,25 +70,25 @@ class Product(models.Model):
 	    return f"{self.name} - {self.category}"
     
 
-class ProductInstance(models.Model):
-    PRODUCT_FUNCTIONALITY = [
-        ('ΛΕΙΤΟΥΡΓΙΚΟ', 'ΛΕΙΤΟΥΡΓΙΚΟ'),
-        ('ΥΠΟ ΕΛΕΓΧΟ', 'ΥΠΟ ΕΛΕΓΧΟ'),
-        ('ΒΛΑΒΗ', 'ΒΛΑΒΗ'),
-    ]
+# class ProductInstance(models.Model):
+#     PRODUCT_FUNCTIONALITY = [
+#         ('ΛΕΙΤΟΥΡΓΙΚΟ', 'ΛΕΙΤΟΥΡΓΙΚΟ'),
+#         ('ΥΠΟ ΕΛΕΓΧΟ', 'ΥΠΟ ΕΛΕΓΧΟ'),
+#         ('ΒΛΑΒΗ', 'ΒΛΑΒΗ'),
+#     ]
 
-    PRODUCT_CHARGE = [
-        ('ΧΡΕΩΜΕΝΟ', 'ΧΡΕΩΜΕΝΟ'),
-        ('ΑΧΡΕΩΤΟ', 'ΑΧΡΕΩΤΟ'),
-    ]
+#     PRODUCT_CHARGE = [
+#         ('ΧΡΕΩΜΕΝΟ', 'ΧΡΕΩΜΕΝΟ'),
+#         ('ΑΧΡΕΩΤΟ', 'ΑΧΡΕΩΤΟ'),
+#     ]
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='instances')
-    serial_number = models.CharField(max_length=100, unique=True, blank=True)
-    purchase_date = models.DateField(null=True, blank=True)
-    warranty_expiration = models.DateField(null=True, blank=True)
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='instances')
+#     serial_number = models.CharField(max_length=100, unique=True, blank=True)
+#     purchase_date = models.DateField(null=True, blank=True)
+#     warranty_expiration = models.DateField(null=True, blank=True)
     
-    def __str__(self):
-        return f"This is the product with id:{self.id} with the serial number{self.serial_number}"
+#     def __str__(self):
+#         return f"This is the product with id:{self.id} with the serial number{self.serial_number}"
 
 class Warehouse(models.Model):
     name = models.CharField(max_length=100)
@@ -107,7 +107,6 @@ class ShipmentItem(models.Model):
     def __str__(self):
         return f"{self.product.name} - Qty: {self.quantity} in {self.shipment}"
     
-
 @receiver(post_save, sender=ShipmentItem)
 def adjust_stock_on_save(sender, instance, created, **kwargs):
     adjust_stock(instance, created=True)
