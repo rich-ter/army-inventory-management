@@ -6,8 +6,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         commands = [
-            'create_final_recipients',
-            'create_groups_and_users',
+            'create_recipients',
+            'create_groups_users_warehouses',
             'create_doriforika_products',
             'create_kepik_products',
             'create_kepik_products_tsaprou'

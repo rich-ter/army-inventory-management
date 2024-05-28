@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Product Details{% endblock %}
+{% block title %}Καταχώρηση Διακίνησης{% endblock %}
 
 {% block css %}
 <link href="{% static 'plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
@@ -17,7 +17,7 @@ $(document).ready(function() {
         var totalForms = $('#id_' + '{{ formset.prefix }}-TOTAL_FORMS');
         var currentFormCount = parseInt(totalForms.val());
         var formsetContainer = $("#shipment-items-container");
-        
+
         // Clone the last form in the formset
         var lastForm = $(".shipment-item-form:last").clone(true);
 
@@ -47,102 +47,73 @@ $(document).ready(function() {
     });
 });
 </script>
-
-{% comment %} <script>
-document.addEventListener("DOMContentLoaded", function() {
-    var shipmentTypeSelect = document.getElementById('shipment_type_id');
-    var recipientSelect = document.getElementById('recipient_id');
-
-    function toggleRecipientField() {
-        if (shipmentTypeSelect.value === 'OUT') {
-            recipientSelect.style.display = 'block';
-        } else {
-            recipientSelect.style.display = 'none';
-        }
-    }
-
-    // Event listener for changes to the shipment type field
-    shipmentTypeSelect.addEventListener('change', toggleRecipientField);
-
-    // Call the function to set the initial state
-    toggleRecipientField();
-});
-</script> {% endcomment %}
-{% endblock %} 
+{% endblock %}
 
 {% block content %}
-	<div class="d-flex align-items-center mb-3">
-		<div>
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:;">PAGES</a></li>
-				<li class="breadcrumb-item active">PRODUCT DETAILS</li>
-			</ol>
-			<h1 class="page-header mb-0">Καταχώρηση Διακίνισης</h1>
-		</div>
-	</div>
-	<div class="row gx-4">
-		<div class="col-lg-8">
-			<div class="card mb-4">
-				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-					Πληροφορίες Διακίνισης
-				</div>
-				<form method="post" enctype="multipart/form-data">
-					{% csrf_token %}
-					{{ form.non_field_errors }}
-					<div class="card-body">
-						{{ form.as_p }}
-					<!-- Shipment Item Section -->
-					<div class="card mb-4">
-						<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-							Shipment Items
-						</div>
-						<div class="card-body" id="shipment-items-container">
-							{{ formset.management_form }}
-							{% for form in formset %}
-							    <div class="shipment-item-form">
-									<div class="row">
-										<!-- Product Field -->
-										<div class="col-md-4">
-											<div class="mb-3">
-												{{ form.product.label_tag }}
-												{{ form.product }}
-												{{ form.product.errors }}
-											</div>
-										</div>
-										<!-- Warehouse Field -->
-										<div class="col-md-4">
-											<div class="mb-3">
-												{{ form.warehouse.label_tag }}
-												{{ form.warehouse }}
-												{{ form.warehouse.errors }}
-											</div>
-										</div>
-										<!-- Quantity Field -->
-										<div class="col-md-4">
-											<div class="mb-3">
-												{{ form.quantity.label_tag }}
-												{{ form.quantity }}
-												{{ form.quantity.errors }}
-											</div>
-										</div>
-									</div>
-							</div>
-							{% endfor %}
-						</div>
-							<button type="button" id="add-more-items" class="btn btn-info">Add More Items</button>
-
-					</div>
-				</div>
-				{% comment %} <div class="card-arrow">
-					<div class="card-arrow-top-left"></div>
-					<div class="card-arrow-top-right"></div>
-					<div class="card-arrow-bottom-left"></div>
-					<div class="card-arrow-bottom-right"></div>
-				</div> {% endcomment %}
-			</div>
-		</div>
-	</div>
-	<button type="submit" class="btn btn-outline-theme btn-lg">Καταχώρηση Διακίνησης</button>
-</form>
-
+<div class="d-flex align-items-center mb-3">
+    <div>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:;">PAGES</a></li>
+            <li class="breadcrumb-item active">PRODUCT DETAILS</li>
+        </ol>
+        <h1 class="page-header mb-0">Καταχώρηση Διακίνισης</h1>
+    </div>
+</div>
+<div class="row gx-4">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
+                Πληροφορίες Διακίνισης
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="card-body">
+                    {{ form.as_p }}
+                    <!-- Shipment Item Section -->
+                    <div class="card mb-4">
+                        <div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
+                            Shipment Items
+                        </div>
+                        <div class="card-body" id="shipment-items-container">
+                            {{ formset.management_form }}
+                            {% for form in formset %}
+                                <div class="shipment-item-form">
+                                    <div class="row">
+                                        <!-- Product Field -->
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                {{ form.product.label_tag }}
+                                                {{ form.product }}
+                                                {{ form.product.errors }}
+                                            </div>
+                                        </div>
+                                        <!-- Warehouse Field -->
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                {{ form.warehouse.label_tag }}
+                                                {{ form.warehouse }}
+                                                {{ form.warehouse.errors }}
+                                            </div>
+                                        </div>
+                                        <!-- Quantity Field -->
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                {{ form.quantity.label_tag }}
+                                                {{ form.quantity }}
+                                                {{ form.quantity.errors }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" id="add-more-items" class="btn btn-info">Add More Items</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<button type="submit" class="btn btn-outline-theme btn-lg">Καταχώρηση Διακίνησης</button>
 {% endblock %}

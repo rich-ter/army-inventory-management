@@ -25,7 +25,7 @@ urlpatterns = [
 
     #warehouse pages
     path('warehouse', views.pageWarehouse, name='pageWarehouse'),
-    path('stock-per-warehouse/<int:warehouse_id>/', views.stockPerWarehouse, name='pageStockPerWarehouse'),
+    path('stock-per-warehouse/<str:warehouse_name>/', views.stockPerWarehouse, name='pageStockPerWarehouse'),
 
     #stock pages
     path('page/data-management', views.pageDataManagement, name='pageDataManagement'),

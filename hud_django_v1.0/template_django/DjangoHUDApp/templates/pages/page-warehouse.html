@@ -112,7 +112,7 @@
 									<!-- If you had an image or icon for each warehouse, it would go here. Otherwise, remove this div. -->
 									<div class="ms-3">
 										<!-- Adjust the URL name as per your urls.py for the warehouse details page -->
-										<a href="{% url 'DjangoHUDApp:pageStockPerWarehouse' warehouse.id %}" class="text-inverse text-opacity-75 text-decoration-none">{{ warehouse.name }}</a>
+										<a href="{% url 'DjangoHUDApp:pageStockPerWarehouse' warehouse.name %}" class="text-inverse text-opacity-75 text-decoration-none">{{ warehouse.name }}</a>
 									</div>
 								</div>
 							</td>

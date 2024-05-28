@@ -15,6 +15,8 @@ from django.utils import timezone
 from django.contrib import messages
 import pandas as pd
 from django.core.files.storage import FileSystemStorage
+from django.db import transaction
+from django.core.exceptions import ValidationError
 
 
 # Function for loging a user 
@@ -51,17 +53,17 @@ def logout_view(request):
 
 # Function for creating a product 
 # Function for creating a product
+@login_required
 def add_product(request):
     if request.method == 'POST':
-        # Create a form instance and populate it with data from the request:
-        form = ProductForm(request.POST, request.FILES)  # Ensure that request.FILES is also passed
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            # Save the new product to the database
-            form.save()
-            # Redirect to a new URL:
+            product = form.save(commit=False)
+            product.save()
+            product.owners.set(request.user.groups.all())  # Assign the product to the user's groups
+            product.save()
             return redirect('DjangoHUDApp:pageProduct')  # Redirect to an appropriate page after saving
         else:
-            # If the form is not valid, render the same page with validation errors
             return render(request, 'pages/add_product.html', {
                 'form': form,
                 'product_category_choices': Product.PRODUCT_CATEGORY,
@@ -69,7 +71,6 @@ def add_product(request):
                 'unit_of_measurement_choices': Product.MEASUREMENT_TYPES,
             })
     else:
-        # If this is a GET (or any other method) create the default form.
         form = ProductForm()
         context = {
             'form': form,
@@ -78,17 +79,15 @@ def add_product(request):
             'unit_of_measurement_choices': Product.MEASUREMENT_TYPES,
         }
         return render(request, 'pages/add_product.html', context)
-
+    
+    
 @login_required
 def pageProduct(request):
-    user_groups = request.user.groups.values_list('name', flat=True)
-
-    if 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
-        products_list = Product.objects.filter(usage='ΔΟΡΥΦΟΡΙΚΑ')
-    elif 'ΔΙΔΕΣ' in user_groups:
-        products_list = Product.objects.exclude(usage='ΔΟΡΥΦΟΡΙΚΑ')
-    else:
+    user_groups = request.user.groups.all()
+    if request.user.is_superuser:
         products_list = Product.objects.all()
+    else:
+        products_list = Product.objects.filter(owners__in=user_groups).distinct()
 
     product_filter = ProductFilter(request.GET, queryset=products_list)
     products_list = product_filter.qs
@@ -123,30 +122,33 @@ def product_details(request, product_id):
     return render(request, 'pages/page-product-details.html', context)
 
 
-
-@login_required  # Ensure that only logged-in users can access this view
+@login_required
 def add_shipment(request):
     if request.method == 'POST':
         form = ShipmentForm(request.POST, request.FILES)
-        # Ensure the prefix matches what you use in the template and is consistent
-        formset = ShipmentItemFormSet(request.POST, prefix='shipmentitem')
-        if form.is_valid():
-            shipment = form.save(commit=False)
-            shipment.user = request.user
-            # Set the date explicitly to ensure timezone.now() is used correctly
-            shipment.date = timezone.now()
-            # Temporarily save shipment to associate it correctly with formset instances
-            shipment.save()
-            formset = ShipmentItemFormSet(request.POST, instance=shipment, prefix='shipmentitem')
-            if formset.is_valid():
-                formset.save()
-                return redirect('DjangoHUDApp:pageOrder')  # Ensure this is the correct path
+        formset = ShipmentItemFormSet(request.POST, prefix='shipmentitem', user=request.user)
+
+        if form.is_valid() and formset.is_valid():
+            try:
+                with transaction.atomic():
+                    shipment = form.save(commit=False)
+                    shipment.user = request.user
+                    shipment.date = timezone.now()
+                    shipment.save()
+
+                    formset.instance = shipment
+                    formset.save()
+
+                    return redirect('DjangoHUDApp:pageOrder')
+            except ValidationError as e:
+                form.add_error(None, e)
         else:
             print(form.errors)
             print(formset.errors)
     else:
         form = ShipmentForm()
-        formset = ShipmentItemFormSet(prefix='shipmentitem')  # Provide prefix here as well
+        formset = ShipmentItemFormSet(prefix='shipmentitem', user=request.user)
+
     return render(request, 'pages/add_order.html', {'form': form, 'formset': formset})
 
 @login_required
@@ -196,7 +198,7 @@ def pageWarehouse(request):
     # Check for 'Doriforika' group and filter accordingly
     elif 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
         # Filter warehouses to show only those related to "Doriforika"
-        warehouses_list = Warehouse.objects.filter(name="Δορυφορικα").annotate(
+        warehouses_list = Warehouse.objects.filter(name="ΔΟΡΥΦΟΡΙΚΑ").annotate(
             total_stock=Sum('stocks__quantity')
         )
 
@@ -275,10 +277,10 @@ def pageDataManagement(request):
     else:
         user_groups = user.groups.values_list('name', flat=True)
         if 'ΔΙΔΕΣ' in user_groups:
-            products = Product.objects.exclude(usage='ΔΟΡΥΦΟΡΙΚΑ').annotate(total_stock=Sum('stocks__quantity'))
+            products = Product.objects.filter(owners__name='ΔΙΔΕΣ').annotate(total_stock=Sum('stocks__quantity'))
             warehouse_filter = ['ΚΕΠΙΚ', 'ΤΑΓΜΑ']
         elif 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
-            products = Product.objects.filter(usage='ΔΟΡΥΦΟΡΙΚΑ').annotate(total_stock=Sum('stocks__quantity'))
+            products = Product.objects.filter(owners__name='ΔΟΡΥΦΟΡΙΚΑ').annotate(total_stock=Sum('stocks__quantity'))
             warehouse_filter = ['ΔΟΡΥΦΟΡΙΚΑ']
 
     warehouses = Warehouse.objects.filter(name__in=warehouse_filter)
@@ -306,13 +308,11 @@ def pageDataManagement(request):
 
     return render(request, 'pages/page-data-management.html', context)
 
-def stockPerWarehouse(request, warehouse_id):
-    # Get the specific warehouse
-    warehouse = get_object_or_404(Warehouse, pk=warehouse_id)
+def stockPerWarehouse(request, warehouse_name):
+    # Get the specific warehouse by name
+    warehouse = get_object_or_404(Warehouse, name=warehouse_name)
     
     # Get the stock items that belong to this warehouse
-    # Assuming you have a reverse relationship from Warehouse to Stock set up in your models
-    # If not, adjust the following query to match your model relationships
     stock_items = Stock.objects.filter(warehouse=warehouse).select_related('product')
 
     # Include both the warehouse and the stock items in the context

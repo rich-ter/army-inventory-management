@@ -17,3 +17,5 @@ admin.site.register(Recipient)
 admin.site.register(Shipment, ShipmentAdmin)
 admin.site.register(Stock)
 # admin.site.register(ProductInstance)
+
+admin.site.register(ShipmentItem)

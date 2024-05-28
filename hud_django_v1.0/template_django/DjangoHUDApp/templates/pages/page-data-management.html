@@ -87,17 +87,40 @@
                     <th></th>
                     <th></th>
 					{% comment %} to fix the below to work, either here or on the template page {% endcomment %}
-                    {% if can_view_tagma %}                            
-						{% with total_tagma=0 %}
+                    {% if can_view_tagma %}
+                        <th>
+                            {% with total_tagma=0 %}
                                 {% for product in products_with_stock %}
                                     {% with total_tagma=total_tagma|add:product.stock_tagma %}
                                     {% endwith %}
                                 {% endfor %}
                                 {{ total_tagma }}
-                        {% endwith %}{% endif %}
-                    {% if can_view_kepik %}<th>241 sold</th>{% endif %}
-                    {% if can_view_doriforika %}<th>457 sold</th>{% endif %}
-                </tr>
+                            {% endwith %}
+                        </th>
+                    {% endif %}
+                    {% if can_view_kepik %}
+                        <th>
+                            {% with total_kepik=0 %}
+                                {% for product in products_with_stock %}
+                                    {% with total_kepik=total_kepik|add:product.stock_kepik %}
+                                    {% endwith %}
+                                {% endfor %}
+                                {{ total_kepik }}
+                            {% endwith %}
+                        </th>
+                    {% endif %}
+                    {% if can_view_doriforika %}
+                        <th>
+                            {% with total_doriforika=0 %}
+                                {% for product in products_with_stock %}
+                                    {% with total_doriforika=total_doriforika|add:product.stock_doriforika %}
+                                    {% endwith %}
+                                {% endfor %}
+                                {{ total_doriforika }}
+                            {% endwith %}
+                        </th>
+                    {% endif %}
+                    </tr>
             </tfoot>
         </table>
     </div>

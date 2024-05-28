@@ -13,108 +13,120 @@ def mark_active_link(menu, current_path_name):
     return menu
 
 def sidebar_menu(request):
-	sidebar_menu = [{
-		'text': 'Επιλογές',
-		'is_header': 1
-	},{
-		'url': '/index',
-		'icon': 'bi bi-cpu',
-		'text': 'Διαχείρηση',
-		'name': 'dashboard'
-	}, {
-		'is_divider': 1
-	}, {
-		'text': 'Ενέργειες Προιόντων',
-		'is_header': 1
-	}, 
-    #  {
-	# 	'icon': 'bi bi-bag-check',
-	# 	'text': 'Προιόντα',
-	# 	'children': ''
-	# }, 
-     {
-		'url': '/product',
-		'icon': 'fas fa-tags',
-		'text': 'Λίστα Προιόντων',
-		'name': 'pageProduct'
-	},{
-		'url': '/add-product',
-		'icon': 'fas fa-plus',
-		'text': 'Προσθήκη Προιόντος',
-		'name': 'dashboard'
-	},{
-		'url': '/page/data-management',
-		'icon': 'fas fa-barcode',
-		'text': 'Αποθέματα',
-		'name': 'pageDataManagement'
-	}, {
-		'is_divider': 1
-	}, {
-		'text': 'Ενέργιες Διακινίσεων',
-		'is_header': 1
-	}, {
-		'url': '/order',
-		'icon': 'bi bi-layout-sidebar',
-		'text': 'Λίστα Διακινίσεων',
-		'name': ''
-	}, {
-		'url': '/add-shipment',
-		'icon': 'far fa-envelope',
-		'text': 'Δημιουργία Διακίνισης',
-		'name': 'dashboard'
-	},{
-		'url': '/recipient',
-		'icon': 'far fa-address-book',
-		'text': 'Παραλήπτες',
-		'name': 'dashboard'
-	}, {
-		'is_divider': 1
-	}, {
-		'text': 'Ενέργειες Αποθηκών',
-		'is_header': 1
-	}, {
-		'url': '/warehouse',
-		'icon': 'fas fa-cubes',
-		'text': 'Λίστα Αποθηκών',
-		'name': 'dashboard'
-	}, {
-		'url': '/stock-per-warehouse/1',
-		'icon': 'fas fa-server',
-		'text': 'Αποθήκη ΚΕΠΙΚ',
-		'name': 'dashboard'
-	},{
-		'url': '/stock-per-warehouse/2',
-		'icon': 'fas fa-building',
-		'text': 'Αποθήκη Τάγματος',
-		'name': 'dashboard'
-	}, {
-		'url': '/stock-per-warehouse/3',
-		'icon': 'fas fa-signal',
-		'text': 'Αποθήκη Δορυφορικών',
-		'name': 'dashboard'
-	}, {
-		'is_divider': 1
-	}, {
-		'text': 'Άλλες Ενέργειες',
-		'is_header': 1
-	}, {
-		'url': '/logout',
-		'icon': 'bi bi-people',
-		'text': 'Έξοδος',
-		'name': 'logout'
-	},
-    # {
-	# 	'url': '/settings',
-	# 	'icon': 'bi bi-gear',
-	# 	'text': 'Ρυθμίσεις',
-	# 	'name': 'settings'
-	# }
-     ]
-	
-	resolved_path = resolve(request.path_info)
+    user = request.user
+    user_groups = user.groups.values_list('name', flat=True)
+    
+    # Define the sidebar menu
+    sidebar_menu = [{
+        'text': 'Επιλογές',
+        'is_header': 1
+    }, {
+        'url': '/index',
+        'icon': 'bi bi-cpu',
+        'text': 'Διαχείρηση',
+        'name': 'dashboard',
+        'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']  # Specify groups and admin that can see this item
+    }, {
+        'is_divider': 1
+    }, {
+        'text': 'Ενέργειες Προιόντων',
+        'is_header': 1
+    }, {
+        'url': '/product',
+        'icon': 'fas fa-tags',
+        'text': 'Λίστα Προιόντων',
+        'name': 'pageProduct',
+        'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']
+    }, {
+        'url': '/add-product',
+        'icon': 'fas fa-plus',
+        'text': 'Προσθήκη Προιόντος',
+        'name': 'dashboard',
+        'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']
+    }, {
+        'url': '/page/data-management',
+        'icon': 'fas fa-barcode',
+        'text': 'Αποθέματα',
+        'name': 'pageDataManagement',
+        'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']
+    }, {
+        'is_divider': 1
+    }, {
+        'text': 'Ενέργιες Διακινίσεων',
+        'is_header': 1
+    }, {
+        'url': '/order',
+        'icon': 'bi bi-layout-sidebar',
+        'text': 'Λίστα Διακινίσεων',
+        'name': '',
+        'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']
+    }, {
+        'url': '/add-shipment',
+        'icon': 'far fa-envelope',
+        'text': 'Δημιουργία Διακίνισης',
+        'name': 'dashboard',
+        'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']
+    }, {
+        'url': '/recipient',
+        'icon': 'far fa-address-book',
+        'text': 'Παραλήπτες',
+        'name': 'dashboard',
+        'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']
+    }, {
+        'is_divider': 1
+    }, {
+        'text': 'Ενέργειες Αποθηκών',
+        'is_header': 1
+    }, {
+        'url': '/warehouse',
+        'icon': 'fas fa-cubes',
+        'text': 'Λίστα Αποθηκών',
+        'name': 'dashboard',
+        'groups': ['ΔΙΔΕΣ', 'admin']
+    }, {
+        'url': '/stock-per-warehouse/ΚΕΠΙΚ',
+        'icon': 'fas fa-server',
+        'text': 'Αποθήκη ΚΕΠΙΚ',
+        'name': 'dashboard',
+        'groups': ['ΔΙΔΕΣ', 'admin']
+    }, {
+        'url': '/stock-per-warehouse/ΤΑΓΜΑ',
+        'icon': 'fas fa-building',
+        'text': 'Αποθήκη Τάγματος',
+        'name': 'dashboard',
+        'groups': ['ΔΙΔΕΣ', 'admin']
+    }, {
+        'url': '/stock-per-warehouse/ΔΟΡΥΦΟΡΙΚΑ',
+        'icon': 'fas fa-signal',
+        'text': 'Αποθήκη Δορυφορικών',
+        'name': 'dashboard',
+        'groups': ['ΔΟΡΥΦΟΡΙΚΑ', 'admin']
+    }, {
+        'is_divider': 1
+    }, {
+        'text': 'Άλλες Ενέργειες',
+        'is_header': 1
+    }, {
+        'url': '/logout',
+        'icon': 'bi bi-people',
+        'text': 'Έξοδος',
+        'name': 'logout',
+        'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']
+    }]
+    
+    # Filter menu items based on user groups or if user is an admin
+    filtered_menu = []
+    for item in sidebar_menu:
+        if 'groups' in item:
+            if 'admin' in item['groups'] and user.is_superuser:
+                filtered_menu.append(item)
+            elif any(group in user_groups for group in item['groups']):
+                filtered_menu.append(item)
+        else:
+            filtered_menu.append(item)
 
-	current_path_name = resolved_path.url_name
-	
-	sidebar_menu = mark_active_link(sidebar_menu, current_path_name)
+    resolved_path = resolve(request.path_info)
+    current_path_name = resolved_path.url_name
+    filtered_menu = mark_active_link(filtered_menu, current_path_name)
 
-	return {'sidebar_menu': sidebar_menu}
+    return {'sidebar_menu': filtered_menu}

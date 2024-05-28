@@ -9,9 +9,7 @@
       {% elif menu.is_divider %}
       <div class="menu-divider"></div>
       {% else %}
-      <div
-        class="menu-item {% if menu.children %} has-sub {% endif %} {% if menu.is_active %} active {% endif %}"
-      >
+      <div class="menu-item {% if menu.children %} has-sub {% endif %} {% if menu.is_active %} active {% endif %}">
         <a href="{{ menu.url }}" class="menu-link">
           <span class="menu-icon"><i class="{{ menu.icon }}"></i></span>
           <span class="menu-text">{{ menu.text }}</span>
@@ -35,12 +33,8 @@
     </div>
     <!-- END menu -->
     <div class="p-3 px-4 mt-auto">
-      <a
-        href="add-shipment"
-        class="btn d-block btn-outline-theme"
-      >
-        <i class="fa fa-code-branch me-2 ms-n2 opacity-5"></i> Δημιουργία
-        Διακίνησης
+      <a href="add-shipment" class="btn d-block btn-outline-theme">
+        <i class="fa fa-code-branch me-2 ms-n2 opacity-5"></i> Δημιουργία Διακίνησης
       </a>
     </div>
   </div>
@@ -49,9 +43,5 @@
 <!-- END #sidebar -->
 
 <!-- BEGIN mobile-sidebar-backdrop -->
-<button
-  class="app-sidebar-mobile-backdrop"
-  data-toggle-target=".app"
-  data-toggle-class="app-sidebar-mobile-toggled"
-></button>
+<button class="app-sidebar-mobile-backdrop" data-toggle-target=".app" data-toggle-class="app-sidebar-mobile-toggled"></button>
 <!-- END mobile-sidebar-backdrop -->

@@ -70,25 +70,28 @@ class Product(models.Model):
 	    return f"{self.name} - {self.category}"
     
 
-# class ProductInstance(models.Model):
-#     PRODUCT_FUNCTIONALITY = [
-#         ('ΛΕΙΤΟΥΡΓΙΚΟ', 'ΛΕΙΤΟΥΡΓΙΚΟ'),
-#         ('ΥΠΟ ΕΛΕΓΧΟ', 'ΥΠΟ ΕΛΕΓΧΟ'),
-#         ('ΒΛΑΒΗ', 'ΒΛΑΒΗ'),
-#     ]
+class Shipment(models.Model):
+    SHIPMENT_TYPE_CHOICES = [
+        ('IN', 'Incoming'),
+        ('OUT', 'Outgoing'),
+    ]
 
-#     PRODUCT_CHARGE = [
-#         ('ΧΡΕΩΜΕΝΟ', 'ΧΡΕΩΜΕΝΟ'),
-#         ('ΑΧΡΕΩΤΟ', 'ΑΧΡΕΩΤΟ'),
-#     ]
+    SHIPMENT_METHOD_CHOICES = [
+        ('ΥΕΣΑ', 'ΥΕΣΑ'),
+        ('ΚΡΥΠΤΟΔΙΑΥΛΟΣ', 'ΚΡΥΠΤΟΔΙΑΥΛΟΣ'),
+        ('ΠΑΡΑΛΑΒΗ ΑΠΟ ΕΞΟΥΣΙΟΔΟΤΗΜΕΝΟ ΠΡΟΣΩΠΙΚΟ', 'ΠΑΡΑΛΑΒΗ ΑΠΟ ΕΞΟΥΣΙΟΔΟΤΗΜΕΝΟ ΠΡΟΣΩΠΙΚΟ'),
+    ]
 
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='instances')
-#     serial_number = models.CharField(max_length=100, unique=True, blank=True)
-#     purchase_date = models.DateField(null=True, blank=True)
-#     warranty_expiration = models.DateField(null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shipments')
+    shipment_type = models.CharField(max_length=3, choices=SHIPMENT_TYPE_CHOICES)
+    date = models.DateTimeField(default=timezone.now)
+    recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
+    notes = models.CharField(max_length=200, null=True, blank=True)
+    attachment = models.FileField(upload_to='shipment_attachments/', null=True, blank=True)  # Store file path in database
+
+    def __str__(self):
+        return f" Αποστολή από {self.user} / Τύπου: {self.shipment_type} - Ημερομηνία: {self.date}"
     
-#     def __str__(self):
-#         return f"This is the product with id:{self.id} with the serial number{self.serial_number}"
 
 class Warehouse(models.Model):
     name = models.CharField(max_length=100)
@@ -99,13 +102,24 @@ class Warehouse(models.Model):
         return f"{self.name}"
     
 class ShipmentItem(models.Model):
-    shipment = models.ForeignKey('Shipment', on_delete=models.CASCADE, related_name='shipment_items')
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, related_name='shipment_items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField()
 
     def __str__(self):
         return f"{self.product.name} - Qty: {self.quantity} in {self.shipment}"
+
+    def clean(self):
+        """Ensure stock validation before saving the shipment item."""
+        if self.shipment.shipment_type == 'OUT':
+            stock = Stock.objects.get(product=self.product, warehouse=self.warehouse)
+            if stock.quantity < self.quantity:
+                raise ValidationError(f'Insufficient stock for {self.product.name} in {self.warehouse.name}. Cannot proceed with the operation.')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
     
 @receiver(post_save, sender=ShipmentItem)
 def adjust_stock_on_save(sender, instance, created, **kwargs):
@@ -138,30 +152,6 @@ def adjust_stock(instance, created):
 
         stock.save()
 
-
-
-class Shipment(models.Model):
-    SHIPMENT_TYPE_CHOICES = [
-        ('IN', 'Incoming'),
-        ('OUT', 'Outgoing'),
-    ]
-
-    SHIPMENT_METHOD_CHOICES = [
-        ('ΥΕΣΑ', 'ΥΕΣΑ'),
-        ('ΚΡΥΠΤΟΔΙΑΥΛΟΣ', 'ΚΡΥΠΤΟΔΙΑΥΛΟΣ'),
-        ('ΠΑΡΑΛΑΒΗ ΑΠΟ ΕΞΟΥΣΙΟΔΟΤΗΜΕΝΟ ΠΡΟΣΩΠΙΚΟ', 'ΠΑΡΑΛΑΒΗ ΑΠΟ ΕΞΟΥΣΙΟΔΟΤΗΜΕΝΟ ΠΡΟΣΩΠΙΚΟ'),
-    ]
-
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shipments')
-    shipment_type = models.CharField(max_length=3, choices=SHIPMENT_TYPE_CHOICES)
-    date = models.DateTimeField(default=timezone.now)
-    recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
-    notes = models.CharField(max_length=200, null=True, blank=True)
-    attachment = models.FileField(upload_to='shipment_attachments/', null=True, blank=True)  # Store file path in database
-
-    def __str__(self):
-        return f" Αποστολή από {self.user} / Τύπου: {self.shipment_type} - Ημερομηνία: {self.date}"
-    
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stocks')
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='stocks')
