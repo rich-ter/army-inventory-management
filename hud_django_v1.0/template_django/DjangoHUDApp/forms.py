@@ -78,8 +78,10 @@ class ShipmentItemFormSetWithUser(forms.BaseInlineFormSet):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         for form in self.forms:
-            form.fields['warehouse'].queryset = Warehouse.objects.filter(access_groups__in=self.user.groups.all()).distinct()
-
+                user_groups = self.user.groups.all()
+                form.fields['product'].queryset = Product.objects.filter(owners__in=user_groups).distinct()
+                form.fields['warehouse'].queryset = Warehouse.objects.filter(access_groups__in=user_groups).distinct()
+                
 ShipmentItemFormSet = inlineformset_factory(
     Shipment,
     ShipmentItem,
