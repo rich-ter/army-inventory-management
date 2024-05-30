@@ -5,12 +5,8 @@
 3. MAKE SURE BACK-END LOGIC WORKS FOR CORRECTLY ADDING AND REMOVING ITEMS FROM THE WAREHOUSES.
 6. Finalise Dashboards
 7. Create the django admin to have the 3 different users above and to be able to add products only for their warehouse.
-15. create management command for creating the products in the right order, specifying the warehouses etc. 
 16. fix routing and route names. 
 18. If time, then add a page for the recipients to have a list to show all recent shipemnts to that recipient.
-20. To ensure order of deleting and CASCADE.models delete is working as expected and logical for deleted orders and not breaking the app. 
-21. ensure CSV importer has no issues, make it visible only to the admin for that functionality, hide the button otherwise.
-22. deployment
 23. Ensure that if user creates something, other's can't view it. all his created things appear in 
 Need to make sure that the user can only send products that belong to his user gorup.
 
@@ -29,12 +25,18 @@ Need to make sure that the user can only send products that belong to his user g
 17. Have the incoming to also have a recipient which can be eborio, OTe etc. remove the conditional logic from having the shipment only outgoing showing the recipient.
 24. When creating shipments ensure only the available warehouses are shown in the dropdown as to where the product is going or leaving from. 
 25. ensure that when a user adds a product, the product is automatically assigned to the creator's user group. 
+15. create management command for creating the products in the right order, specifying the warehouses etc. 
+21. ensure CSV importer has no issues, make it visible only to the admin for that functionality, hide the button otherwise.
+20. To ensure order of deleting and CASCADE.models delete is working as expected and logical for deleted orders and not breaking the app. 
+22. deployment
+2. Issue with creating δορυφορικά products that also go to a adifferent warehouse. 
+1. WHEN 'CREATING ORDER' EVEN IF THE STOCK IS LOWER AND IT DOESNT LET THE OBJECT IS ACTUALLY CREATED EVEN THO THE ERROR IS SHOWING.
 
 
 ------ BUGS ------ 
 
-1. WHEN 'CREATING ORDER' EVEN IF THE STOCK IS LOWER AND IT DOESNT LET THE OBJECT IS ACTUALLY CREATED EVEN THO THE ERROR IS SHOWING.
-2. Issue with creating δορυφορικά products that also go to a adifferent warehouse. 
+3. On the deployed server when we create a shipment we can't press the submit button to fulfil.
+
 
 
 
