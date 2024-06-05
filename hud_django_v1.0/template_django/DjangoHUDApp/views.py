@@ -17,6 +17,7 @@ import pandas as pd
 from django.core.files.storage import FileSystemStorage
 from django.db import transaction
 from django.core.exceptions import ValidationError
+from .models import ProductCategory, ProductUsage
 
 
 # Function for loging a user 
@@ -74,8 +75,8 @@ def add_product(request):
         form = ProductForm()
         context = {
             'form': form,
-            'product_category_choices': Product.PRODUCT_CATEGORY,
-            'product_usage_choices': Product.PRODUCT_USAGE,
+            'product_category_choices': ProductCategory.objects.all(),
+            'product_usage_choices': ProductUsage.objects.all(),
             'unit_of_measurement_choices': Product.MEASUREMENT_TYPES,
         }
         return render(request, 'pages/add_product.html', context)
@@ -334,6 +335,16 @@ def pageRecipient(request):
 # 	return render(request, "pages/index.html")
 
 def index(request):
+
+    user = request.user
+
+    # Get the user's groups
+    user_groups = user.groups.all()
+
+    # Calculate the total number of products the user can view in their warehouses
+    total_products = Product.objects.filter(owners__in=user_groups).distinct().count()
+    total_shipments_sent = Shipment.objects.filter(user=user).count()
+
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
@@ -341,6 +352,12 @@ def index(request):
     stocks = Stock.objects.all()
     total_shipments = 0
     total_stock = 0
+
+    top_products = (Stock.objects
+                    .filter(warehouse__access_groups__in=user_groups)
+                    .values('product__name', 'product__image')
+                    .annotate(total_quantity=Sum('quantity'))
+                    .order_by('-total_quantity')[:10])
 
     if start_date and end_date:
         start_date = parse_date(start_date)
@@ -357,6 +374,9 @@ def index(request):
     recent_shipments = shipments.order_by('-date')[:10]
 
     context = {
+        'top_products': top_products,
+        'total_products': total_products,
+        'total_shipments_sent': total_shipments_sent,
         'start_date': start_date,
         'end_date': end_date,
         'total_shipments': total_shipments,

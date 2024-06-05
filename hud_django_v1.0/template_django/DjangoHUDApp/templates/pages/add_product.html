@@ -44,7 +44,6 @@
 					Πληροφορίες Προιόντος
 				</div>
 
-
 			<form method="post" enctype="multipart/form-data">
 				{% csrf_token %}
 				        {{ form.non_field_errors }}
@@ -86,39 +85,19 @@
 					<div class="mb-3">
 						<label class="form-label">Μονάδα Μέτρησης</label>
 							<div class="mb-lg-0 mb-3">
-								<select class="form-select" name="warranty_type_id">
-									<option value="">-- Μονάδα Μέτρησης --</option>
-									<option value="1">ΤΕΜΑΧΙΑ</option>
-									<option value="2">ΜΕΤΡΑ</option>
-								</select>
+								{{ form.unit_of_measurement }}
 							</div>
 					</div> 
 					<div class="mb-3">
 						<label class="form-label">Κατηγορία Προιόντος</label>
 							<div class="mb-lg-0 mb-3">
-								<select class="form-select" name="warranty_type_id">
-									<option value="">-- Επιλογή Κατηγορίας --</option>
-
-									{% for value, display_name in product_category_choices %}
-                					<option value="{{ value }}">{{ display_name }}</option>
-            						{% endfor %}
-									{% comment %} <option value="">-- Επιλογή Κατηγορίας --</option>
-									<option value="1">No Warranty</option>
-									<option value="2">Local Supplier Warranty</option>
-									<option value="3">Local Manufacturer Warranty</option>
-									<option value="4">International Manufacturer Warranty</option> {% endcomment %}
-								</select>
+								{{ form.category }}
 							</div>
 					</div>
 					<div class="mb-0">
 						<label class="form-label">Χρήση Προιόντος</label>
 							<div class="mb-lg-0 mb-3">
-								<select class="form-select" name="warranty_type_id">
-									<option value="">-- Επιλογή Χρήσης --</option>
-										{% for value, display_name in product_usage_choices %}
-											<option value="{{ value }}">{{ display_name }}</option>
-										{% endfor %}
-								</select>
+								{{ form.usage }}
 							</div>
 					</div>
 				</div>

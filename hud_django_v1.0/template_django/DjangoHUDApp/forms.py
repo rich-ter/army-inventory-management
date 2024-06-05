@@ -2,6 +2,7 @@ from django import forms
 from .models import Product, Shipment, ShipmentItem, Warehouse
 from django.forms import inlineformset_factory
 from django.contrib.auth.models import Group
+from .models import Product, ProductCategory, ProductUsage
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -17,14 +18,23 @@ class ProductForm(forms.ModelForm):
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Onoma'}))
     batch_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Merida ilikou'}), required=False)
     description = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'rows': 6}), required=False)
-    category = forms.ChoiceField(choices=Product.PRODUCT_CATEGORY, widget=forms.Select(attrs={'class': 'form-select'}), required=False)
-    usage = forms.ChoiceField(choices=Product.PRODUCT_USAGE, widget=forms.Select(attrs={'class': 'form-select'}), required=False)
+    category = forms.ModelChoiceField(queryset=ProductCategory.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-select'}))
+    usage = forms.ModelChoiceField(queryset=ProductUsage.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-select'}))
     unit_of_measurement = forms.ChoiceField(choices=Product.MEASUREMENT_TYPES, widget=forms.Select(attrs={'class': 'form-select'}), required=False)
     image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))  # Adding the image field
 
     class Meta:
         model = Product
         fields = ['name', 'batch_number', 'category', 'usage', 'description', 'unit_of_measurement', 'image']
+        labels = {
+            'name': 'Όνομα Προϊόντος',
+            'batch_number': 'Αριθμός Μερίδας',
+            'category': 'Κατηγορία Προϊόντος',
+            'usage': 'Χρήση Προϊόντος',
+            'description': 'Περιγραφή',
+            'unit_of_measurement': 'Μονάδα Μέτρησης',
+            'image': 'Εικόνα Προϊόντος'
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -44,6 +54,13 @@ class ShipmentForm(forms.ModelForm):
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'attachment': forms.FileInput(attrs={'class': 'form-control'})  # Add this line for file input
         }
+        labels = {
+            'shipment_type': 'Τύπος Αποστολής',  # Custom title for shipment_type
+            'recipient': 'Παραλήπτης',  # Custom title for recipient
+            'date': 'Ημερομηνία',  # Custom title for date
+            'notes': 'Σημειώσεις',  # Custom title for notes
+            'attachment': 'Συνημμένο'  # Custom title for attachment
+        }
 
     def __init__(self, *args, **kwargs):
         super(ShipmentForm, self).__init__(*args, **kwargs)
@@ -52,6 +69,11 @@ class ShipmentItemForm(forms.ModelForm):
     class Meta:
         model = ShipmentItem
         fields = ['product', 'warehouse', 'quantity']
+        labels = {
+            'product': 'Προϊόντος',  # Custom title for shipment_type
+            'warehouse': 'Αποθήκη',  # Custom title for recipient
+            'quantity': 'Ποσότητα'  # Custom title for date
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)

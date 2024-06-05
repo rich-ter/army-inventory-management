@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Product, Warehouse, Recipient, Shipment, ShipmentItem, Stock
 from django.core.exceptions import ValidationError
+from .models import Product, ProductCategory, ProductUsage
 
 class ShipmentItemInline(admin.TabularInline):
     model = ShipmentItem
@@ -9,13 +10,20 @@ class ShipmentItemInline(admin.TabularInline):
 class ShipmentAdmin(admin.ModelAdmin):
     inlines = [ShipmentItemInline,]
 
-# Register your models with the admin site
-admin.site.register(Product)
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+@admin.register(ProductUsage)
+class ProductUsageAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'usage', 'description')
+
 admin.site.register(Warehouse)
 admin.site.register(Recipient)
-# Make sure to register Shipment with ShipmentAdmin only once
 admin.site.register(Shipment, ShipmentAdmin)
 admin.site.register(Stock)
-# admin.site.register(ProductInstance)
-
 admin.site.register(ShipmentItem)

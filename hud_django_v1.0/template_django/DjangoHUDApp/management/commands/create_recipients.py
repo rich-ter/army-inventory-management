@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from DjangoHUDApp.models import Recipient
+import re
 
 class Command(BaseCommand):
     help = 'Imports a list of recipients into the database'
@@ -62,11 +63,19 @@ class Command(BaseCommand):
             {"ΣΧΗΜΑΤΙΣΜΟΙ": "ΟΤΕ", "ΑΠΟΔΕΚΤΕΣ": "ΟΤΕ", "ΑΤΟΜΟ ΕΠΙΚΟΙΝΩΝΙΑΣ": "", "ΣΗΜΕΙΩΣΕΙΣ": ""},
         ]
 
+        # Function to extract the first numerical part from the "ΣΧΗΜΑΤΙΣΜΟΙ" value
+        def extract_number(text):
+            match = re.search(r'\d+', text)
+            return int(match.group()) if match else float('inf')
+
+        # Sort data by the numerical part of the "ΣΧΗΜΑΤΙΣΜΟΙ" key
+        data = sorted(data, key=lambda x: extract_number(x["ΣΧΗΜΑΤΙΣΜΟΙ"]))
+
         for item in data:
             Recipient.objects.create(
                 commanding_unit=item["ΣΧΗΜΑΤΙΣΜΟΙ"],
                 recipient_unit=item["ΑΠΟΔΕΚΤΕΣ"],
-                notes=item["ΣΗΜΕΙΩΣΕΙΣ"]
+                notes=''
             )
 
         self.stdout.write(self.style.SUCCESS('Successfully imported recipient data.'))

@@ -23,7 +23,7 @@ def sidebar_menu(request):
     }, {
         'url': '/index',
         'icon': 'bi bi-cpu',
-        'text': 'Διαχείρηση',
+        'text': 'Πίνακας Ελέγχου',
         'name': 'dashboard',
         'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']  # Specify groups and admin that can see this item
     }, {

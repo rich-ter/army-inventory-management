@@ -1,6 +1,7 @@
 import json
 from django.core.management.base import BaseCommand
 from DjangoHUDApp.models import Product, Warehouse, Stock, Group
+from DjangoHUDApp.models import Product, ProductCategory, ProductUsage, Stock, Warehouse
 
 class Command(BaseCommand):
     help = 'Load products into the Kepik warehouse from a JSON file'
@@ -9,6 +10,10 @@ class Command(BaseCommand):
 
         # Ensure the ΔΙΔΕΣ group exists
         dides_group, _ = Group.objects.get_or_create(name='ΔΙΔΕΣ')
+        kepik_warehouse, _ = Warehouse.objects.get_or_create(name='Kepik Warehouse')
+       # Get the specific categories and usages by their names
+        category_kamia_epilogi = ProductCategory.objects.get(name="ΚΑΜΙΑ ΕΠΙΛΟΓΗ")
+        usage_kamia_epilogi = ProductUsage.objects.get(name="ΚΑΜΙΑ ΕΠΙΛΟΓΗ")
 
         # The product data to be loaded
         kepik_products = [
@@ -311,28 +316,27 @@ class Command(BaseCommand):
         ]
 
 
+        # Process each product and assign it to the group and warehouse
         for item in kepik_products:
             # Create or get the product
             product, created = Product.objects.get_or_create(
-                name=item["name"],
+                batch_number=item["batch_number"],
                 defaults={
-                    'category': 'ΚΑΜΙΑ ΕΠΙΛΟΓΗ',
-                    'usage': 'ΚΑΜΙΑ ΕΠΙΛΟΓΗ',
-                    'description': item.get("description", ""),
-                    'batch_number': item["batch_number"],  # Assuming default value as you didn't provide in the JSON
-                    'unit_of_measurement': 'ΤΕΜΑΧΙΑ'  # Assuming default value as you didn't provide in the JSON
+                    'name': item["name"],
+                    'unit_of_measurement': item["unit_of_measurement"],
+                    'category': category_kamia_epilogi,
+                    'usage': usage_kamia_epilogi,
+                    'description': ''
                 }
             )
-            
-            # Add the ΔΙΔΕΣ group to the product owners if the product was newly created
+
+            # Add the product to the "ΔΟΡΥΦΟΡΙΚΑ" group
             if created:
                 product.owners.add(dides_group)
+                product.save()
 
-            # Update stock for the Kepik warehouse
-            # Stock.objects.update_or_create(
-            #     product=product,
-            #     warehouse=kepik_warehouse,
-            #     defaults={'quantity': item["ΣΥΝΟΛΟ"]}
-            # )
+            # stock, _ = Stock.objects.get_or_create(product=product, warehouse=kepik_warehouse, defaults={'quantity': item["QUANTITY"]})
+            # stock.quantity = item["QUANTITY"]
+            # stock.save()
 
-        self.stdout.write(self.style.SUCCESS('Successfully loaded Kepik 2 products into the database'))
+        self.stdout.write(self.style.SUCCESS('Products created and assigned to kepik tsaprou group successfully'))

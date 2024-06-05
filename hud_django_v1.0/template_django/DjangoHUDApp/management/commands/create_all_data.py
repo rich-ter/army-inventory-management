@@ -8,6 +8,7 @@ class Command(BaseCommand):
         commands = [
             'create_recipients',
             'create_groups_users_warehouses',
+            'create_product_usage_and_category',
             'create_doriforika_products',
             'create_kepik_products',
             'create_kepik_products_tsaprou'

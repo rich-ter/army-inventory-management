@@ -52,10 +52,6 @@ $(document).ready(function() {
 {% block content %}
 <div class="d-flex align-items-center mb-3">
     <div>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="javascript:;">PAGES</a></li>
-            <li class="breadcrumb-item active">PRODUCT DETAILS</li>
-        </ol>
         <h1 class="page-header mb-0">Καταχώρηση Διακίνισης</h1>
     </div>
 </div>
@@ -73,7 +69,7 @@ $(document).ready(function() {
                     <!-- Shipment Item Section -->
                     <div class="card mb-4">
                         <div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-                            Shipment Items
+                            Τύπος Αποστολής
                         </div>
                         <div class="card-body" id="shipment-items-container">
                             {{ formset.management_form }}
@@ -108,7 +104,7 @@ $(document).ready(function() {
                                 </div>
                             {% endfor %}
                         </div>
-                        <button type="button" id="add-more-items" class="btn btn-info">Add More Items</button>
+                        <button type="button" id="add-more-items" class="btn btn-info">Προσθήκη προιόντων</button>
                     </div>
                 </div>
             </form>

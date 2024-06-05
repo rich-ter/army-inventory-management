@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group
 from DjangoHUDApp.models import Product, Warehouse, Stock
+from DjangoHUDApp.models import Product, ProductCategory, ProductUsage, Warehouse, Stock
 
 class Command(BaseCommand):
     help = 'Creates all the product instances for doriforika created'
@@ -9,6 +10,9 @@ class Command(BaseCommand):
         # Retrieve the "ΔΟΡΥΦΟΡΙΚΑ" group
         group_doriforika, created = Group.objects.get_or_create(name='ΔΟΡΥΦΟΡΙΚΑ')
 
+        category_kamia_epilogi = ProductCategory.objects.get(name='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
+        usage_doriforika = ProductUsage.objects.get(name='ΔΟΡΥΦΟΡΙΚΑ')
+        
         doriforika_products = [
             {"BATCH NO.": 751, "NAME": "ΤΕΧΝΙΚΑ ΕΓΧΕΙΡΙΔΙΑ", "UNITS OF MEASUREMENT": "Τεμάχια", "QUANTITY": 4},
             {"BATCH NO.": 798, "NAME": "Τ.Δ.FD177/RACAL/PRM4720B", "UNITS OF MEASUREMENT": "Τεμάχια", "QUANTITY": 10},
@@ -216,13 +220,22 @@ class Command(BaseCommand):
                 'batch_number': data["BATCH NO."],
                 'name': data["NAME"],
                 'unit_of_measurement': data["UNITS OF MEASUREMENT"],
-                'category': 'ΚΑΜΙΑ ΕΠΙΛΟΓΗ',
-                'usage': 'ΔΟΡΥΦΟΡΙΚΑ',
+                'category': category_kamia_epilogi,
+                'usage': usage_doriforika,
                 'description': ''
             }
 
             # Create or retrieve the product
-            product, created = Product.objects.get_or_create(**product_data)
+            product, created = Product.objects.get_or_create(
+                batch_number=product_data['batch_number'],
+                name=product_data['name'],
+                defaults={
+                    'unit_of_measurement': product_data['unit_of_measurement'],
+                    'category': product_data['category'],
+                    'usage': product_data['usage'],
+                    'description': product_data['description'],
+                }
+            )
             
             # Add the product to the "ΔΟΡΥΦΟΡΙΚΑ" group
             product.owners.add(group_doriforika)

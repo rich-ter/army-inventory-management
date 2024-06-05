@@ -18,31 +18,20 @@ class Recipient(models.Model):
     def __str__(self):
 	    return self.recipient_unit
 
+class ProductCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class ProductUsage(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+    
 
 class Product(models.Model):
-
-    PRODUCT_CATEGORY = (
-        ("ΔΡΟΜΟΛΟΓΗΤΗΣ", "ΔΡΟΜΟΛΟΓΗΤΗΣ"), 
-        ("CONVERTER", "CONVERTER"),
-        ("SWITCH", "SWITCH"),
-        ("MODULES", "MODULES"),
-        ("ΜΕΤΑΤΡΟΠΕΑΣ", "ΜΕΤΑΤΡΟΠΕΑΣ"),
-        ("LAN EXTENDER", "LAN EXTENDER"),   
-        ("ΚΑΛΩΔΙΩΣΗ", "ΚΑΛΩΔΙΩΣΗ"),
-        ("ΛΟΙΠΑ ΥΛΙΚΑ", "ΛΟΙΠΑ ΥΛΙΚΑ"),
-        ("IP PHONES", "IP PHONES"),
-        ("ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "ΚΑΜΙΑ ΕΠΙΛΟΓΗ"),
-    )
-
-    PRODUCT_USAGE = (
-        ("ΔΙΔΕΣ ΔΙΚΤΥΑΚΟΣ ΕΞΟΠΛΙΣΜΟΣ", "ΔΙΔΕΣ ΔΙΚΤΥΑΚΟΣ ΕΞΟΠΛΙΣΜΟΣ"), 
-        ("ΣΔΑ ΠΥΡΣΕΙΑ", "ΣΔΑ ΠΥΡΣΕΙΑ"),
-        ("ΕΨΑΔ-ΤΗΛΕΦΩΝΙΚΟ ΚΕΝΤΡΟ", "ΕΨΑΔ-ΤΗΛΕΦΩΝΙΚΟ ΚΕΝΤΡΟ"),
-        ("ΚΡΥΠΤΟ", "ΚΡΥΠΤΟ"),
-        ("UPS", "UPS"),
-        ("ΔΟΡΥΦΟΡΙΚΑ", "ΔΟΡΥΦΟΡΙΚΑ"),
-        ("ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "ΚΑΜΙΑ ΕΠΙΛΟΓΗ"),       
-    )
 
     MEASUREMENT_TYPES = (
         ("ΤΕΜΑΧΙΑ", "ΤΕΜΑΧΙΑ"), 
@@ -54,8 +43,8 @@ class Product(models.Model):
     batch_number = models.CharField(max_length=100, null = False, default='KAMIA EPILOGH', blank=True)
     unit_of_measurement = models.CharField(max_length=30, choices=MEASUREMENT_TYPES, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
-    category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
-    usage = models.CharField(max_length=50, choices=PRODUCT_USAGE, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
+    category = models.ForeignKey(ProductCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    usage = models.ForeignKey(ProductUsage, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.CharField(max_length=200, null=True, blank=True)
     owners = models.ManyToManyField(Group, blank=True, verbose_name='Product Owners')
 
@@ -72,8 +61,8 @@ class Product(models.Model):
 
 class Shipment(models.Model):
     SHIPMENT_TYPE_CHOICES = [
-        ('IN', 'Incoming'),
-        ('OUT', 'Outgoing'),
+        ('IN', 'Εισερχόμενη'),
+        ('OUT', 'Εξερχόμενη'),
     ]
 
     SHIPMENT_METHOD_CHOICES = [

@@ -1,6 +1,7 @@
 import json
 from django.core.management.base import BaseCommand
 from DjangoHUDApp.models import Product, Warehouse, Stock, Group
+from DjangoHUDApp.models import Product, ProductCategory, ProductUsage
 
 class Command(BaseCommand):
     help = 'Load products into the Kepik warehouse from a JSON file'
@@ -10,6 +11,15 @@ class Command(BaseCommand):
         # Ensure the ΔΙΔΕΣ group exists
         dides_group, _ = Group.objects.get_or_create(name='ΔΙΔΕΣ')
 
+        category_kamia_epilogi = ProductCategory.objects.get(name="ΚΑΜΙΑ ΕΠΙΛΟΓΗ")
+        usage_kamia_epilogi = ProductUsage.objects.get(name="ΚΑΜΙΑ ΕΠΙΛΟΓΗ")
+
+        try:
+            kepik_warehouse = Warehouse.objects.get(name='ΚΕΠΙΚ')
+        except Warehouse.DoesNotExist:
+            self.stdout.write(self.style.ERROR('Kepik warehouse does not exist.'))
+            return
+        
         # The product data to be loaded
         kepik_products = [
             {"Α/Α": "1", "name": "CISCO 871", "category": "ΔΡΟΜΟΛΟΓΗΤΗΣ", "usage": "ΔΙΔΕΣ ΔΙΚΤΥΑΚΟΣ ΕΞΟΠΛΙΣΜΟΣ", "description": "", "ΣΥΝΟΛΟ": "2"},
@@ -103,29 +113,28 @@ class Command(BaseCommand):
             {"Α/Α": 89, "name": "Οθόνη L170 C", "category": "ΛΟΙΠΑ ΥΛΙΚΑ", "usage": "ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "Ποσότητα": 1},
         ]
 
-
+        # Process each product and assign it to the group and warehouse
         for item in kepik_products:
             # Create or get the product
             product, created = Product.objects.get_or_create(
                 name=item["name"],
                 defaults={
-                    'category': item["category"],
-                    'usage': item["usage"],
+                    'category': category_kamia_epilogi,
+                    'usage': usage_kamia_epilogi,
                     'description': item.get("description", ""),
-                    'batch_number': 'KAMIA EPILOGH',  # Assuming default value as you didn't provide in the JSON
-                    'unit_of_measurement': 'ΤΕΜΑΧΙΑ'  # Assuming default value as you didn't provide in the JSON
+                    # 'batch_number': item["batch_number"],  # Use the provided batch_number
+                    'unit_of_measurement': 'ΚΑΜΙΑ ΕΠΙΛΟΓΗ' # Use the provided unit_of_measurement
                 }
             )
-            
+
             # Add the ΔΙΔΕΣ group to the product owners if the product was newly created
             if created:
                 product.owners.add(dides_group)
+                product.save()
 
-            # Update stock for the Kepik warehouse
-            # Stock.objects.update_or_create(
-            #     product=product,
-            #     warehouse=kepik_warehouse,
-            #     defaults={'quantity': item["ΣΥΝΟΛΟ"]}
-            # )
+            # Create or update the stock in the "Kepik Warehouse"
+            # stock, _ = Stock.objects.get_or_create(product=product, warehouse=kepik_warehouse, defaults={'quantity': item["quantity"]})
+            # stock.quantity = item["quantity"]
+            # stock.save()
 
         self.stdout.write(self.style.SUCCESS('Successfully loaded Kepik products into the database'))
