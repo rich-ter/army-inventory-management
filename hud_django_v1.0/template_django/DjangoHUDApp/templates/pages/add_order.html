@@ -69,7 +69,7 @@ $(document).ready(function() {
                     <!-- Shipment Item Section -->
                     <div class="card mb-4">
                         <div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-                            Τύπος Αποστολής
+                            Προϊόντα
                         </div>
                         <div class="card-body" id="shipment-items-container">
                             {{ formset.management_form }}
@@ -107,9 +107,9 @@ $(document).ready(function() {
                         <button type="button" id="add-more-items" class="btn btn-info">Προσθήκη προιόντων</button>
                     </div>
                 </div>
+                <button type="submit" class="btn btn-outline-theme btn-lg">Καταχώρηση Διακίνησης</button>
             </form>
         </div>
     </div>
 </div>
-<button type="submit" class="btn btn-outline-theme btn-lg">Καταχώρηση Διακίνησης</button>
 {% endblock %}

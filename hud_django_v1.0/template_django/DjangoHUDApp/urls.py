@@ -22,7 +22,8 @@ urlpatterns = [
     path('order', views.pageOrder, name='pageOrder'),
     path('order-details/<int:shipment_id>/', views.pageOrderDetails, name='pageOrderDetails'),
     path('order-details/<int:shipment_id>/print/', views.order_print, name='order_print'),
-
+    path('delete-shipment/<int:shipment_id>/', views.delete_shipment, name='delete_shipment'),
+    
     #warehouse pages
     path('warehouse', views.pageWarehouse, name='pageWarehouse'),
     path('stock-per-warehouse/<str:warehouse_name>/', views.stockPerWarehouse, name='pageStockPerWarehouse'),

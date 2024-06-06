@@ -6,142 +6,106 @@
 {% block title %}Διακινίσεις{% endblock %}
 
 {% block content %}
-	<div class="d-flex align-items-center mb-3">
-		<div>
-			<h1 class="page-header mb-0">Διακινίσεις</h1>
-		</div>
-		<div class="ms-auto">
-			<a href="add-shipment" class="btn btn-outline-theme"><i class="fa fa-plus-circle fa-fw me-1"></i> Δημιουργία Διακίνησης</a>
-		</div>
-	</div>
-	{% render_shipment_filter_form filter %}
-
-	<div class="card">
-		{% comment %} <ul class="nav nav-tabs nav-tabs-v2 px-4">
-			<li class="nav-item me-3"><a href="#allTab" class="nav-link active px-2" data-bs-toggle="tab">Όλες</a></li>
-			<li class="nav-item me-3"><a href="#publishedTab" class="nav-link px-2" data-bs-toggle="tab">Εισαγωγή</a></li>
-			<li class="nav-item me-3"><a href="#expiredTab" class="nav-link px-2" data-bs-toggle="tab">Εξαγωγές</a></li>
-			<li class="nav-item me-3"><a href="#deletedTab" class="nav-link px-2" data-bs-toggle="tab">Open</a></li>
-			<li class="nav-item me-3"><a href="#deletedTab" class="nav-link px-2" data-bs-toggle="tab">Closed</a></li>
-			<li class="nav-item me-3"><a href="#deletedTab" class="nav-link px-2" data-bs-toggle="tab">Local delivery</a></li> 
-		</ul>{% endcomment %}
-		<div class="tab-content p-4">
-			<div class="tab-pane fade show active" id="allTab">
-				<!-- BEGIN input-group -->
-				{% comment %} <div class="input-group mb-4">
-					<div class="flex-fill position-relative">
-						<div class="input-group">
-							<input type="text" class="form-control px-35px" placeholder="Filter orders">
-							<div class="input-group-text position-absolute top-0 bottom-0 bg-none border-0 start-0" style="z-index: 1020;">
-								<i class="fa fa-search opacity-5"></i>
-							</div>
-						</div>
-					</div>
-					<button class="btn btn-outline-default dropdown-toggle rounded-0" type="button" data-bs-toggle="dropdown"><span class="d-none d-md-inline">Payment Status</span><span class="d-inline d-md-none"><i class="fa fa-credit-card"></i></span> &nbsp;</button>
-					<div class="dropdown-menu">
-						<a class="dropdown-item" href="#">Action</a>
-						<a class="dropdown-item" href="#">Another action</a>
-						<a class="dropdown-item" href="#">Something else here</a>
-						<div role="separator" class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Separated link</a>
-					</div>
-					<button class="btn btn-outline-default dropdown-toggle" type="button" data-bs-toggle="dropdown"><span class="d-none d-md-inline">Fulfillment status</span><span class="d-inline d-md-none"><i class="fa fa-check"></i></span> &nbsp;</button>
-					<div class="dropdown-menu dropdown-menu-end">
-						<a class="dropdown-item" href="#">Action</a>
-						<a class="dropdown-item" href="#">Another action</a>
-						<a class="dropdown-item" href="#">Something else here</a>
-						<div role="separator" class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Separated link</a>
-					</div>
-				</div> {% endcomment %}
-				<!-- END input-group -->
-				
-				<!-- BEGIN table -->
-				<div class="table-responsive">
-					<table class="table table-hover text-nowrap">
-						<thead>
-							<tr>
-								<th class="border-top-0 pt-0 pb-2"></th>
-								<th class="border-top-0 pt-0 pb-2">Αρ.</th>
-								<th class="border-top-0 pt-0 pb-2">Ημερομηνία</th>
-								<th class="border-top-0 pt-0 pb-2">Παραλήπτης</th>
-								<th class="border-top-0 pt-0 pb-2">Τύπος Αποστολής</th>
-								<th class="border-top-0 pt-0 pb-2">Τρόπος Αποστολής</th>
-								<th class="border-top-0 pt-0 pb-2">Προιόντα</th>
-								<th class="border-top-0 pt-0 pb-2">Σχόλια</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for shipment in shipments %}
-							<tr>
-								<td class="w-10px align-middle">
-									{% comment %} <div class="form-check">
-										<input type="checkbox" class="form-check-input" id="product2">
-										<label class="form-check-label" for="product2"></label>
-									</div> {% endcomment %}
-								<a href="{% url 'DjangoHUDApp:order_print' shipment_id=shipment.id %}" class="btn" target="_blank">
-									<i class="bi bi-printer"></i>
-								</a>
-								</td>
-								<td class="align-middle">
-									<a href="{% url 'DjangoHUDApp:pageOrderDetails' shipment.id %}">
-										#{{ shipment.id }}
-									</a>
-								</td>
-								<td class="align-middle">{{shipment.date}}</td>
-								<td>{{ shipment.recipient|default:"-" }}</td>
-								<td class="py-1 align-middle">
-								{% if shipment.shipment_type == 'IN' %}
-									<span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> IN</span>
-								{% elif shipment.shipment_type == 'OUT' %}
-									<span class="badge border border-warning text-warning px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> OUT</span>
-								{% endif %}
-									</td>
-								<td class="align-middle"><span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Fulfilled</span></td>
-								<td class="align-middle">{{ shipment.products_count }}</td>
-								<td class="align-middle">{{shipment.notes}}</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				</div>
-				<!-- END table -->
-				
-            <div class="d-md-flex align-items-center">
-                <div class="me-md-auto text-md-left text-center mb-2 mb-md-0">
-        Showing {{ shipments.start_index }} to {{ shipments.end_index }} of {{ shipments.paginator.count }} entries
-                </div>
-                <ul class="pagination mb-0 justify-content-center">
-                    {% if shipments.has_previous %}
-                    <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-                    <li class="page-item"><a class="page-link" href="?page={{ shipments.previous_page_number }}">Previous</a></li>
-                    {% else %}
-                    <li class="page-item disabled"><a class="page-link">First</a></li>
-                    <li class="page-item disabled"><a class="page-link">Previous</a></li>
-                    {% endif %}
-                    {% for num in shipments.paginator.page_range %}
-                    {% if shipments.number == num %}
-                    <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-                    {% elif num > shipments.number|add:'-3' and num < shipments.number|add:'3' %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-                    {% endif %}
-                    {% endfor %}
-                    {% if shipments.has_next %}
-                    <li class="page-item"><a class="page-link" href="?page={{ shipments.next_page_number }}">Next</a></li>
-                    <li class="page-item"><a class="page-link" href="?page={{ shipments.paginator.num_pages }}">Last</a></li>
-                    {% else %}
-                    <li class="page-item disabled"><a class="page-link">Next</a></li>
-                    <li class="page-item disabled"><a the="page-link">Last</a></li>
-                    {% endif %}
-                </ul>
-            </div>
+    <div class="d-flex align-items-center mb-3">
+        <div>
+            <h1 class="page-header mb-0">Διακινίσεις</h1>
+        </div>
+        <div class="ms-auto">
+            <a href="add-shipment" class="btn btn-outline-theme"><i class="fa fa-plus-circle fa-fw me-1"></i> Δημιουργία Διακίνησης</a>
         </div>
     </div>
-    <div class="card-arrow">
-        <div class="card-arrow-top-left"></div>
-        <div the="card-arrow-top-right"></div>
-        <div the="card-arrow-bottom-left"></div>
-        <div the="card-arrow-bottom-right"></div>
+    {% render_shipment_filter_form filter %}
+
+    <div class="card">
+        <div class="tab-content p-4">
+            <div class="tab-pane fade show active" id="allTab">
+                <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0 pt-0 pb-2"></th>
+                                <th class="border-top-0 pt-0 pb-2">Αρ.</th>
+                                <th class="border-top-0 pt-0 pb-2">Ημερομηνία</th>
+                                <th class="border-top-0 pt-0 pb-2">Παραλήπτης</th>
+                                <th class="border-top-0 pt-0 pb-2">Τύπος Αποστολής</th>
+                                <th class="border-top-0 pt-0 pb-2">Τρόπος Αποστολής</th>
+                                <th class="border-top-0 pt-0 pb-2">Προιόντα</th>
+                                <th class="border-top-0 pt-0 pb-2">Σχόλια</th>
+                                <th class="border-top-0 pt-0 pb-2">Διαγραφή</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for shipment in shipments %}
+                            <tr>
+                                <td class="w-10px align-middle">
+                                    <a href="{% url 'DjangoHUDApp:order_print' shipment_id=shipment.id %}" class="btn" target="_blank">
+                                        <i class="bi bi-printer"></i>
+                                    </a>
+                                </td>
+                                <td class="align-middle">
+                                    <a href="{% url 'DjangoHUDApp:pageOrderDetails' shipment.id %}">
+                                        #{{ shipment.id }}
+                                    </a>
+                                </td>
+                                <td class="align-middle">{{shipment.date}}</td>
+                                <td>{{ shipment.recipient|default:"-" }}</td>
+                                <td class="py-1 align-middle">
+                                {% if shipment.shipment_type == 'IN' %}
+                                    <span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> IN</span>
+                                {% elif shipment.shipment_type == 'OUT' %}
+                                    <span class="badge border border-warning text-warning px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> OUT</span>
+                                {% endif %}
+                                    </td>
+                                <td class="align-middle"><span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Fulfilled</span></td>
+                                <td class="align-middle">{{ shipment.products_count }}</td>
+                                <td class="align-middle">{{shipment.notes}}</td>
+                                <td class="align-middle">
+                                    <form method="post" action="{% url 'DjangoHUDApp:delete_shipment' shipment.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="d-md-flex align-items-center">
+                    <div class="me-md-auto text-md-left text-center mb-2 mb-md-0">
+                        Showing {{ shipments.start_index }} to {{ shipments.end_index }} of {{ shipments.paginator.count }} entries
+                    </div>
+                    <ul class="pagination mb-0 justify-content-center">
+                        {% if shipments.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ shipments.previous_page_number }}">Previous</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><a class="page-link">First</a></li>
+                        <li class="page-item disabled"><a class="page-link">Previous</a></li>
+                        {% endif %}
+                        {% for num in shipments.paginator.page_range %}
+                        {% if shipments.number == num %}
+                        <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                        {% elif num > shipments.number|add:'-3' and num < shipments.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if shipments.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ shipments.next_page_number }}">Next</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ shipments.paginator.num_pages }}">Last</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><a class="page-link">Next</a></li>
+                        <li class="page-item disabled"><a class="page-link">Last</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div the="card-arrow-top-right"></div>
+            <div the="card-arrow-bottom-left"></div>
+            <div the="card-arrow-bottom-right"></div>
+        </div>
     </div>
-</div>
 {% endblock %}

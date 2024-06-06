@@ -18,6 +18,7 @@ from django.core.files.storage import FileSystemStorage
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from .models import ProductCategory, ProductUsage
+from django.urls import reverse
 
 
 # Function for loging a user 
@@ -116,8 +117,8 @@ def product_details(request, product_id):
     context = {
         'form': form,
         'product': product,
-        'product_category_choices': Product.PRODUCT_CATEGORY,
-        'product_usage_choices': Product.PRODUCT_USAGE,
+        'product_category_choices': Product.category,
+        'product_usage_choices': Product.usage,
         'unit_of_measurement_choices': Product.MEASUREMENT_TYPES,
     }
     return render(request, 'pages/page-product-details.html', context)
@@ -151,6 +152,14 @@ def add_shipment(request):
         formset = ShipmentItemFormSet(prefix='shipmentitem', user=request.user)
 
     return render(request, 'pages/add_order.html', {'form': form, 'formset': formset})
+
+
+@login_required
+def delete_shipment(request, shipment_id):
+    shipment = get_object_or_404(Shipment, id=shipment_id)
+    shipment.delete()
+    messages.success(request, 'Shipment deleted successfully.')
+    return redirect(reverse('DjangoHUDApp:pageOrder'))
 
 @login_required
 def pageOrder(request):
@@ -384,11 +393,6 @@ def index(request):
         'recent_shipments': recent_shipments,
     }
     return render(request, 'pages/index.html', context)
-# def product_details(request, product_id):
-#     product = get_object_or_404(Product, pk=product_id)
-#     return render(request, 'pages/page-product-details.html', {'product': product})
-
-
 
 
 def pageOrderDetails(request, shipment_id):

@@ -42,7 +42,7 @@
 ------ BUGS ------ 
 
 3. On the deployed server when we create a shipment we can't press the submit button to fulfil.
-
+4. Admin doesn't view any products
 
 
 

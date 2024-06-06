@@ -7,35 +7,16 @@
 {% block content %}
 	<div class="d-flex align-items-center mb-3">
 		<div>
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:;">PAGES</a></li>
-				<li class="breadcrumb-item active">ORDER DETAILS</li>
-			</ol>
 			<h1 class="page-header mb-0"> Πληροφορίες / Επεξεργασία Διακίνησης</h1>
 		</div>
 	</div>
 	
-	<div class="mb-3 d-md-flex fw-bold">
-		<div class="mt-md-0 mt-2"><a href="" target="_blank"  class="text-decoration-none text-inverse"><i class="bi bi-printer fa-fw me-1 text-inverse text-opacity-50"></i> Εκτύπωση</a></div>
-		<div class="ms-md-4 mt-md-0 mt-2"><a href="#" class="text-decoration-none text-inverse"><i class="bi bi-pen fa-fw me-1 text-inverse text-opacity-50"></i> Επεξεργασία Διακίνησης</a></div>
-		<div class="ms-md-4 mt-md-0 mt-2 dropdown-toggle">
-			<a href="#" data-bs-toggle="dropdown" class="text-decoration-none text-inverse"><i class="bi bi-gear fa-fw me-1 text-inverse text-opacity-50"></i> More Actions</a>
-			<div class="dropdown-menu">
-				<a class="dropdown-item" href="#">Action</a>
-				<a class="dropdown-item" href="#">Another action</a>
-				<a class="dropdown-item" href="#">Something else here</a>
-				<div role="separator" class="dropdown-divider"></div>
-				<a class="dropdown-item" href="#">Separated link</a>
-			</div>
-		</div>
-	</div>
 	<div class="row gx-4">
 		<div class="col-lg-8">
 
 			<div class="card mb-4">
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-        		Products ({{ shipment_items.count }})
-					<a href="#" class="ms-auto text-decoration-none text-inverse text-opacity-50"><i class="bi bi-truck fa-lg me-1"></i> Add Tracking Link</a>
+        		Προιόντα ({{ shipment_items.count }})
 				</div>
 				<div class="card-body text-inverse">
 					{% for item in shipment_items %}
@@ -54,39 +35,20 @@
 							<div class="ps-3 flex-1">
 								<div><a href="#" class="text-decoration-none text-inverse">{{ item.product.name }}</a></div>
 								<div class="text-inverse text-opacity-50 small">
-									Σειριακός Αριθμός: {{item.product.serial_number}}
+									Αρ. Μερίδας: {{item.product.batch_number}}
 								</div>
 							</div>
 						</div>
-						<div class="col-lg-2 m-0 ps-lg-3">
+						<div class="col-lg-3 m-0 ps-lg-3">
 							Αποθήκη: {{item.warehouse}}
-						</div>
-						<div class="col-lg-2 m-0 text-end">
-							$999
 						</div>
 					</div>
 					<hr class="my-4">
 					{% endfor %}
 				</div>
-				<div class="card-footer bg-none d-flex p-3">
-					<a href="#" class="btn btn-outline-default ms-auto dropdown-toggle">More</a>
-					<a href="#" class="btn btn-outline-theme ms-2">Add Tracking</a>
-				</div>
-				<div class="card-arrow">
-					<div class="card-arrow-top-left"></div>
-					<div class="card-arrow-top-right"></div>
-					<div class="card-arrow-bottom-left"></div>
-					<div class="card-arrow-bottom-right"></div>
-				</div>
+					<div class="card-footer bg-none d-flex p-3">
+					<a href="{% url 'DjangoHUDApp:order_print' shipment_id=shipment.id %}" class="btn btn-outline-theme ms-2" target="_blank">Εκτύπωση</a>
 			</div>
-			<div class="card">
-				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-					Σχόλια Διακίνησης
-				</div>
-				<div class="card-body">
-					{{shipment.notes}}
-				</div>
-
 				<div class="card-arrow">
 					<div class="card-arrow-top-left"></div>
 					<div class="card-arrow-top-right"></div>
@@ -95,26 +57,26 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="col-lg-4">
 			<div class="card mb-4">
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
 					Πληροφορίες Διακίνησης
-					<a href="#" class="ms-auto text-decoration-none text-inverse text-opacity-50">Edit</a>
 				</div>
 				<div class="card-body">
 					<table class="table table-borderless table-sm m-0">
 						<tbody>
 							<tr>
 								<td class="w-150px">Ημερομηνία</td>
-								<td class="text-end pb-2 text-decoration-underline">{{shipment.date}}ems</td>
+								<td class="text-end pb-2 text-decoration-underline">{{ shipment.date|date:"d/m/Y H:i" }}</td>
 							</tr>
 								<td colspan="3">
 								<hr class="m-0">
 								</td>
 							</tr>
 							<tr>
-								<td>Τύπος Διακίνησης</td>
-								<td> <u class="text-success fw-bold small">{{shipment.shipment_type}}</u> <small></small></td>
+								<td class="pb-2" colspan="2"><b>Tύπος Διακίνηση</b></td>
+								<td> <u class="text-end pb-2 text-success fw-bold small">{{shipment.shipment_type}}</u> <small></small></td>
 							</tr>
 							</tr>
 								<td colspan="3">
@@ -123,7 +85,14 @@
 							</tr>
 							<tr>
 								<td class="pb-2" colspan="2"><b>Δημιουργός</b></td>
-								<td class="text-end pb-2"> <a href="#" class="text-decoration-none">{{shipment.user}}</a></td>								
+								<td class="text-end pb-2"> <a class="text-decoration-none">{{shipment.user}}</a></td>								
+							</td>
+							</tr>
+								<td colspan="3">
+								<hr class="m-0">
+							<tr>
+								<td class="pb-2" colspan="2"><b>Παραλήπτης</b></td>
+								<td class="text-end pb-2"> <a href="#" class="text-decoration-none">{{shipment.recipient}}</a></td>								
 							</td>
 							</tr>
 							<tr>
@@ -143,14 +112,13 @@
 			</div>
 			<div class="card mb-4">
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-					Παραλήπτης
-					<a href="#" class="ms-auto text-decoration-none text-inverse text-opacity-50">Edit</a>
+					Συννημένα
 				</div>
 				<div class="card-body fw-bold">
 					<div class="d-flex align-items-center">
 						{% comment %} <a href="#" class="d-block"><img src="{% static 'img/user/user-1.jpg' %}" alt="" width="45" class="rounded-pill"></a> {% endcomment %}
 						<div class="flex-1 ps-3">
-							<a href="#" class="d-block text-decoration-none">{{shipment.recipient}}</a>
+							<a href="#" class="d-block text-decoration-none">{{shipment.attachment}}</a>
 						</div>
 					</div>
 				</div>
@@ -163,17 +131,10 @@
 			</div>
 			<div class="card mb-4">
 				<div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-					Shipping Information
-					<a href="#" class="ms-auto text-decoration-none text-inverse text-opacity-50">Edit</a>
+					Σχόλια Διακίνησης
 				</div>
 				<div class="card-body fw-bold">
-					<i class="bi bi-telephone-fill fa-fw"></i> +916-663-4289<br><br>
-					867 Highland View Drive<br>
-					Newcastle, CA<br>
-					California<br>
-					95658<br>
-					<br>
-					<a href="#" class="text-decoration-none"><i class="bi bi-geo-alt-fill fa-fw"></i> View map</a>
+				{{shipment.notes}}
 				</div>
 				<div class="card-arrow">
 					<div class="card-arrow-top-left"></div>
