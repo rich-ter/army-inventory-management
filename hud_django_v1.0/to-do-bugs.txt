@@ -11,6 +11,8 @@
 9. Need to make sure that the user can only send products that belong to his user group.
 12. order shipment paper to split into 1os loxos and 2os. have 2 different ones based on the user creating the order.
 13. ensure the greek is implemented in the date 
+14. Add csv file as importing into the database with management command.
+
 
 
 ------ DONE ------ 
