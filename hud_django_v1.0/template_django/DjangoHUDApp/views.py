@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum,F, Q
 from django.contrib.auth.decorators import login_required
-from .filters import ProductFilter, ShipmentFilter
+from .filters import ProductFilter, ShipmentFilter, RecipientFilter
 from django.utils.dateparse import parse_date
 from django.utils import timezone
 from django.contrib import messages
@@ -100,7 +100,6 @@ def pageProduct(request):
 
     context = {'products': products, 'filter': product_filter}
     return render(request, "pages/page-product.html", context)
-
 # Function for individual product details
 @login_required
 def product_details(request, product_id):
@@ -184,11 +183,14 @@ def pageOrder(request):
     shipments_filter = ShipmentFilter(request.GET, queryset=shipments_list)
     shipments_list = shipments_filter.qs
 
-    paginator = Paginator(shipments_list, 10)  # Show 10 products per page
+    paginator = Paginator(shipments_list, 10)  # Show 10 shipments per page
     page_number = request.GET.get('page')
     shipments = paginator.get_page(page_number)
 
-    context = {'shipments': shipments, 'filter': shipments_filter}
+    context = {
+        'shipments': shipments,
+        'filter': shipments_filter,
+    }
     return render(request, "pages/page-order.html", context)
 
     
@@ -334,9 +336,20 @@ def stockPerWarehouse(request, warehouse_name):
     return render(request, "pages/page-stock-per-warehouse.html", context)
 
 
+@login_required
 def pageRecipient(request):
     recipients_list = Recipient.objects.all()
-    context = {'recipients': recipients_list}
+
+    # Apply filtering
+    recipients_filter = RecipientFilter(request.GET, queryset=recipients_list)
+    recipients_list = recipients_filter.qs
+
+    # Paginate the filtered recipients
+
+    context = {
+        'recipients': recipients_list,
+        'filter': recipients_filter,
+    }
     return render(request, "pages/page-recipient.html", context)
 
 

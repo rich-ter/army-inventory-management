@@ -4,57 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Material Delivery and Receipt Protocol</title>
-<style>
-    .container {
-        max-width: 1200px; /* Limiting the width */
-        margin: auto;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 20px;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse; /* Ensures that borders between cells are merged */
-        margin-top: 20px;
-    }
-    th, td {
-        padding: 15px; /* Increase padding for the cells */
-        text-align: center; /* Center align text */
-        border: 1px solid #ccc; /* Adds a light grey border around table cells */
-    }
-    th {
-        background-color: #f0f0f0; /* Light grey background for header cells */
-    }
-    .header {
-        text-align: right;
-        margin-bottom: 20px;
-    }
-    .protocol-title {
-        text-align: center;
-    }
-    .signatories {
-        margin-top: 20px;
-    }
-    .signatories th, .signatories td {
-        padding: 5px; /* Adjust cell padding */
-    }
-    .signatories table {
-        margin: auto; /* Center the table */
-    }
-    .signature-name {
-        font-weight: bold; /* Make the text bold */
-    }
-    .table-separator {
-        border-bottom: 2px solid black; /* Add a line after the table */
-        margin-top: 20px;
-    }
-</style>
-
+    <style>
+        .container {
+            max-width: 1200px; /* Limiting the width */
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Ensures that borders between cells are merged */
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 15px; /* Increase padding for the cells */
+            text-align: center; /* Center align text */
+            border: 1px solid #ccc; /* Adds a light grey border around table cells */
+        }
+        th {
+            background-color: #f0f0f0; /* Light grey background for header cells */
+        }
+        .header {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .protocol-title {
+            text-align: center;
+        }
+        .signatories {
+            margin-top: 20px;
+        }
+        .signatories th, .signatories td {
+            padding: 5px; /* Adjust cell padding */
+            border: none; /* Remove borders from cells */
+        }
+        .signatories table {
+            margin: auto; /* Center the table */
+            border-collapse: separate; /* Prevents cell borders from merging */
+        }
+        .signature-name {
+            font-weight: bold; /* Make the text bold */
+        }
+        .table-separator {
+            border-bottom: 2px solid black; /* Add a line after the table */
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -65,34 +66,31 @@
             <h1>ΠΡΩΤΟΚΟΛΛΟ ΠΑΡΑΔΟΣΗΣ – ΠΑΡΑΛΑΒΗΣ ΥΛΙΚΩΝ</h1>
         </div>
 
-        <p>Στην Αθήνα σήμερα, την {{ shipment.date.day }} του μηνός {{ shipment.date|date:"F" }} του έτους {{ shipment.date.year }}</p>
-        <p>Ο υπογεγραμμένος __________ παρέλαβα από το [Παραδίδουσα Μονάδα] τα παρακάτω υλικά βάσει [Αιτίας]:</p>
+        <p>Στην Αθήνα σήμερα, την {{ shipment.date.day }} του μηνός ____________________ του έτους {{ shipment.date.year }}</p>
+        <p>Ο υπογεγραμμένος ____________________ παρέλαβα από το [Παραδίδουσα Μονάδα] τα παρακάτω υλικά βάσει [Αιτίας]:</p>
 
         <!-- Product Table -->
         <table class='product-table'>
             <thead>
-               
                 <tr>
                     <th>Α/Α</th>
                     <th>ΠΕΡΙΓΡΑΦΗ</th>
                     <th>ΜΟΝ. ΜΕΤΡΗΣΗΣ</th>
                     <th>ΠΟΣΟΤΗΤΑ</th>
                     <th>ΠΑΡ/ΣΕΙΣ</th>
-                <tr>
-                </tr>
                 </tr>
             </thead>
             <tbody>
-        {% for item in shipment_items %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ item.product.name }}</td>
-                <td>{{ item.product.unit_of_measurement }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ shipment.notes }}</td>
-            </tr>
-        {% endfor %}
-                </tbody>
+                {% for item in shipment_items %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.product.unit_of_measurement }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ shipment.notes }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
 
         <!-- Signatories -->

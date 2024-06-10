@@ -1,87 +1,87 @@
 {% extends 'base.html' %}
-
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %} ΠΑΡΑΛΗΠΤΕΣ {% endblock %}
 
 {% block content %}
-	<div class="d-flex align-items-center mb-3">
-		<div>
-			<ul class="breadcrumb">
-				<li class="breadcrumb-item"><a href="#">PAGES</a></li>
-				<li class="breadcrumb-item active">PRODUCTS</li>
-			</ul>
-			<h1 class="page-header mb-0">ΠΑΡΑΛΗΠΤΕΣ</h1>
-		</div>
-		
-	</div>
-	
-	<div class="card">
-		<div class="tab-content p-4">
-			<div class="tab-pane fade show active" id="allTab">
-				<!-- BEGIN input-group -->
-				<div class="input-group mb-4">
-					<div class="flex-fill position-relative">
-						<div class="input-group">
-							<div class="input-group-text position-absolute top-0 bottom-0 bg-none border-0 pe-0" style="z-index: 1020;">
-								<i class="fa fa-search opacity-5"></i>
-							</div>
-							<input type="text" class="form-control ps-35px" placeholder="Αναζήτηση Παραλήπτη">
-						</div>
-					</div>
-				</div>
-				<!-- END input-group -->
-				
-				<!-- BEGIN table -->
-				<div class="table-responsive">
-					<table class="table table-hover text-nowrap">
-						<thead>
-							<tr>
-								<th class="pt-0 pb-2"></th>
-								<th class="pt-0 pb-2">ΣΧΗΜΑΤΙΣΜΟΣ</th>
-								<th class="pt-0 pb-2">ΑΠΟΔΕΚΤΗΣ</th>
-								<th class="pt-0 pb-2">ΣΧΟΛΙΑ</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for recipient in recipients %}
+    <div class="d-flex align-items-center mb-3">
+        <div>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">PAGES</a></li>
+                <li class="breadcrumb-item active">PRODUCTS</li>
+            </ul>
+            <h1 class="page-header mb-0">ΠΑΡΑΛΗΠΤΕΣ</h1>
+        </div>
+    </div>
 
-   <tr>
-        <td class="w-10px align-middle">
-
-        </td>
-    <td>
-        <div class="d-flex align-items-center">
-            <!-- If you had an image or icon for each warehouse, it would go here. Otherwise, remove this div. -->
-            <div class="ms-3">
-                <!-- Adjust the URL name as per your urls.py for the warehouse details page -->
-                <a href="" class="text-inverse text-opacity-75 text-decoration-none">{{ recipient.commanding_unit }}</a>
+    <!-- Search Form -->
+    <form method="get" class="form-inline mb-3 d-flex justify-content-center align-items-center">
+        <div class="row align-items-center mb-3 w-100">
+            <!-- Search Input -->
+            <div class="col-md-6 mb-2">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control ps-35px" placeholder="Αναζήτηση Παραλήπτη" value="{{ request.GET.search }}">
+                </div>
+            </div>
+            <div class="col-md-1 mb-2">
+                <button type="submit" class="btn btn-theme w-100"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="col-md-1 mb-2">
+                <a href="{% url 'DjangoHUDApp:pageRecipient' %}" class="btn btn-outline-secondary w-100">
+                    <i class="fa fa-times"></i>
+                </a>
             </div>
         </div>
-    </td>
-        <td class="align-middle">{{ recipient.recipient_unit }}</td> <!-- Assuming you have a stock field -->
-        <td class="align-middle">{{ recipient.notes }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="5" class="text-center">No Recipients found.</td>
-    </tr>
-							{% endfor %}
+    </form>
 
-						</tbody>
-					</table>
-				</div>
-				<!-- END table -->
-				
-				<div class="d-md-flex align-items-center">
-				</div>
-			</div>
-		</div>
-		<div class="card-arrow">
-			<div class="card-arrow-top-left"></div>
-			<div class="card-arrow-top-right"></div>
-			<div class="card-arrow-bottom-left"></div>
-			<div class="card-arrow-bottom-right"></div>
-		</div>
-	</div>
+    <div class="card">
+        <div class="tab-content p-4">
+            <div class="tab-pane fade show active" id="allTab">
+                <!-- BEGIN table -->
+                <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="pt-0 pb-2"></th>
+                                <th class="pt-0 pb-2">ΣΧΗΜΑΤΙΣΜΟΣ</th>
+                                <th class="pt-0 pb-2">ΑΠΟΔΕΚΤΗΣ</th>
+                                <th class="pt-0 pb-2">ΣΧΟΛΙΑ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recipient in recipients %}
+                            <tr>
+                                <td class="w-10px align-middle"></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="ms-3">
+                                            <a href="" class="text-inverse text-opacity-75 text-decoration-none">{{ recipient.commanding_unit }}</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle">{{ recipient.recipient_unit }}</td>
+                                <td class="align-middle">{{ recipient.notes }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No Recipients found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- END table -->
+                
+                <div class="d-md-flex align-items-center">
+                </div>
+            </div>
+        </div>
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
+        </div>
+    </div>
 {% endblock %}

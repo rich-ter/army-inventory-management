@@ -16,7 +16,7 @@ class Recipient(models.Model):
     notes = models.CharField(max_length=450, null = True, blank=True)
 
     def __str__(self):
-	    return self.recipient_unit
+	    return self.commanding_unit
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)

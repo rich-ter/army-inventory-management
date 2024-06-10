@@ -5,7 +5,7 @@
         <!-- Search Input -->
         <div class="col-md-2 mb-2">
             <div class="input-group">
-                <input type="text" name="name" class="form-control ps-35px" placeholder= 'Αριθμός Αποστολής'value="{{ request.GET.name }}">
+                <input type="text" name="order_number" class="form-control ps-35px" placeholder="Αριθμός Αποστολής" value="{{ request.GET.order_number }}">
             </div>
         </div>
         <!-- Shipment Type Dropdown -->
@@ -15,7 +15,7 @@
                         aria-haspopup="true" aria-expanded="false">Τύπος Διακίνησης</button>
                 <div class="dropdown-menu">
                     {% for choice in filter.form.shipment_type.field.choices %}
-                        <a class="dropdown-item" href="?shipment_type={{ choice.0 }}">{{ choice.1 }}</a>
+                        <a class="dropdown-item" href="?shipment_type={{ choice.0 }}{% if request.GET.recipient %}&recipient={{ request.GET.recipient }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">{{ choice.1 }}</a>
                     {% endfor %}
                 </div>
                 <input type="hidden" name="shipment_type" id="shipment_type-input" value="{{ request.GET.shipment_type }}">
@@ -27,8 +27,8 @@
                 <button class="btn btn-outline-default dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">Παραλήπτης</button>
                 <div class="dropdown-menu w-100">
-                    {% for choice in filter.form.recipient.field.choices %}
-                        <a class="dropdown-item" href="?recipient={{ choice.0 }}">{{ choice.1 }}</a>
+                   {% for choice in filter.form.recipient.field.choices %}
+                        <a class="dropdown-item" href="?recipient={{ choice.0 }}{% if request.GET.shipment_type %}&shipment_type={{ request.GET.shipment_type }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">{{ choice.1 }}</a>
                     {% endfor %}
                 </div>
                 <input type="hidden" name="recipient" id="recipient-input" value="{{ request.GET.recipient }}">
