@@ -333,7 +333,7 @@ def stockPerWarehouse(request, warehouse_name):
         'stock_items': stock_list,
         'filter': stock_filter
     }
-    
+
     return render(request, "pages/page-stock-per-warehouse.html", context)
 
 
