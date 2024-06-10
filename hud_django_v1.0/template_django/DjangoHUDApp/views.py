@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum,F, Q
 from django.contrib.auth.decorators import login_required
-from .filters import ProductFilter, ShipmentFilter, RecipientFilter
+from .filters import ProductFilter, ShipmentFilter, RecipientFilter, StockFilter
 from django.utils.dateparse import parse_date
 from django.utils import timezone
 from django.contrib import messages
@@ -320,17 +320,18 @@ def pageDataManagement(request):
 
     return render(request, 'pages/page-data-management.html', context)
 
+@login_required
 def stockPerWarehouse(request, warehouse_name):
-    # Get the specific warehouse by name
     warehouse = get_object_or_404(Warehouse, name=warehouse_name)
+    stock_list = Stock.objects.filter(warehouse=warehouse).select_related('product')
     
-    # Get the stock items that belong to this warehouse
-    stock_items = Stock.objects.filter(warehouse=warehouse).select_related('product')
+    stock_filter = StockFilter(request.GET, queryset=stock_list)
+    stock_list = stock_filter.qs
 
-    # Include both the warehouse and the stock items in the context
     context = {
         'warehouse': warehouse,
-        'stock_items': stock_items
+        'stock_items': stock_list,
+        'filter': stock_filter
     }
     
     return render(request, "pages/page-stock-per-warehouse.html", context)

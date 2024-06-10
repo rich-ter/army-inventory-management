@@ -10,34 +10,6 @@
 	<script src="{% static 'js/demo/chart-js.demo.js' %}"></script>
 
 <!-- script -->
-<script>
-  var ctx2 = document.getElementById('barChart');
-  var barChart = new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: ['ΚΕΠΙΚ','ΤΑΓΜΑ','ΔΟΡΥΦΟΡΙΚΑ'],
-      datasets: [{
-        label: 'Total Visitors',
-        data: [37,31,36,34,43,31],
-        backgroundColor: 'rgba(54, 162, 235, 0.2)', // Hardcoded color for testing
-        borderColor: 'rgb(54, 162, 235)', // Hardcoded color for testing
-        borderWidth: 1.5
-      },{
-        label: 'New Visitors',
-        data: [12,16,20,14,23,21],
-        backgroundColor: 'rgba(255, 99, 132, 0.2)', // Hardcoded color for testing
-        borderColor: 'rgb(255, 99, 132)', // Hardcoded color for testing
-        borderWidth: 1.5
-      },{
-        label: 'Total Visitors',
-        data: [37,31,36,34,43,31],
-        backgroundColor: 'rgba(255, 206, 86, 0.2)', // Hardcoded color for testing
-        borderColor: 'rgb(255, 206, 86)', // Hardcoded color for testing
-        borderWidth: 1.5
-      }]
-    },
-  });
-</script>
 {% endblock %}
 
 {% block title %}Products{% endblock %}
@@ -45,11 +17,7 @@
 {% block content %}
 	<div class="d-flex align-items-center mb-3">
 		<div>
-			<ul class="breadcrumb">
-				<li class="breadcrumb-item"><a href="#">PAGES</a></li>
-				<li class="breadcrumb-item active">PRODUCTS</li>
-			</ul>
-			<h1 class="page-header mb-0">ΑΠΟΘΗΚΕΣ</h1>
+			<h1 class="page-header mb-0">ΛΙΣΤΑ ΑΠΟΘΗΚΩΝ</h1>
 		</div>
 		
 	</div>
@@ -57,7 +25,7 @@
 <!-- required js -->
 
 <!-- html -->
-<canvas id="barChart" height="200"></canvas>
+{% comment %} <canvas id="barChart" height="200"></canvas> {% endcomment %}
 
 
 	
@@ -65,24 +33,6 @@
 		<div class="tab-content p-4">
 			<div class="tab-pane fade show active" id="allTab">
 				<!-- BEGIN input-group -->
-				<div class="input-group mb-4">
-					<button class="btn btn-outline-default dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter products &nbsp;</button>
-					<div class="dropdown-menu">
-						<a class="dropdown-item" href="#">Action</a>
-						<a class="dropdown-item" href="#">Another action</a>
-						<a class="dropdown-item" href="#">Something else here</a>
-						<div role="separator" class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Separated link</a>
-					</div>
-					<div class="flex-fill position-relative">
-						<div class="input-group">
-							<div class="input-group-text position-absolute top-0 bottom-0 bg-none border-0 pe-0" style="z-index: 1020;">
-								<i class="fa fa-search opacity-5"></i>
-							</div>
-							<input type="text" class="form-control ps-35px" placeholder="Search products">
-						</div>
-					</div>
-				</div>
 				<!-- END input-group -->
 				
 				<!-- BEGIN table -->
@@ -102,10 +52,6 @@
 
 						<tr>
 								<td class="w-10px align-middle">
-								<div class="form-check">
-									<input type="checkbox" class="form-check-input" id="warehouse{{ forloop.counter }}">
-									<label class="form-check-label" for="warehouse{{ forloop.counter }}"></label>
-								</div>
 								</td>
 							<td>
 								<div class="d-flex align-items-center">

@@ -13,8 +13,6 @@
 13. ensure the greek is implemented in the date 
 14. Add csv file as importing into the database with management command.
 
-
-
 ------ DONE ------ 
 
 1. To be able to upload images for each of the products - DONE

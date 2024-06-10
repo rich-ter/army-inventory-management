@@ -13,3 +13,7 @@ def render_shipment_filter_form(context, filter):
 @register.inclusion_tag('filters/recipients-search-form.html', takes_context=True)
 def render_recipients_filter_form(context, filter):
     return {'filter': filter}
+
+@register.inclusion_tag('filters/stock-search-form.html', takes_context=True)
+def render_stock_filter_form(context, filter):
+    return {'filter': filter}

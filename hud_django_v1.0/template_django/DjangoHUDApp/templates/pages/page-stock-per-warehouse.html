@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load filters_tags %}
+
 {% block title %}Products{% endblock %}
 
 {% block content %}
@@ -12,40 +14,21 @@
 		
 	</div>
 	
-	
+	    {% render_stock_filter_form filter %}
+
 	<div class="card">
 		<div class="tab-content p-4">
 			<div class="tab-pane fade show active" id="allTab">
-				<!-- BEGIN input-group -->
-				<div class="input-group mb-4">
-					<button class="btn btn-outline-default dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter products &nbsp;</button>
-					<div class="dropdown-menu">
-						<a class="dropdown-item" href="#">Action</a>
-						<a class="dropdown-item" href="#">Another action</a>
-						<a class="dropdown-item" href="#">Something else here</a>
-						<div role="separator" class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Separated link</a>
-					</div>
-					<div class="flex-fill position-relative">
-						<div class="input-group">
-							<div class="input-group-text position-absolute top-0 bottom-0 bg-none border-0 pe-0" style="z-index: 1020;">
-								<i class="fa fa-search opacity-5"></i>
-							</div>
-							<input type="text" class="form-control ps-35px" placeholder="Search products">
-						</div>
-					</div>
-				</div>
-				<!-- END input-group -->
-				
 				<!-- BEGIN table -->
 				<div class="table-responsive">
 					<table class="table table-hover text-nowrap">
 						<thead>
 							<tr>
 								<th class="pt-0 pb-2"></th>
+								<th class="pt-0 pb-2">Αρ. Μερίδας</th>
 								<th class="pt-0 pb-2">Προιόν</th>
 								<th class="pt-0 pb-2">Απόθεμα</th>
-								<th class="pt-0 pb-2">Τελευταία Εισαγωγή</th>
+								<th class="pt-0 pb-2">Κατηγορία</th>
 								<th class="pt-0 pb-2">Χρήση</th>
 							</tr>
 						</thead>
@@ -53,9 +36,7 @@
 						{% for stock_item in stock_items %}
 						<tr>
 							<td class="w-10px align-middle">
-								<div class="form-check">
-									<input type="checkbox" class="form-check-input" id="stockItem{{ forloop.counter }}">
-									<label class="form-check-label" for="stockItem{{ forloop.counter }}"></label>
+                                <td class="align-middle">{{ stock_item.product.batch_number }}</td>
 								</div>
 							</td>
 							<td>
@@ -70,8 +51,9 @@
 								</div>
 							</td>
 							<td class="align-middle">{{ stock_item.quantity }}</td>
-							{% comment %} <td class="align-middle">{{ stock_item.product.get_category_display }}</td> {% endcomment %}
-							{% comment %} <td class="align-middle">{{ stock_item.product.get_usage_display }}</td> {% endcomment %}
+							<td class="align-middle">{{ stock_item.product.category }}</td>
+
+							<td class="align-middle">{{ stock_item.product.usage }}</td>
 						</tr>
 						{% empty %}
 						<tr>
