@@ -1,17 +1,15 @@
 ------ THINGS LEFT TO FINISH ------ 
 
-1. SEARCHING FILTERS EERYWHERE
+1. Make sure that the stock-per-warehouse filters are working properly. 
 2. MAKE SURE ABOUT CRUD OPERATIONS ABOUT SHIPMENTS AND PRODUCTS
 3. MAKE SURE BACK-END LOGIC WORKS FOR CORRECTLY ADDING AND REMOVING ITEMS FROM THE WAREHOUSES.
 4. Finalise Dashboards
 5. Create the django admin to have the 3 different users above and to be able to add products only for their warehouse.
-6. fix routing and route names. 
-7. If time, then add a page for the recipients to have a list to show all recent shipemnts to that recipient.
 8. Ensure that if user creates something, other's can't view it. all his created things appear in 
 9. Need to make sure that the user can only send products that belong to his user group.
 12. order shipment paper to split into 1os loxos and 2os. have 2 different ones based on the user creating the order.
-13. ensure the greek is implemented in the date 
 14. Add csv file as importing into the database with management command.
+7. If time, then add a page for the recipients to have a list to show all recent shipemnts to that recipient.
 
 ------ DONE ------ 
 
@@ -37,6 +35,8 @@
 11. usage also - DONE
 10. to add a new model so they can edit the product category
 14. change the recipient list from sorted by small to high number ascending - DONE
+6. fix routing and route names. 
+13. ensure the greek is implemented in the date 
 
 
 ------ BUGS ------ 

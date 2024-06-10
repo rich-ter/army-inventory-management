@@ -47,14 +47,13 @@ def pageLogin(request):
         "appHeaderHide": 1,
         "appContentClass": 'p-0'
     }
-    return render(request, "pages/page-login.html", context)
+    return render(request, "pages/login.html", context)
 
 def logout_view(request):
      logout(request)
      return redirect('DjangoHUDApp:pageLogin')
 
 # Function for creating a product 
-# Function for creating a product
 @login_required
 def add_product(request):
     if request.method == 'POST':
@@ -99,7 +98,7 @@ def pageProduct(request):
     products = paginator.get_page(page_number)
 
     context = {'products': products, 'filter': product_filter}
-    return render(request, "pages/page-product.html", context)
+    return render(request, "pages/all-products.html", context)
 # Function for individual product details
 @login_required
 def product_details(request, product_id):
@@ -120,7 +119,7 @@ def product_details(request, product_id):
         'product_usage_choices': Product.usage,
         'unit_of_measurement_choices': Product.MEASUREMENT_TYPES,
     }
-    return render(request, 'pages/page-product-details.html', context)
+    return render(request, 'pages/product-details.html', context)
 
 
 @login_required
@@ -191,7 +190,7 @@ def pageOrder(request):
         'shipments': shipments,
         'filter': shipments_filter,
     }
-    return render(request, "pages/page-order.html", context)
+    return render(request, "pages/all-orders.html", context)
 
     
 @login_required
@@ -222,7 +221,7 @@ def pageWarehouse(request):
         )
 
     context = {'warehouses': warehouses_list}
-    return render(request, "pages/page-warehouse.html", context)
+    return render(request, "pages/warehouses.html", context)
 
 @login_required
 def pageDataManagement(request):
@@ -318,7 +317,7 @@ def pageDataManagement(request):
         'can_view_tagma': 'ΤΑΓΜΑ' in warehouse_filter,
     }
 
-    return render(request, 'pages/page-data-management.html', context)
+    return render(request, 'pages/all-stock.html', context)
 
 @login_required
 def stockPerWarehouse(request, warehouse_name):
@@ -334,7 +333,7 @@ def stockPerWarehouse(request, warehouse_name):
         'filter': stock_filter
     }
 
-    return render(request, "pages/page-stock-per-warehouse.html", context)
+    return render(request, "pages/stock-per-warehouse.html", context)
 
 
 @login_required
@@ -351,7 +350,7 @@ def pageRecipient(request):
         'recipients': recipients_list,
         'filter': recipients_filter,
     }
-    return render(request, "pages/page-recipient.html", context)
+    return render(request, "pages/recipients.html", context)
 
 
 # def index(request):
