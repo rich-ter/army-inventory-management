@@ -43,6 +43,7 @@
                                 <th class="pt-0 pb-2">Απόθεμα</th>
                                 <th class="pt-0 pb-2">Κατηγορία</th>
                                 <th class="pt-0 pb-2">Χρήση</th>
+                                <th class="border-top-0 pt-0 pb-2">Διαγραφή</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,6 +68,12 @@
                                     <td class="align-middle">{{ product.stock }}</td> <!-- Assuming you have a stock field -->
                                     <td class="align-middle">{{ product.category }}</td>
                                     <td class="align-middle">{{ product.usage }}</td>
+                                    <td class="align-middle">
+                                        <form method="post" action="{% url 'DjangoHUDApp:delete_product' product.id %}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button>
+                                        </form>
+                                    </td>
                                 </tr>
                             {% empty %}
                                 <tr>

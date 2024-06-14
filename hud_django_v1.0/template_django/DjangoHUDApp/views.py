@@ -99,6 +99,17 @@ def pageProduct(request):
 
     context = {'products': products, 'filter': product_filter}
     return render(request, "pages/all-products.html", context)
+
+
+
+@login_required
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    product.delete()
+    messages.success(request, 'Shipment deleted successfully.')
+    return redirect(reverse('DjangoHUDApp:pageProduct'))
+
+
 # Function for individual product details
 @login_required
 def product_details(request, product_id):

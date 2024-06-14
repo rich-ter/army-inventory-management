@@ -10,6 +10,13 @@
 12. order shipment paper to split into 1os loxos and 2os. have 2 different ones based on the user creating the order.
 14. Add csv file as importing into the database with management command.
 7. If time, then add a page for the recipients to have a list to show all recent shipemnts to that recipient.
+- MAKE image uploading limited to png and jpg and max size. 
+- same for shipment attachments
+- when deleting a shipment make sure the attachemnts are also deleted in the database. 
+- DEFAULT OPTION TO BE ΚΑΜΙΑ ΕΠΙΛΟΓΗ when creating a product.
+
+
+
 
 ------ DONE ------ 
 
@@ -37,6 +44,7 @@
 14. change the recipient list from sorted by small to high number ascending - DONE
 6. fix routing and route names. 
 13. ensure the greek is implemented in the date 
+16 being able to delete products
 
 
 ------ BUGS ------ 
