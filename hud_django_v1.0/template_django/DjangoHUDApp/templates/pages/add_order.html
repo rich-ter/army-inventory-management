@@ -45,6 +45,23 @@ $(document).ready(function() {
         // Append the cloned form to the container
         lastForm.appendTo(formsetContainer);
     });
+
+    // Validate file input
+    $('#image').on('change', function(event) {
+        var file = event.target.files[0];
+        if (file) {
+            var maxSize = 5 * 1024 * 1024; // 5 MB
+            if (file.size > maxSize) {
+                alert('Το μέγεθος του αρχείου δεν πρέπει να υπερβαίνει τα 5 MB');
+                event.target.value = '';
+            }
+            var validTypes = ['image/jpeg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                alert('Επιτρέπονται μόνο αρχεία JPG και PNG');
+                event.target.value = '';
+            }
+        }
+    });
 });
 </script>
 {% endblock %}
@@ -52,14 +69,14 @@ $(document).ready(function() {
 {% block content %}
 <div class="d-flex align-items-center mb-3">
     <div>
-        <h1 class="page-header mb-0">Καταχώρηση Διακίνισης</h1>
+        <h1 class="page-header mb-0">Καταχώρηση Διακίνησης</h1>
     </div>
 </div>
 <div class="row gx-4">
     <div class="col-lg-8">
         <div class="card mb-4">
             <div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
-                Πληροφορίες Διακίνισης
+                Πληροφορίες Διακίνησης
             </div>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -105,6 +122,14 @@ $(document).ready(function() {
                             {% endfor %}
                         </div>
                         <button type="button" id="add-more-items" class="btn btn-info">Προσθήκη προιόντων</button>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
+                        Φωτογραφία
+                    </div>
+                    <div class="card-body">
+                        <input type="file" id="image" name="image" class="form-control" accept="image/jpeg, image/png">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-outline-theme btn-lg">Καταχώρηση Διακίνησης</button>
