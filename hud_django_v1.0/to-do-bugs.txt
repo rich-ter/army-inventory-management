@@ -12,6 +12,9 @@
 7. If time, then add a page for the recipients to have a list to show all recent shipemnts to that recipient.
 - when deleting a shipment make sure the attachemnts are also deleted in the database. 
 - DEFAULT OPTION TO BE ΚΑΜΙΑ ΕΠΙΛΟΓΗ when creating a product.
+Customize admin dashboard to be able to search product names.
+
+-- create a custom richterlabs admin dashboard on docker to deloy all the time? 
 
 
 
