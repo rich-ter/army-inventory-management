@@ -4,23 +4,22 @@
 2. MAKE SURE ABOUT CRUD OPERATIONS ABOUT SHIPMENTS AND PRODUCTS
 3. MAKE SURE BACK-END LOGIC WORKS FOR CORRECTLY ADDING AND REMOVING ITEMS FROM THE WAREHOUSES.
 4. Finalise Dashboards
-5. Create the django admin to have the 3 different users above and to be able to add products only for their warehouse.
-8. Ensure that if user creates something, other's can't view it. all his created things appear in 
-9. Need to make sure that the user can only send products that belong to his user group.
-12. order shipment paper to split into 1os loxos and 2os. have 2 different ones based on the user creating the order.
-14. Add csv file as importing into the database with management command.
-7. If time, then add a page for the recipients to have a list to show all recent shipemnts to that recipient.
-- when deleting a shipment make sure the attachemnts are also deleted in the database. 
-- DEFAULT OPTION TO BE ΚΑΜΙΑ ΕΠΙΛΟΓΗ when creating a product.
-Customize admin dashboard to be able to search product names.
+8. DEFAULT OPTION TO BE ΚΑΜΙΑ ΕΠΙΛΟΓΗ when creating a product.
+
 
 -- create a custom richterlabs admin dashboard on docker to deloy all the time? 
-
+7. If time, then add a page for the recipients to have a list to show all recent shipemnts to that recipient.
 
 
 
 ------ DONE ------ 
-
+14. Add csv file as importing into the database with management command.
+- when deleting a shipment make sure the attachemnts are also deleted in the database. 
+8. Ensure that if user creates something, other's can't view it. all his created things appear in 
+5. Create the django admin to have the 3 different users above and to be able to add products only for their warehouse.
+9. Need to make sure that the user can only send products that belong to his user group.
+admin to be able to view all products when creating shipments.
+- remove the fulfiled tropos apostolis as it doesn't exist.
 1. To be able to upload images for each of the products - DONE
 2. Create 3 user types (DIDES, DORIFORIKA, ADMIN)
     2.1 Do not allow the dides user to view doriforika products
@@ -48,6 +47,8 @@ Customize admin dashboard to be able to search product names.
 16 being able to delete products
 - MAKE image uploading limited to png and jpg and max size. 
 - same for shipment attachments
+Customize admin dashboard to be able to search product names.
+12. order shipment paper to split into 1os loxos and 2os. have 2 different ones based on the user creating the order.
 
 ------ BUGS ------ 
 
@@ -56,17 +57,7 @@ Customize admin dashboard to be able to search product names.
 
 
 
------- VLASSOPOULOS ------ 
 
-
-vlassopoulos
-
-readme.md file
-order of creating products on state zero
-deploying
-
-creating extra user
-s
 
 
 ----

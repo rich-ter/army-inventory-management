@@ -76,12 +76,16 @@ class ShipmentItemForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        user = kwargs.pop('user', None)  # Extract the user from the keyword arguments
         super().__init__(*args, **kwargs)
         if user:
-            user_groups = user.groups.all()
-            self.fields['product'].queryset = Product.objects.filter(owners__in=user_groups).distinct()
-            self.fields['warehouse'].queryset = Warehouse.objects.filter(access_groups__in=user_groups).distinct()
+            if user.is_superuser:
+                self.fields['product'].queryset = Product.objects.all()
+                self.fields['warehouse'].queryset = Warehouse.objects.all()
+            else:
+                user_groups = user.groups.all()
+                self.fields['product'].queryset = Product.objects.filter(owners__in=user_groups).distinct()
+                self.fields['warehouse'].queryset = Warehouse.objects.filter(access_groups__in=user_groups).distinct()
         self.fields['product'].widget.attrs.update({'class': 'form-select mb-2'})
         self.fields['warehouse'].widget.attrs.update({'class': 'form-select'})
         self.fields['quantity'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Ποσότητα'})
@@ -97,9 +101,13 @@ ShipmentItemFormSet = inlineformset_factory(
 
 class ShipmentItemFormSetWithUser(forms.BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
+        self.user = kwargs.pop('user', None)  # Extract the user from the keyword arguments
         super().__init__(*args, **kwargs)
         for form in self.forms:
+            if self.user.is_superuser:
+                form.fields['product'].queryset = Product.objects.all()
+                form.fields['warehouse'].queryset = Warehouse.objects.all()
+            else:
                 user_groups = self.user.groups.all()
                 form.fields['product'].queryset = Product.objects.filter(owners__in=user_groups).distinct()
                 form.fields['warehouse'].queryset = Warehouse.objects.filter(access_groups__in=user_groups).distinct()

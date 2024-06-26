@@ -36,7 +36,11 @@ class Command(BaseCommand):
             try:
                 model = apps.get_model('DjangoHUDApp', model_name)
                 with transaction.atomic():
-                    model.objects.all().delete()
+                    if model_name == 'ShipmentItem':
+                        for item in model.objects.all():
+                            item.delete(skip_validation=True)
+                    else:
+                        model.objects.all().delete()
                     self.stdout.write(self.style.SUCCESS(f'Successfully flushed table: {model_name}'))
             except LookupError:
                 self.stdout.write(self.style.ERROR(f'Model {model_name} not found.'))

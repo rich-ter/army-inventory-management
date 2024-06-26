@@ -9,14 +9,15 @@ from django.contrib import admin
 from django.db.models import F
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+import os 
 
 class Recipient(models.Model):
     commanding_unit = models.CharField(max_length=100)
     recipient_unit = models.CharField(max_length=100, default='None Specified')
-    notes = models.CharField(max_length=450, null = True, blank=True)
+    notes = models.CharField(max_length=450, null=True, blank=True)
 
     def __str__(self):
-	    return self.commanding_unit
+        return self.commanding_unit
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -29,16 +30,16 @@ class ProductUsage(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 def validate_image(file):
     file_size = file.size
-    limit_kb = 10000  
+    limit_kb = 10000
     if file_size > limit_kb * 1024:
         raise ValidationError("Max size of file is %s KB" % limit_kb)
-    
+
     if not file.name.endswith(('.jpg', '.png')):
         raise ValidationError("Μόνο αρχεία .jpg & .png επιτρέπονται")
-    
+
 class Product(models.Model):
 
     MEASUREMENT_TYPES = (
@@ -47,8 +48,8 @@ class Product(models.Model):
         ("ΚΑΜΙΑ ΕΠΙΛΟΓΗ", "ΚΑΜΙΑ ΕΠΙΛΟΓΗ"),       
     )
 
-    name = models.CharField(max_length=100, null = False)
-    batch_number = models.CharField(max_length=100, null = False, default='KAMIA EPILOGH', blank=True)
+    name = models.CharField(max_length=100, null=False)
+    batch_number = models.CharField(max_length=100, null=False, default='KAMIA EPILOGH', blank=True)
     unit_of_measurement = models.CharField(max_length=30, choices=MEASUREMENT_TYPES, default='ΚΑΜΙΑ ΕΠΙΛΟΓΗ')
     image = models.ImageField(upload_to='product_images/', validators=[validate_image], blank=True, null=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.SET_NULL, null=True, blank=True)
@@ -56,26 +57,28 @@ class Product(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
     owners = models.ManyToManyField(Group, blank=True, verbose_name='Product Owners')
 
-    # def stock_by_warehouse(self):
-    #     return Stock.objects.filter(product=self).values('warehouse__name', 'quantity')
-    
     def total_stock(self):
         """Return the total stock across all warehouses for this product."""
         return self.stocks.aggregate(total=Sum('quantity'))['total'] or 0
-    
-    def __str__(self):
-	    return f"{self.name} - {self.category}"
-    
 
+    def __str__(self):
+        return f"{self.name} - {self.category}"
+
+@receiver(post_delete, sender=Product)
+def delete_product_images(sender, instance, **kwargs):
+    if instance.image:
+        if os.path.isfile(instance.image.path):
+            os.remove(instance.image.path)
+            
 def validate_shipment_attachment(file):
     file_size = file.size
-    limit_kb = 10000  
+    limit_kb = 10000
     if file_size > limit_kb * 1024:
         raise ValidationError("Max size of file is %s KB" % limit_kb)
-    
+
     if not file.name.endswith(('.pdf')):
         raise ValidationError("Μόνο αρχεία pdf")
-    
+
 class Shipment(models.Model):
     SHIPMENT_TYPE_CHOICES = [
         ('IN', 'Εισερχόμενη'),
@@ -93,11 +96,22 @@ class Shipment(models.Model):
     date = models.DateTimeField(default=timezone.now)
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
     notes = models.CharField(max_length=200, null=True, blank=True)
-    attachment = models.FileField(upload_to='shipment_attachments/', validators=[validate_shipment_attachment], null=True, blank=True)  # Store file path in database
+    attachment = models.FileField(upload_to='shipment_attachments/', validators=[validate_shipment_attachment], null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.notes is None:
+            self.notes = ''
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f" Αποστολή από {self.user} / Τύπου: {self.shipment_type} - Ημερομηνία: {self.date}"
-    
+
+@receiver(post_delete, sender=Shipment)
+def delete_shipment_files(sender, instance, **kwargs):
+    if instance.attachment:
+        if os.path.isfile(instance.attachment.path):
+            os.remove(instance.attachment.path)
+
 
 class Warehouse(models.Model):
     name = models.CharField(max_length=100)
@@ -106,7 +120,7 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-    
+
 class ShipmentItem(models.Model):
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, related_name='shipment_items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -126,7 +140,12 @@ class ShipmentItem(models.Model):
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
-    
+
+    def delete(self, *args, skip_validation=False, **kwargs):
+        if not skip_validation:
+            self.clean()
+        super().delete(*args, **kwargs)
+
 @receiver(post_save, sender=ShipmentItem)
 def adjust_stock_on_save(sender, instance, created, **kwargs):
     adjust_stock(instance, created=True)
@@ -162,13 +181,9 @@ class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stocks')
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='stocks')
     quantity = models.PositiveIntegerField(default=0)
-    
+
     class Meta:
         unique_together = ('product', 'warehouse')
 
     def __str__(self):
         return f"{self.product.name} in {self.warehouse.name} - Qty: {self.quantity}"
-    
-
-
-# implementing the different use roles and groups for 

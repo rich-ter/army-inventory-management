@@ -21,6 +21,7 @@ class ProductUsageAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'usage', 'description')
+    search_fields = ['name']  # Enables search by product name
 
 admin.site.register(Warehouse)
 admin.site.register(Recipient)

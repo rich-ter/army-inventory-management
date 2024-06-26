@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm
 from django.http import HttpResponse  # Add this import
 from .forms import ProductForm, ShipmentForm, ShipmentItemFormSet
-from .models import Product, Shipment, Warehouse, Recipient, ShipmentItem, Stock
+from .models import Product, Shipment, Warehouse, Recipient, ShipmentItem, Stock, ProductCategory, ProductUsage  
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum,F, Q
@@ -243,26 +243,39 @@ def pageDataManagement(request):
         if file_name.endswith('.csv'):
             df = pd.read_csv(file)
         elif file_name.endswith('.xlsx'):
-            df = pd.read_excel(file)
+            df = pd.read_excel(file, header=0)
         else:
             return HttpResponse("Unsupported file format", status=400)
 
-        # Print columns for debugging
-        print(df.columns)
+        # Strip whitespace from column names to avoid KeyError
+        df.columns = df.columns.str.strip()
+
+        # Print columns for debugging after stripping
+        print("DataFrame columns after stripping:", df.columns)
 
         # Fill NaN values with empty strings to avoid errors
         df.fillna('', inplace=True)
 
+        # Check for required columns and print a warning if any are missing
+        required_columns = ['Προιόν', 'Κατηγορία', 'Χρήση', 'Μερίδα', 'Απ. ΤΑΓΜΑ', 'Απ. ΚΕΠΙΚ', 'Απ. ΔΟΡΥΦΟΡΙΚΑ']
+        missing_columns = [col for col in required_columns if col not in df.columns]
+        if missing_columns:
+            print(f"Missing columns: {missing_columns}")
+            return HttpResponse(f"Missing columns in the uploaded file: {', '.join(missing_columns)}", status=400)
+
         # Process the DataFrame to update Products and Stocks
         for index, row in df.iterrows():
             product_name = str(row['Προιόν']).strip()
-            category = str(row['Κατηγορία']).strip()
-            usage = str(row['Χρήση']).strip()
+            category_name = str(row['Κατηγορία']).strip()
+            usage_name = str(row['Χρήση']).strip()
             batch_number = str(row['Μερίδα']).strip()
             # total_stock = row['Συνολικό Απόθεμα']
             stock_tagma = row['Απ. ΤΑΓΜΑ']
             stock_kepik = row['Απ. ΚΕΠΙΚ']
             stock_doriforika = row['Απ. ΔΟΡΥΦΟΡΙΚΑ']
+
+            category, _ = ProductCategory.objects.get_or_create(name=category_name)
+            usage, _ = ProductUsage.objects.get_or_create(name=usage_name)
 
             product, created = Product.objects.get_or_create(
                 name=product_name,
@@ -432,10 +445,18 @@ def pageOrderDetails(request, shipment_id):
 
 
 
-def order_print(request,shipment_id):
+def order_print(request, shipment_id):
     shipment = get_object_or_404(Shipment, pk=shipment_id)
     shipment_items = ShipmentItem.objects.filter(shipment=shipment)
-    return render(request, "doriforika-protokolo.html", {"shipment": shipment, "shipment_items": shipment_items})
+
+    # Get the creator's group
+    creator_group = shipment.user.groups.first().name if shipment.user.groups.exists() else None
+
+    return render(request, "doriforika-protokolo.html", {
+        "shipment": shipment,
+        "shipment_items": shipment_items,
+        "creator_group": creator_group,
+    })
 
 
 

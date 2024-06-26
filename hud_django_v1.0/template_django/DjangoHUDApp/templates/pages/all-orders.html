@@ -28,8 +28,8 @@
                                 <th class="border-top-0 pt-0 pb-2">Ημερομηνία</th>
                                 <th class="border-top-0 pt-0 pb-2">Παραλήπτης</th>
                                 <th class="border-top-0 pt-0 pb-2">Τύπος Αποστολής</th>
-                                <th class="border-top-0 pt-0 pb-2">Τρόπος Αποστολής</th>
                                 <th class="border-top-0 pt-0 pb-2">Προιόντα</th>
+                                <th class="border-top-0 pt-0 pb-2">Δημιουργός</th>
                                 <th class="border-top-0 pt-0 pb-2">Σχόλια</th>
                                 <th class="border-top-0 pt-0 pb-2">Διαγραφή</th>
                             </tr>
@@ -56,8 +56,14 @@
                                     <span class="badge border border-warning text-warning px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> OUT</span>
                                 {% endif %}
                                     </td>
-                                <td class="align-middle"><span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> Fulfilled</span></td>
-                                <td class="align-middle">{{ shipment.products_count }}</td>
+                                <td class="align-middle">
+                                    <ul class="list-unstyled mb-0" style="font-size: smaller;">
+                                        {% for item in shipment.shipment_items.all %}
+                                            <li>{{ item.product.name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>                            
+                                <td class="align-middle">{{ shipment.user.username }}</td>
                                 <td class="align-middle">{{shipment.notes}}</td>
                                 <td class="align-middle">
                                     <form method="post" action="{% url 'DjangoHUDApp:delete_shipment' shipment.id %}" style="display:inline;">
