@@ -9,7 +9,7 @@ urlpatterns = [
     path('', views.pageLogin, name='pageLogin'),
     path('index', views.index, name='index'),
     path('404/', views.error404, name='error404'),
-    path('page/error', views.pageError, name='pageError'),
+    path('page/error', views.pageError, name='pageError'),  
     path('logout/', views.logout_view, name='logout'),
 
     #product pages

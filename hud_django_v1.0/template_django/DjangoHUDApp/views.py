@@ -19,6 +19,7 @@ from django.db import transaction
 from django.core.exceptions import ValidationError
 from .models import ProductCategory, ProductUsage
 from django.urls import reverse
+from django.db.models import Q
 
 
 # Function for loging a user 
@@ -380,6 +381,7 @@ def pageRecipient(request):
 # def index(request):
 # 	return render(request, "pages/index.html")
 
+@login_required
 def index(request):
     user = request.user
 
@@ -421,7 +423,6 @@ def index(request):
                     )
                     .order_by('-total_quantity')[:10])
 
-
     if start_date and end_date:
         start_date = parse_date(start_date)
         end_date = parse_date(end_date)
@@ -434,7 +435,14 @@ def index(request):
         total_shipments = shipments.count()
         total_stock = stocks.aggregate(total_quantity=Sum('quantity'))['total_quantity']
 
-    recent_shipments = shipments.order_by('-date')[:10]
+    if user.is_superuser:
+        # Admin can view all recent shipments
+        recent_shipments = shipments.order_by('-date')[:10]
+    else:
+        # Non-admin users only see shipments related to their groups
+        recent_shipments = shipments.filter(
+            Q(user__groups__in=user_groups)
+        ).distinct().order_by('-date')[:10]
 
     context = {
         'top_products': top_products,
@@ -447,8 +455,6 @@ def index(request):
         'recent_shipments': recent_shipments,
     }
     return render(request, 'pages/index.html', context)
-
-
 def pageOrderDetails(request, shipment_id):
     shipment = get_object_or_404(Shipment, pk=shipment_id)
     shipment_items = ShipmentItem.objects.filter(shipment=shipment)
@@ -516,9 +522,11 @@ def error404(request):
 	}
 	return render(request, "pages/page-error.html", context)
 
-def handler404(request, exception = None):
-	return redirect('/404/')
 
 def handler404(request, exception):
-    context = {} # Add any context variables if needed
+    context = {
+        "appSidebarHide": 1,
+        "appHeaderHide": 1,
+        "appContentClass": 'p-0'
+    }
     return render(request, 'pages/page-error.html', context, status=404)

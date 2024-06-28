@@ -1,1 +1,0 @@
-when uploading stock into the app make sure the uploader uploads only his products. 

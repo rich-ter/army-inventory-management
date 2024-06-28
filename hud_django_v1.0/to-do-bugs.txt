@@ -2,10 +2,7 @@
 
 1. Make sure that the stock-per-warehouse filters are working properly. 
 2. MAKE SURE ABOUT CRUD OPERATIONS ABOUT SHIPMENTS AND PRODUCTS
-3. MAKE SURE BACK-END LOGIC WORKS FOR CORRECTLY ADDING AND REMOVING ITEMS FROM THE WAREHOUSES.
-4. Finalise Dashboards
-8. DEFAULT OPTION TO BE ΚΑΜΙΑ ΕΠΙΛΟΓΗ when creating a product.
-
+3. Make sure that in dashboards users can only see what their target group created.
 
 -- create a custom richterlabs admin dashboard on docker to deloy all the time? 
 7. If time, then add a page for the recipients to have a list to show all recent shipemnts to that recipient.
@@ -13,6 +10,13 @@
 
 
 ------ DONE ------ 
+
+
+8. DEFAULT OPTION TO BE ΚΑΜΙΑ ΕΠΙΛΟΓΗ when creating a product.
+
+4. Finalise Dashboards
+3. MAKE SURE BACK-END LOGIC WORKS FOR CORRECTLY ADDING AND REMOVING ITEMS FROM THE WAREHOUSES.
+
 14. Add csv file as importing into the database with management command.
 - when deleting a shipment make sure the attachemnts are also deleted in the database. 
 8. Ensure that if user creates something, other's can't view it. all his created things appear in 
@@ -54,11 +58,6 @@ Customize admin dashboard to be able to search product names.
 
 3. On the deployed server when we create a shipment we can't press the submit button to fulfil.
 4. Admin doesn't view any products
-
-
-
-
-
 
 ----
 -
