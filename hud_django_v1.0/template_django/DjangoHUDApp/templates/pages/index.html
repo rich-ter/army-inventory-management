@@ -241,18 +241,16 @@
 				<div class="card-body">
 					<!-- BEGIN title -->
 					<div class="d-flex fw-bold small mb-3">
-						<span class="flex-grow-1">ΑΠΟΘΕΜΑΤΑ</span>
-						<a href="#" data-toggle="card-expand" class="text-inverse text-opacity-50 text-decoration-none"><i class="bi bi-fullscreen"></i></a>
+						<span class="flex-grow-1">ΔΗΜΙΟΥΡΓΙΑ ΠΡΟΙΟΝΤΟΣ</span>
 					</div>
 					<!-- END title -->
 					<!-- BEGIN stat-lg -->
 					<div class="row align-items-center mb-2">
 						<div class="col-7">
-							<h3 class="mb-0">4,490</h3>
-						</div>
-						<div class="col-5">
-							<div class="mt-n3 mb-n2" data-render="apexchart" data-type="pie" data-title="Visitors" data-height="45"></div>
-						</div>
+						<div class="ms-auto">
+							<a href="add-product" class="btn btn-outline-theme"><i class="fa fa-plus-circle fa-fw me-1"></i> Νέα Προιόν</a>
+						</div>						
+					</div>
 					</div>
 					<!-- END stat-lg -->
 				</div>
@@ -279,18 +277,16 @@
 				<div class="card-body">
 					<!-- BEGIN title -->
 					<div class="d-flex fw-bold small mb-3">
-						<span class="flex-grow-1">BANDWIDTH</span>
-						<a href="#" data-toggle="card-expand" class="text-inverse text-opacity-50 text-decoration-none"><i class="bi bi-fullscreen"></i></a>
+						<span class="flex-grow-1">ΔΗΜΙΟΥΡΓΙΑ ΔΙΑΚΙΝΗΣΗΣ</span>						
 					</div>
 					<!-- END title -->
 					<!-- BEGIN stat-lg -->
 					<div class="row align-items-center mb-2">
 						<div class="col-7">
-							<h3 class="mb-0">4.5TB</h3>
+						<div class="ms-auto">
+							<a href="add-shipment" class="btn btn-outline-theme"><i class="fa fa-plus-circle fa-fw me-1"></i> Νέα Διακίνηση</a>
 						</div>
-						<div class="col-5">
-							<div class="mt-n3 mb-n2" data-render="apexchart" data-type="donut" data-title="Visitors" data-height="45"></div>
-						</div>
+							</div>
 					</div>
 					<!-- END stat-lg -->
 				</div>
@@ -309,7 +305,7 @@
 		</div>
 		<!-- END col-3 -->
 		
-		<!-- BEGIN col-6 -->
+		{% comment %} <!-- BEGIN col-6 -->
 		<div class="col-xl-6">
 			<!-- BEGIN card -->
 			<div class="card mb-3">
@@ -355,9 +351,9 @@
 				<!-- END card-arrow -->
 			</div>
 			<!-- END card -->
-		</div>
+		</div> {% endcomment %}
 		<!-- END col-6 -->
-		
+{% comment %} 		
 		<!-- BEGIN col-6 -->
 		<div class="col-xl-6">
 			<!-- BEGIN card -->
@@ -416,7 +412,7 @@
 			</div>
 			<!-- END card -->
 		</div>
-		<!-- END col-6 --> 
+		<!-- END col-6 -->  {% endcomment %}
 		
 		<!-- BEGIN col-6 -->
 		<div class="col-xl-6">
@@ -427,7 +423,7 @@
 					<!-- BEGIN title -->
 					<div class="d-flex fw-bold small mb-3">
 						<span class="flex-grow-1">ΜΕΓΑΛΥΤΕΡΑ ΑΠΟΘΕΜΑΤΑ</span>
-						<a href="#" data-toggle="card-expand" class="text-inverse text-opacity-50 text-decoration-none"><i class="bi bi-fullscreen"></i></a>
+						{% comment %} <a href="#" data-toggle="card-expand" class="text-inverse text-opacity-50 text-decoration-none"><i class="bi bi-fullscreen"></i></a> {% endcomment %}
 					</div>
 					<!-- END title -->
 					<!-- BEGIN table -->
@@ -440,39 +436,42 @@
 									<td>
 										<div class="d-flex">
 											<div class="position-relative mb-2">
-    											<div class="bg-position-center bg-size-cover bg-repeat-no-repeat w-80px h-60px" style="background-image: url({% if product.image %}{{ product.image.url }}{% else %}{% static 'img/dashboard/product-1.jpeg' %}{% endif %});">
-												{% comment %} <div class="bg-position-center bg-size-cover bg-repeat-no-repeat w-80px h-60px" style="background-image: url({{ product.image.url }});">				 {% endcomment %}
-												
-												</div>    											
+    {% comment %} {% if product.product_image %}
+        <a href="{{ product.product_image.url }}" data-lightbox="product-{{ product.id }}" data-title="{{ product.product_name }}">
+            <img alt="{{ product.product_name }}" class="mw-100 mh-100 w-80px h-60px" src="{{ product.product_image.url }}">
+        </a>
+    {% else %}
+        <img alt="" class="mw-100 mh-100 w-80px h-60px" src="{% static 'img/dashboard/product-1.jpeg' %}">
+    {% endif %} {% endcomment %}
 
-												<div class="position-absolute top-0 start-0">
+												{% comment %} <div class="position-absolute top-0 start-0">
 													<span class="badge bg-theme text-theme-900 rounded-0 d-flex align-items-center justify-content-center w-20px h-20px">1</span>
-												</div>
+												</div> {% endcomment %}
 											</div>
 											<div class="flex-1 ps-3">
-												<div class="mb-1"><small class="fs-9px fw-500 lh-1 d-inline-block rounded-0 badge bg-secondary bg-opacity-25 text-inverse text-opacity-75 pt-5px">SKU90400</small></div>
-												<div class="fw-500 text-inverse">{{product.product__name}}</div>
-												$399.00
+												<div class="mb-1"><small class="fs-9px fw-500 lh-1 d-inline-block rounded-0 badge bg-secondary bg-opacity-25 text-inverse text-opacity-75 pt-5px">ΑΜ: {{product.product_batch_number}}</small></div>
+												<div class="fw-500 text-inverse">{{product.product_name}}</div>
+												{{ product.product_category_name }} / {{ product.product_usage_name }}
 											</div>
 										</div>
 									</td>
 									<td>
 										<table class="mb-2">
 											<tr>
-												<td class="pe-3">Απόθεμα:</td>
+												<td class="pe-3">ΑΠΟΘΕΜΑ:</td>
 												<td class="text-inverse text-opacity-75 fw-500">{{product.total_quantity}}</td>
 											</tr>
 											<tr>
-												<td class="pe-3">REVENUE:</td>
-												<td class="text-inverse text-opacity-75 fw-500">$51,471</td>
+												<td class="pe-3">ΜΟΝΑΔΑ ΜΕΤΡΗΣΗΣ:</td>
+												<td class="text-inverse text-opacity-75 fw-500">{{product.product_unit_of_measurement }}</td>
 											</tr>
-											<tr>
-												<td class="pe-3 text-nowrap">PROFIT:</td>
+											{% comment %} <tr>
+												<td class="pe-3 text-nowrap">ΧΡΗΣΗ:</td>
 												<td class="text-inverse text-opacity-75 fw-500">$15,441</td>
-											</tr>
+											</tr> {% endcomment %}
 										</table>
 									</td>
-									<td><a href="#" class="text-decoration-none text-inverse"><i class="bi bi-search"></i></a></td>
+									{% comment %} <td><a href="#" class="text-decoration-none text-inverse"><i class="bi bi-search"></i></a></td> {% endcomment %}
 								</tr>
 		                        {% endfor %}
 							</tbody>

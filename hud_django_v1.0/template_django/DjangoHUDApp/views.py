@@ -381,7 +381,6 @@ def pageRecipient(request):
 # 	return render(request, "pages/index.html")
 
 def index(request):
-
     user = request.user
 
     # Get the user's groups
@@ -401,9 +400,27 @@ def index(request):
 
     top_products = (Stock.objects
                     .filter(warehouse__access_groups__in=user_groups)
-                    .values('product__name', 'product__image')
-                    .annotate(total_quantity=Sum('quantity'))
+                    .select_related('product__category', 'product__usage')
+                    .annotate(
+                        product_name=F('product__name'),
+                        product_image_url=F('product__image'),
+                        product_category_name=F('product__category__name'),
+                        product_batch_number=F('product__batch_number'),
+                        product_unit_of_measurement=F('product__unit_of_measurement'),
+                        product_usage_name=F('product__usage__name'),
+                        total_quantity=Sum('quantity')
+                    )
+                    .values(
+                        'product_name', 
+                        'product_image_url', 
+                        'product_category_name', 
+                        'product_batch_number', 
+                        'product_unit_of_measurement', 
+                        'product_usage_name',
+                        'total_quantity'
+                    )
                     .order_by('-total_quantity')[:10])
+
 
     if start_date and end_date:
         start_date = parse_date(start_date)

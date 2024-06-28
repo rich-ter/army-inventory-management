@@ -6,6 +6,13 @@
 
 {% block css %}
 <link href="{% static 'plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+<style>
+    .center-button-container {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
 {% endblock %}
 
 {% block js %}
@@ -124,15 +131,17 @@ $(document).ready(function() {
                         <button type="button" id="add-more-items" class="btn btn-info">Προσθήκη προιόντων</button>
                     </div>
                 </div>
-                <div class="card mb-4">
+                {% comment %} <div class="card mb-4">
                     <div class="card-header d-flex align-items-center bg-inverse bg-opacity-10 fw-400">
                         Φωτογραφία
                     </div>
                     <div class="card-body">
                         <input type="file" id="image" name="image" class="form-control" accept="image/jpeg, image/png">
                     </div>
-                </div>
-                <button type="submit" class="btn btn-outline-theme btn-lg">Καταχώρηση Διακίνησης</button>
+                </div> {% endcomment %}
+                <div class="center-button-container">
+                    <button type="submit" class="btn btn-outline-theme btn-lg">Καταχώρηση Διακίνησης</button>
+                </div>            
             </form>
         </div>
     </div>

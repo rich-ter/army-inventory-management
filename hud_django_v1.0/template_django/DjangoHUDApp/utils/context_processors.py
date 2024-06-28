@@ -24,7 +24,7 @@ def sidebar_menu(request):
         'url': '/index',
         'icon': 'bi bi-cpu',
         'text': 'Πίνακας Ελέγχου',
-        'name': 'dashboard',
+        'name': 'index',
         'groups': ['ΔΙΔΕΣ', 'ΔΟΡΥΦΟΡΙΚΑ', 'admin']  # Specify groups and admin that can see this item
     }, {
         'is_divider': 1

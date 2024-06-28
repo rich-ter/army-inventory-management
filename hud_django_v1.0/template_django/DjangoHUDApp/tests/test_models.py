@@ -1,58 +1,85 @@
-# myapp/tests/test_models.py
 from django.test import TestCase
-from django.core.exceptions import ValidationError
-from DjangoHUDApp.models import Product, Warehouse, Stock, Shipment, ShipmentItem
 from django.contrib.auth.models import User
+from django.utils import timezone
+from DjangoHUDApp.models import Product, ProductCategory, ProductUsage, Warehouse, Stock, Shipment, ShipmentItem, Recipient, ValidationError
 
-class ProductStockTests(TestCase):
-
+class StockAdjustmentTest(TestCase):
     def setUp(self):
-        # Create test user
-        self.user = User.objects.create_user('testuser', 'test@example.com', 'password')
-
-        # Create products
-        self.product1 = Product.objects.create(name="Router", category="ROUTER", usage="ΔΟΡΥΦΟΡΙΚΑ")
+        # Create a user
+        self.user = User.objects.create_user(username='testuser', password='12345')
         
-        # Create warehouse
-        self.warehouse = Warehouse.objects.create(name="Main Warehouse")
+        # Create product category and usage
+        self.category = ProductCategory.objects.create(name='Category A')
+        self.usage = ProductUsage.objects.create(name='Usage A')
+        
+        # Create a product
+        self.product = Product.objects.create(name='Product A', category=self.category, usage=self.usage)
+        
+        # Create a warehouse
+        self.warehouse = Warehouse.objects.create(name='Warehouse A')
+        
+        # Create a recipient
+        self.recipient = Recipient.objects.create(commanding_unit='Unit A')
+        
+        # Create initial stock
+        self.stock = Stock.objects.create(product=self.product, warehouse=self.warehouse, quantity=100)
 
-        # Create stock
-        self.stock = Stock.objects.create(product=self.product1, warehouse=self.warehouse, quantity=50)
-
-        # Create shipment
-        self.shipment = Shipment.objects.create(
+    def test_stock_decreases_on_outgoing_shipment(self):
+        # Create an outgoing shipment
+        shipment = Shipment.objects.create(
             user=self.user,
             shipment_type='OUT',
-            date="2021-01-01"
+            recipient=self.recipient,
+            date=timezone.now()
         )
 
-        # Create shipment item
-        self.shipment_item = ShipmentItem.objects.create(
-            shipment=self.shipment,
-            product=self.product1,
+        # Add a shipment item
+        ShipmentItem.objects.create(
+            shipment=shipment,
+            product=self.product,
             warehouse=self.warehouse,
             quantity=10
         )
 
-    def test_stock_adjustment_on_shipment_creation(self):
-        """Test that stock is reduced when a shipment item is created."""
+        # Check stock decreases by 10
         self.stock.refresh_from_db()
-        self.assertEqual(self.stock.quantity, 40)
+        self.assertEqual(self.stock.quantity, 90)
 
-    def test_stock_adjustment_on_shipment_deletion(self):
-        """Test that stock is increased back when a shipment item is deleted."""
-        self.shipment_item.delete()
+    def test_stock_increases_on_incoming_shipment(self):
+        # Create an incoming shipment
+        shipment = Shipment.objects.create(
+            user=self.user,
+            shipment_type='IN',
+            recipient=self.recipient,
+            date=timezone.now()
+        )
+
+        # Add a shipment item
+        ShipmentItem.objects.create(
+            shipment=shipment,
+            product=self.product,
+            warehouse=self.warehouse,
+            quantity=10
+        )
+
+        # Check stock increases by 10
         self.stock.refresh_from_db()
-        self.assertEqual(self.stock.quantity, 50)
+        self.assertEqual(self.stock.quantity, 110)
 
-    def test_negative_stock_prevention(self):
-        """Test that creating a shipment item with more quantity than available results in an error."""
+    def test_error_raised_when_insufficient_stock(self):
+        # Create an outgoing shipment
+        shipment = Shipment.objects.create(
+            user=self.user,
+            shipment_type='OUT',
+            recipient=self.recipient,
+            date=timezone.now()
+        )
+
+        # Attempt to create a shipment item with a quantity greater than the available stock
         with self.assertRaises(ValidationError):
             ShipmentItem.objects.create(
-                shipment=self.shipment,
-                product=self.product1,
+                shipment=shipment,
+                product=self.product,
                 warehouse=self.warehouse,
-                quantity=100  # more than available in stock
+                quantity=200  # More than available stock
             )
-
-# Additional tests can be added to check for proper handling of incoming shipments, multiple warehouses, etc.
