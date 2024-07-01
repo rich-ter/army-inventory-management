@@ -20,6 +20,8 @@ from django.core.exceptions import ValidationError
 from .models import ProductCategory, ProductUsage
 from django.urls import reverse
 from django.db.models import Q
+from datetime import timedelta
+from django.db.models import Sum, Max
 
 
 # Function for loging a user 
@@ -191,9 +193,14 @@ def pageOrder(request):
             # Default to no shipments if no specific group is found
             shipments_list = Shipment.objects.none()
 
+    # Apply the filter
     shipments_filter = ShipmentFilter(request.GET, queryset=shipments_list)
     shipments_list = shipments_filter.qs
 
+    # Sort by most recent date
+    shipments_list = shipments_list.order_by('-date')
+
+    # Paginate the results
     paginator = Paginator(shipments_list, 10)  # Show 10 shipments per page
     page_number = request.GET.get('page')
     shipments = paginator.get_page(page_number)
@@ -207,30 +214,25 @@ def pageOrder(request):
     
 @login_required
 def pageWarehouse(request):
-    # Get the user's groups as a list of strings
     user_groups = request.user.groups.values_list('name', flat=True)
 
-    # Initialize an empty queryset
-    warehouses_list = Warehouse.objects.none()
-
-    # Check if user is a superuser or in the Admin group
     if request.user.is_superuser or 'Admin' in user_groups:
-        # Show all warehouses if user is an admin or in the admin group
-        warehouses_list = Warehouse.objects.annotate(total_stock=Sum('stocks__quantity'))
-
-    # Check for 'Doriforika' group and filter accordingly
+        warehouses_list = Warehouse.objects.annotate(
+            total_stock=Sum('stocks__quantity'),
+            last_shipment_date=Max('shipmentitem__shipment__date')
+        )
     elif 'ΔΟΡΥΦΟΡΙΚΑ' in user_groups:
-        # Filter warehouses to show only those related to "Doriforika"
         warehouses_list = Warehouse.objects.filter(name="ΔΟΡΥΦΟΡΙΚΑ").annotate(
-            total_stock=Sum('stocks__quantity')
+            total_stock=Sum('stocks__quantity'),
+            last_shipment_date=Max('shipmentitem__shipment__date')
         )
-
-    # Check for 'ΔΙΔΕΣ' group and filter for "KEPIK" and "TAGMA" warehouses
     elif 'ΔΙΔΕΣ' in user_groups:
-        # Filter warehouses to show only "KEPIK" and "TAGMA"
         warehouses_list = Warehouse.objects.filter(name__in=["ΚΕΠΙΚ", "ΤΑΓΜΑ"]).annotate(
-            total_stock=Sum('stocks__quantity')
+            total_stock=Sum('stocks__quantity'),
+            last_shipment_date=Max('shipmentitem__shipment__date')
         )
+    else:
+        warehouses_list = Warehouse.objects.none()
 
     context = {'warehouses': warehouses_list}
     return render(request, "pages/warehouses.html", context)
@@ -397,8 +399,6 @@ def index(request):
 
     shipments = Shipment.objects.all()
     stocks = Stock.objects.all()
-    total_shipments = 0
-    total_stock = 0
 
     top_products = (Stock.objects
                     .filter(warehouse__access_groups__in=user_groups)
@@ -426,14 +426,16 @@ def index(request):
     if start_date and end_date:
         start_date = parse_date(start_date)
         end_date = parse_date(end_date)
-        shipments = shipments.filter(date__range=[start_date, end_date])
+        if start_date and end_date:
+            # Adjust the end_date to include the whole day
+            end_date += timedelta(days=1)
+            shipments = shipments.filter(date__range=[start_date, end_date])
         total_shipments = shipments.count()
-
-        # Calculate total stock
-        total_stock = stocks.aggregate(total_quantity=Sum('quantity'))['total_quantity']
     else:
         total_shipments = shipments.count()
-        total_stock = stocks.aggregate(total_quantity=Sum('quantity'))['total_quantity']
+
+    # Calculate total stock
+    total_stock = stocks.aggregate(total_quantity=Sum('quantity'))['total_quantity']
 
     if user.is_superuser:
         # Admin can view all recent shipments
@@ -455,6 +457,7 @@ def index(request):
         'recent_shipments': recent_shipments,
     }
     return render(request, 'pages/index.html', context)
+
 def pageOrderDetails(request, shipment_id):
     shipment = get_object_or_404(Shipment, pk=shipment_id)
     shipment_items = ShipmentItem.objects.filter(shipment=shipment)

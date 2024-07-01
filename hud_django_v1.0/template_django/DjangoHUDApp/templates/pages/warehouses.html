@@ -42,7 +42,6 @@
 							<tr>
 								<th class="pt-0 pb-2"></th>
 								<th class="pt-0 pb-2">Αποθήκη</th>
-								<th class="pt-0 pb-2">Απόθεμα</th>
 								<th class="pt-0 pb-2">Τελευταία Εισαγωγή</th>
 								<th class="pt-0 pb-2">Περιγραφή</th>
 							</tr>
@@ -62,9 +61,7 @@
 									</div>
 								</div>
 							</td>
-    						<td class="align-middle">{{ warehouse.total_stock }}</td> <!-- Updated to show total stock -->
-										<td class="align-middle">{{ warehouse.description }}</td>
-
+                    		<td>{{ warehouse.last_shipment_date|date:"Y-m-d H:i" }}</td>
 								<td class="align-middle">{{ warehouse.description }}</td>
 							</tr>
 							{% empty %}

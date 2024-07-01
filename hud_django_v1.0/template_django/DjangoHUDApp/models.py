@@ -10,6 +10,7 @@ from django.db.models import F
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 import os 
+from django.db.models import Max
 
 class Recipient(models.Model):
     commanding_unit = models.CharField(max_length=100)
@@ -120,6 +121,10 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+    
+    def last_shipment_date(self):
+        last_shipment = self.shipmentitem_set.aggregate(last_date=Max('shipment__date'))
+        return last_shipment['last_date']
 
 class ShipmentItem(models.Model):
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, related_name='shipment_items')
